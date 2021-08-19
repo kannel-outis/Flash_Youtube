@@ -28,7 +28,7 @@ flutter:
     platforms:
       android:
         package: kannel.outtis.flashEx.flash_newpipe_extractor
-        pluginClass: FlashNewpipeExtractorPlugin
+        pluginClass: FlashNewPipeExtractorPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
   # assets:
