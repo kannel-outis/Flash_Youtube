@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/flash_newpipe_extractor.iml" filepath="$PROJECT_DIR$/flash_newpipe_extractor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/android/flash_newpipe_extractor_android.iml" filepath="$PROJECT_DIR$/android/flash_newpipe_extractor_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/example/android/flash_newpipe_extractor_example_android.iml" filepath="$PROJECT_DIR$/example/android/flash_newpipe_extractor_example_android.iml" />
+    </modules>
+  </component>
+</project>
