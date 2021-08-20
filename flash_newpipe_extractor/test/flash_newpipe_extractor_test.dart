@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+// import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('flash_newpipe_extractor');
@@ -18,6 +18,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await FlashNewpipeExtractor.platformVersion, '42');
+    // expect(await FlashNewpipeExtractor.platformVersion, '42');
   });
 }

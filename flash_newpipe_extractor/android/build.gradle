@@ -41,5 +41,8 @@ android {
 dependencies {
     //noinspection GradleDependency
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'com.github.TeamNewPipe:NewPipeExtractor:v0.21.9'
+    implementation "com.squareup.okhttp3:okhttp:3.14.7"
+
 }
