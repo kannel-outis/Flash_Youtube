@@ -35,7 +35,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
 
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     val executor: ExecutorService = Executors.newSingleThreadExecutor();
-    val  handler:Handler = Handler(Looper.getMainLooper());
+    val  handler = Handler(Looper.getMainLooper());
 
     executor.execute(Runnable {
       if (call.method.equals("getTrending")) {

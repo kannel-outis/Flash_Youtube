@@ -1,12 +1,11 @@
 package kannel.outtis.flashEx.flash_newpipe_extractor.extractors
 
 
-import android.util.Log
+import kannel.outtis.flashEx.flash_newpipe_extractor.models.VideoInfo
 import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import org.schabi.newpipe.extractor.ServiceList.YouTube
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeTrendingExtractor
-import java.lang.NullPointerException
 
 class YoutubeTrending{
     companion object{
@@ -14,27 +13,16 @@ class YoutubeTrending{
         var itemsPage : ListExtractor.InfoItemsPage<StreamInfoItem>? = null
 
 
-        fun getTrendingPage(): Map<Int, Map<String, String?>>{
-            Log.d("StreamInfo", "streamInfoItem.name" )
+        fun getTrendingPage(): Map<Int, Map<String, Any?>>{
             trendingExtractor =  YouTube.kioskList.defaultKioskExtractor as YoutubeTrendingExtractor
             trendingExtractor!!.fetchPage()
             itemsPage = trendingExtractor!!.initialPage
             val streamInfoItems = itemsPage!!.items
-            val itemsMap: MutableMap<Int, Map<String, String?>> = mutableMapOf()
+            val itemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
             for (i in 0 until streamInfoItems.size) {
                 val item: StreamInfoItem = streamInfoItems[i]
-                val itemMap: MutableMap<String, String?> = mutableMapOf()
-                itemMap["name"] = item.name
-                itemMap["url"] = item.url
-                itemMap["viewCount"] = item.viewCount.toString()
-                itemMap["textualUploadDate"] = item.textualUploadDate
-                itemMap["uploaderName"] = item.uploaderName
-                itemMap["uploaderUrl"] = item.uploaderUrl
-                itemMap["thumbnailUrl"] = item.thumbnailUrl
-                itemMap["duration"] = item.duration.toString()
-                itemMap["uploadDate"] = item.uploadDate!!.offsetDateTime().toString()
-                itemMap["isUploaderVerified"] = item.isUploaderVerified.toString()
-                itemsMap[i] = itemMap
+                val video = VideoInfo(item)
+                itemsMap[i] = video.toMap()
             }
             return itemsMap
 

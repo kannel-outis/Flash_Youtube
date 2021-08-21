@@ -17,8 +17,7 @@ class MyApp extends StatelessWidget {
       body: const SizedBox(),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          print("Something ah");
-          await FlashNewpipeExtractor.platformVersion;
+          await FlashMethodCalls.getTrendingVideos();
         },
       ),
     ));
