@@ -1,7 +1,7 @@
 package kannel.outtis.flashEx.flash_newpipe_extractor.extractors
 
 
-import kannel.outtis.flashEx.flash_newpipe_extractor.models.VideoInfo
+import kannel.outtis.flashEx.flash_newpipe_extractor.models.VideoInfoDecode
 import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import org.schabi.newpipe.extractor.ServiceList.YouTube
@@ -21,8 +21,8 @@ class YoutubeTrending{
             val itemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
             for (i in 0 until streamInfoItems.size) {
                 val item: StreamInfoItem = streamInfoItems[i]
-                val video = VideoInfo(item)
-                itemsMap[i] = video.toMap()
+
+                itemsMap[i] = VideoInfoDecode.toMap(item)
             }
             return itemsMap
 

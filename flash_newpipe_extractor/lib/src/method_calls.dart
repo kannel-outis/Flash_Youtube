@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/services.dart';
 
@@ -23,5 +24,12 @@ class FlashMethodCalls {
     } catch (e) {
       return null;
     }
+  }
+
+  static Future<void> getVideoInfoFromUrl(String url) async {
+    final result = await _channel.invokeMethod("getVideoInfoFromUrl", {
+      "url": url,
+    });
+    log(result.toString());
   }
 }

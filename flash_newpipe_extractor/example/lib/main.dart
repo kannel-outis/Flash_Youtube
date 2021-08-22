@@ -14,10 +14,17 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         home: Scaffold(
       appBar: AppBar(),
-      body: const SizedBox(),
+      body: TextButton(
+        onPressed: () {},
+        child: Center(
+          child: Text("press"),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await FlashMethodCalls.getTrendingVideos();
+          await FlashMethodCalls.getTrendingVideos().then((value) async {
+            await FlashMethodCalls.getVideoInfoFromUrl(value![0].url!);
+          });
         },
       ),
     ));
