@@ -1,3 +1,7 @@
+import 'package:flash_newpipe_extractor/src/models/_streamOfType_.dart';
+import 'package:flash_newpipe_extractor/src/models/stream/streams.dart';
+import 'package:flash_newpipe_extractor/src/utils/enums.dart';
+
 import '../utils/utils.dart';
 import 'stream/audioOnlyStream.dart';
 import 'stream/videoAudioStream.dart';
@@ -59,6 +63,32 @@ class YoutubeVideoInfo {
 
   void addVideoAudioStream(VideoAudioStream stream) {
     _videoAudioStreams.add(stream);
+  }
+
+  StreamOfType<T> getStreamOfQuality<T extends Streams>(Quality quality) {
+    switch (T) {
+      case AudioOnlyStream:
+        final value =
+            _audioOnlyStreams.where((element) => element.quality == quality);
+        if (value.isEmpty) {
+          return StreamOfType<T>(null);
+        }
+        return StreamOfType<T>(value.first as T);
+      case VideoOnlyStream:
+        final value =
+            _videoOnlyStreams.where((element) => element.quality == quality);
+        if (value.isEmpty) {
+          return StreamOfType<T>(null);
+        }
+        return StreamOfType<T>(value.first as T);
+      default:
+        final value =
+            _videoAudioStreams.where((element) => element.quality == quality);
+        if (value.isEmpty) {
+          return StreamOfType<T>(null);
+        }
+        return StreamOfType<T>(value.first as T);
+    }
   }
 
   static List<String> _getListFromString(String list) {

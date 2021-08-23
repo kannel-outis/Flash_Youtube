@@ -28,7 +28,7 @@ class YoutubeVideo {
     this.isUploaderVerified,
   });
 
-  Future<YoutubeVideoInfo> get videoFullInformation async {
+  Future<YoutubeVideoInfo> get getFullInformation async {
     return await FlashMethodCalls.getVideoInfoFromUrl(url);
   }
 

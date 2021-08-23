@@ -22,8 +22,10 @@ class MyApp extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await FlashMethodCalls.getTrendingVideos().then((value) async {
-            value![70].videoFullInformation.then((value) => null);
+          final extract = Extract();
+          await extract.getTrendingVideos().then((value) async {
+            value![70].getFullInformation.then((value) =>
+                value.getStreamOfQuality<VideoAudioStream>(Quality.large));
           });
         },
       ),
