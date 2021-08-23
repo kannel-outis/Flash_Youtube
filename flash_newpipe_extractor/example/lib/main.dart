@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           await FlashMethodCalls.getTrendingVideos().then((value) async {
-            await FlashMethodCalls.getVideoInfoFromUrl(value![0].url!);
+            value![70].videoFullInformation.then((value) => null);
           });
         },
       ),

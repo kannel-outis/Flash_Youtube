@@ -1,5 +1,7 @@
 package kannel.outtis.flashEx.flash_newpipe_extractor.models
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import org.schabi.newpipe.extractor.stream.StreamExtractor
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
@@ -69,24 +71,26 @@ class VideoInfoDecode(){
             }
             return videoAudioStreams
         }
+
         fun decoderToMap(extractor:StreamExtractor): Map<String, Any?>{
             val fullVideoInformation:MutableMap<String, Any?> = mutableMapOf()
-            fullVideoInformation["id"] = extractor.id;
-            fullVideoInformation["url"] = extractor.url;
-            fullVideoInformation["videoName"] = extractor.name;
-            fullVideoInformation["uploaderName"] = extractor.uploaderName;
-            fullVideoInformation["uploaderUrl"] = extractor.uploaderUrl;
-            fullVideoInformation["uploaderAvatarUrl"] = extractor.uploaderAvatarUrl;
-            fullVideoInformation["uploadDate"] = extractor.textualUploadDate;
-            fullVideoInformation["description"] = extractor.description.content;
-            fullVideoInformation["length"] = extractor.length;
-            fullVideoInformation["viewCount"] = extractor.viewCount;
-            fullVideoInformation["likeCount"] = extractor.likeCount;
-            fullVideoInformation["dislikeCount"] = extractor.dislikeCount;
-            fullVideoInformation["category"] = extractor.category;
-            fullVideoInformation["ageLimit"] = extractor.ageLimit;
-            fullVideoInformation["tags"] = extractor.tags.toString();
-            fullVideoInformation["thumbnailUrl"] = extractor.thumbnailUrl;
+            fullVideoInformation["id"] = extractor.id
+            fullVideoInformation["url"] = extractor.url
+            fullVideoInformation["videoName"] = extractor.name
+            fullVideoInformation["uploaderName"] = extractor.uploaderName
+            fullVideoInformation["uploaderUrl"] = extractor.uploaderUrl
+            fullVideoInformation["uploaderAvatarUrl"] = extractor.uploaderAvatarUrl
+            fullVideoInformation["textualUploadDate"] = extractor.textualUploadDate
+            fullVideoInformation["uploadDate"] = extractor.uploadDate!!.offsetDateTime().toString()
+            fullVideoInformation["description"] = extractor.description.content
+            fullVideoInformation["length"] = extractor.length
+            fullVideoInformation["viewCount"] = extractor.viewCount
+            fullVideoInformation["likeCount"] = extractor.likeCount
+            fullVideoInformation["dislikeCount"] = extractor.dislikeCount
+            fullVideoInformation["category"] = extractor.category
+            fullVideoInformation["ageLimit"] = extractor.ageLimit
+            fullVideoInformation["tags"] = extractor.tags.toString()
+            fullVideoInformation["thumbnailUrl"] = extractor.thumbnailUrl
             return fullVideoInformation
         }
 

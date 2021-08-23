@@ -1,9 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
-
+import 'package:flash_newpipe_extractor/src/models/stream/audioOnlyStream.dart';
+import 'package:flash_newpipe_extractor/src/models/stream/videoAudioStream.dart';
+import 'package:flash_newpipe_extractor/src/models/stream/videoOnlyStream.dart';
+import 'package:flash_newpipe_extractor/src/models/videoInfo.dart';
 import 'package:flutter/services.dart';
 
-import 'models/videoInfo.dart';
+import 'models/video.dart';
 
 class FlashMethodCalls {
   static const MethodChannel _channel =
@@ -26,10 +28,39 @@ class FlashMethodCalls {
     }
   }
 
-  static Future<void> getVideoInfoFromUrl(String url) async {
-    final result = await _channel.invokeMethod("getVideoInfoFromUrl", {
-      "url": url,
+  static Future<YoutubeVideoInfo> getVideoInfoFromUrl(String url) async {
+    final result = await _channel.invokeMethod(
+      "getVideoInfoFromUrl",
+      {
+        "url": url,
+      },
+    );
+    final resultMap = Map<String, dynamic>.from(result).map(
+      (key, value) => MapEntry(
+        key,
+        Map<int, dynamic>.from(value).map(
+          (key, value) => MapEntry(
+            key,
+            Map<String, dynamic>.from(value),
+          ),
+        ),
+      ),
+    );
+    final fullinfo = YoutubeVideoInfo.fromMap(resultMap["fullVideoInfo"]![0]!);
+    resultMap["audioStreamsMap"]!.forEach((key, value) {
+      final stream = AudioOnlyStream.fromMap(value);
+      fullinfo.addAudioOnlyStream(stream);
     });
-    log(result.toString());
+
+    resultMap["videoOnlyStream"]!.forEach((key, value) {
+      final stream = VideoOnlyStream.fromMap(value);
+      fullinfo.addVideoOnlyStream(stream);
+    });
+
+    resultMap["videoAudioStream"]!.forEach((key, value) {
+      final stream = VideoAudioStream.fromMap(value);
+      fullinfo.addVideoAudioStream(stream);
+    });
+    return fullinfo;
   }
 }
