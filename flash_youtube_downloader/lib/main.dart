@@ -1,3 +1,4 @@
+import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flutter/material.dart';
 
 void main() {
