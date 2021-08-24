@@ -17,6 +17,7 @@ class YoutubeTrending{
             trendingExtractor =  YouTube.kioskList.defaultKioskExtractor as YoutubeTrendingExtractor
             trendingExtractor!!.fetchPage()
             itemsPage = trendingExtractor!!.initialPage
+            println(trendingExtractor!!.initialPage.hasNextPage())
             val streamInfoItems = itemsPage!!.items
             val itemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
             for (i in 0 until streamInfoItems.size) {
