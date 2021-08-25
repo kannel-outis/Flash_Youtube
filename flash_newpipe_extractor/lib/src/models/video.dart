@@ -46,7 +46,7 @@ class YoutubeVideo {
       duration: Duration(seconds: map["duration"]),
       thumbnailUrl: map["thumbnailUrl"],
       uploaderName: map["uploaderName"],
-      videoName: map["videoName"],
+      videoName: map["name"],
       viewCount: map["viewCount"],
     );
   }

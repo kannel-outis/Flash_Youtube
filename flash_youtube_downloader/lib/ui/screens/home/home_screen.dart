@@ -32,12 +32,24 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(children: const [
-          VideoInfoTile(),
-        ]),
-      ),
+      body: FutureBuilder<List<YoutubeVideo>?>(
+          future: Extract().getTrendingVideos(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            return Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: ListView.builder(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return VideoInfoTile(video: snapshot.data![index]);
+                },
+              ),
+            );
+          }),
     );
   }
 }

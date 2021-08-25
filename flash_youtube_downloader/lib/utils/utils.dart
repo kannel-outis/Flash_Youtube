@@ -27,7 +27,7 @@ class Utils {
           fontSize: blockWidth * 3.3,
         ),
         bodyText2: TextStyle(
-          fontSize: blockWidth * 3.3,
+          fontSize: blockWidth * 3.0,
         ),
         headline3: TextStyle(
           fontWeight: FontWeight.bold,
