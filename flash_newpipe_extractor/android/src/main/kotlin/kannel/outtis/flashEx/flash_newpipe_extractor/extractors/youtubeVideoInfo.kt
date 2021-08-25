@@ -1,6 +1,6 @@
 package kannel.outtis.flashEx.flash_newpipe_extractor.extractors
 
-import kannel.outtis.flashEx.flash_newpipe_extractor.models.VideoInfoDecode
+import kannel.outtis.flashEx.flash_newpipe_extractor.decoders.VideoInfoDecode
 import org.schabi.newpipe.extractor.ServiceList
 
 

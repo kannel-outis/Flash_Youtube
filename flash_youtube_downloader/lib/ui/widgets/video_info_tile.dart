@@ -24,11 +24,9 @@ class VideoInfoTile extends StatelessWidget {
               children: [
                 _FadeInImageWidget(
                   altImage: video.hqdefault,
-                  height: Utils.blockHeight * 20,
                   url: video.thumbnailUrl!
                       .replaceAll("hqdefault", "maxresdefault")
                       .toString(),
-                  width: double.infinity,
                   placeHolderChild: Container(
                     height: Utils.blockHeight * 20,
                     width: double.infinity,
@@ -59,13 +57,24 @@ class VideoInfoTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: Utils.blockWidth * 12,
-                  width: Utils.blockWidth * 12,
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                ),
+                    height: Utils.blockWidth * 13,
+                    width: Utils.blockWidth * 13,
+                    decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: FutureBuilder<Channel>(
+                      future: video.getUploaderChannelInfo(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return const CircularProgressIndicator();
+                        }
+                        return _FadeInImageWidget(
+                          url: snapshot.data!.avatarUrl,
+                          placeHolderChild: const SizedBox(),
+                        );
+                      },
+                    )),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(
@@ -123,16 +132,12 @@ class VideoInfoTile extends StatelessWidget {
 
 class _FadeInImageWidget extends StatefulWidget {
   final String url;
-  final String altImage;
-  final double height;
-  final double width;
+  final String? altImage;
   final Widget placeHolderChild;
   const _FadeInImageWidget({
     Key? key,
-    required this.height,
     required this.url,
-    required this.altImage,
-    required this.width,
+    this.altImage,
     required this.placeHolderChild,
   }) : super(key: key);
 
@@ -164,10 +169,11 @@ class _FadeInImageWidgetState extends State<_FadeInImageWidget>
       width: double.infinity,
       fit: BoxFit.fill,
       errorBuilder: (context, t, u) {
+        if (widget.altImage == null) return const SizedBox();
         return Image(
           width: double.infinity,
           fit: BoxFit.fill,
-          image: NetworkImage(widget.altImage),
+          image: NetworkImage(widget.altImage!),
         );
       },
       frameBuilder: (context, child, v, b) {

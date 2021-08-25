@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
+// ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+  YoutubeVideo? _video;
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +25,14 @@ class MyApp extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           final extract = Extract();
-          await extract.getTrendingVideos().then((value) async {
-            value![70].getFullInformation.then((value) =>
-                value.getStreamOfQuality<VideoAudioStream>(Quality.large));
+          // await extract.getTrendingVideos().then((value) async {
+          //   value![70].getFullInformation.then((value) =>
+          //       value.getStreamOfQuality<VideoAudioStream>(Quality.large));
+          // });
+          _video = await extract.getTrendingVideos().then((value) => value![0]);
+          await _video!.getUploaderChannelInfo();
+          _video!.uploaderChannelInfo!.videoUploads.forEach((element) {
+            print(element.videoName);
           });
         },
       ),

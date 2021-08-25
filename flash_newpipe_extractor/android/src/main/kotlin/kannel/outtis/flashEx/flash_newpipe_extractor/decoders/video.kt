@@ -1,7 +1,5 @@
-package kannel.outtis.flashEx.flash_newpipe_extractor.models
+package kannel.outtis.flashEx.flash_newpipe_extractor.decoders
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import org.schabi.newpipe.extractor.stream.StreamExtractor
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 

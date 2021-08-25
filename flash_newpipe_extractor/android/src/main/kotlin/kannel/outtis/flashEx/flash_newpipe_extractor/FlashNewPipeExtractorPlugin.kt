@@ -12,7 +12,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import kannel.outtis.flashEx.flash_newpipe_extractor.downloader.FlashDownloader
-import kannel.outtis.flashEx.flash_newpipe_extractor.extractors.YoutubeTrending
+import kannel.outtis.flashEx.flash_newpipe_extractor.extractors.YoutubeExtractors
 import kannel.outtis.flashEx.flash_newpipe_extractor.extractors.YoutubeVideoInfoExtractor
 import org.schabi.newpipe.extractor.NewPipe
 import java.util.concurrent.ExecutorService
@@ -41,10 +41,10 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
     executor.execute(Runnable {
       when {
           call.method.equals("getTrending") -> {
-            val listOfTrendingVideos = YoutubeTrending.getTrendingPage()
-            handler.post(Runnable {
+            val listOfTrendingVideos = YoutubeExtractors.getTrendingPage()
+            handler.post {
               result.success(listOfTrendingVideos)
-            })
+            }
           }
           call.method.equals("getVideoInfoFromUrl") -> {
             val url = call.argument<String>("url")
@@ -53,6 +53,14 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
               result.success(fullVideoInfo)
             }
           }
+
+        call.method.equals("getChannelInfo")->{
+          val channelUrl = call.argument<String>("channelUrl")
+          val channelInfo = YoutubeExtractors.getChannelInfo(channelUrl!!)
+          handler.post {
+            result.success(channelInfo)
+          }
+        }
           else -> {
             handler.post(Runnable {
               result.notImplemented()

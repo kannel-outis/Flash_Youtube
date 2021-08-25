@@ -2,6 +2,7 @@ import 'package:flash_newpipe_extractor/src/method_calls.dart';
 import 'package:flash_newpipe_extractor/src/models/videoInfo.dart';
 
 import '../utils/utils.dart';
+import 'channel.dart';
 
 class YoutubeVideo {
   final String? videoName;
@@ -15,7 +16,7 @@ class YoutubeVideo {
   final DateTime? uploadDate;
   final bool? isUploaderVerified;
 
-  const YoutubeVideo({
+  YoutubeVideo({
     this.videoName,
     required this.url,
     this.viewCount,
@@ -28,8 +29,12 @@ class YoutubeVideo {
     this.isUploaderVerified,
   });
   String get id => Utils.getIdFromUrl(url);
+
+  YoutubeVideoInfo? _videoInfo;
+  YoutubeVideoInfo? get videoInfo => _videoInfo;
+
   Future<YoutubeVideoInfo> get getFullInformation async {
-    return await FlashMethodCalls.getVideoInfoFromUrl(url);
+    return _videoInfo = await FlashMethodCalls.getVideoInfoFromUrl(url);
   }
 
   String get hqdefault => "https://img.youtube.com/vi/$id/hqdefault.jpg";
@@ -40,6 +45,13 @@ class YoutubeVideo {
 
   String get maxresdefault =>
       "https://img.youtube.com/vi/$id/maxresdefault.jpg";
+
+  Channel? _uploaderChannel;
+  Channel? get uploaderChannelInfo => _uploaderChannel;
+  Future<Channel> getUploaderChannelInfo() async {
+    return _uploaderChannel =
+        await FlashMethodCalls.getChannelInfo(uploaderUrl!);
+  }
 
   factory YoutubeVideo.fromMap(Map<String, dynamic> map) {
     return YoutubeVideo(

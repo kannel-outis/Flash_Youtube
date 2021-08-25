@@ -1,3 +1,5 @@
+import 'package:flash_newpipe_extractor/src/models/channel.dart';
+
 import 'method_calls.dart';
 import 'models/video.dart';
 import 'models/videoInfo.dart';
@@ -9,5 +11,9 @@ class Extract {
 
   Future<YoutubeVideoInfo> getVideoInfoFromUrl(String url) async {
     return await FlashMethodCalls.getVideoInfoFromUrl(url);
+  }
+
+  Future<Channel> getChannelInfo(String channelUrl) async {
+    return await FlashMethodCalls.getChannelInfo(channelUrl);
   }
 }
