@@ -1,10 +1,25 @@
+import 'package:async/async.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/ui/widgets/video_info_tile.dart';
 import 'package:flutter/material.dart';
+import '/utils/utils.dart';
 // import '';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
+
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late final AsyncMemoizer<List<YoutubeVideo>?> _memoizer;
+
+  @override
+  void initState() {
+    super.initState();
+    _memoizer = AsyncMemoizer<List<YoutubeVideo>?>();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +28,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
         toolbarHeight: 70,
-        // elevation: 0.0,
+        elevation: 0.0,
         title: Row(
           children: [
             SizedBox(
@@ -33,7 +48,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: FutureBuilder<List<YoutubeVideo>?>(
-          future: Extract().getTrendingVideos(),
+          future: _memoizer.runOnce(() => Extract().getTrendingVideos()),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return const Center(
@@ -41,11 +56,16 @@ class HomeScreen extends StatelessWidget {
               );
             }
             return Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: EdgeInsets.all(Utils.blockHeight * 1.2),
               child: ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  return VideoInfoTile(video: snapshot.data![index]);
+                  return Column(
+                    children: [
+                      VideoInfoTile(video: snapshot.data![index]),
+                      const SizedBox(height: 10)
+                    ],
+                  );
                 },
               ),
             );

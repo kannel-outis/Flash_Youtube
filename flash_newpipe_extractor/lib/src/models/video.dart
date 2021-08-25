@@ -27,10 +27,19 @@ class YoutubeVideo {
     this.uploadDate,
     this.isUploaderVerified,
   });
-
+  String get id => Utils.getIdFromUrl(url);
   Future<YoutubeVideoInfo> get getFullInformation async {
     return await FlashMethodCalls.getVideoInfoFromUrl(url);
   }
+
+  String get hqdefault => "https://img.youtube.com/vi/$id/hqdefault.jpg";
+
+  String get mqdefault => "https://img.youtube.com/vi/$id/mqdefault.jpg";
+
+  String get sddefault => "https://img.youtube.com/vi/$id/sddefault.jpg";
+
+  String get maxresdefault =>
+      "https://img.youtube.com/vi/$id/maxresdefault.jpg";
 
   factory YoutubeVideo.fromMap(Map<String, dynamic> map) {
     return YoutubeVideo(

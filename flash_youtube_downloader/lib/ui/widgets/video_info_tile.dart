@@ -1,6 +1,7 @@
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
+import '/utils/extensions.dart';
 
 class VideoInfoTile extends StatelessWidget {
   final YoutubeVideo video;
@@ -9,23 +10,24 @@ class VideoInfoTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // color: Colors.red,
-      height: Utils.blockHeight * 28,
+      height: Utils.blockHeight * 31,
       width: double.infinity,
       constraints: const BoxConstraints(
-        maxHeight: 400,
         minHeight: 250,
       ),
       child: Column(
         children: [
           Container(
-            height: Utils.blockHeight * 20,
+            height: Utils.blockHeight * 23,
             // color: Colors.black,
             child: Stack(
               children: [
-                FadeInImageWidget(
+                _FadeInImageWidget(
+                  altImage: video.hqdefault,
                   height: Utils.blockHeight * 20,
-                  url: video.thumbnailUrl!,
+                  url: video.thumbnailUrl!
+                      .replaceAll("hqdefault", "maxresdefault")
+                      .toString(),
                   width: double.infinity,
                   placeHolderChild: Container(
                     height: Utils.blockHeight * 20,
@@ -34,15 +36,15 @@ class VideoInfoTile extends StatelessWidget {
                   ),
                 ),
                 Positioned(
-                  height: 20,
-                  width: 50,
-                  bottom: 20,
+                  bottom: 10,
                   right: 20,
                   child: Container(
-                    color: Colors.black.withOpacity(.5),
+                    color: Colors.black.withOpacity(.7),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     child: Center(
                       child: Text(
-                        video.duration.toString(),
+                        Utils.trimTime(video.duration.toString()),
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
                     ),
@@ -66,7 +68,8 @@ class VideoInfoTile extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+                    padding: EdgeInsets.only(
+                        left: Utils.blockWidth * 2.2, right: Utils.blockWidth),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -74,7 +77,7 @@ class VideoInfoTile extends StatelessWidget {
                           child: Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              video.videoName ?? "name",
+                              video.videoName!,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyText1!
@@ -86,12 +89,12 @@ class VideoInfoTile extends StatelessWidget {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        SizedBox(height: Utils.blockWidth),
                         Flexible(
                           child: Container(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "${video.uploaderName}   •   ${video.viewCount} views  •   ${video.textualUploadDate}",
+                              "${video.uploaderName}   •   ${video.viewCount.toString().convertToViews()} views  •   ${video.textualUploadDate}",
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyText2!
@@ -100,7 +103,7 @@ class VideoInfoTile extends StatelessWidget {
                                   ),
                               textAlign: TextAlign.left,
                               overflow: TextOverflow.ellipsis,
-                              maxLines: 2,
+                              // maxLines: 2,
                             ),
                           ),
                         ),
@@ -118,15 +121,17 @@ class VideoInfoTile extends StatelessWidget {
   }
 }
 
-class FadeInImageWidget extends StatefulWidget {
+class _FadeInImageWidget extends StatefulWidget {
   final String url;
+  final String altImage;
   final double height;
   final double width;
   final Widget placeHolderChild;
-  const FadeInImageWidget({
+  const _FadeInImageWidget({
     Key? key,
     required this.height,
     required this.url,
+    required this.altImage,
     required this.width,
     required this.placeHolderChild,
   }) : super(key: key);
@@ -135,7 +140,7 @@ class FadeInImageWidget extends StatefulWidget {
   _FadeInImageWidgetState createState() => _FadeInImageWidgetState();
 }
 
-class _FadeInImageWidgetState extends State<FadeInImageWidget>
+class _FadeInImageWidgetState extends State<_FadeInImageWidget>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
 
@@ -156,7 +161,15 @@ class _FadeInImageWidgetState extends State<FadeInImageWidget>
   Widget build(BuildContext context) {
     return Image(
       image: NetworkImage(widget.url),
-      // fit: BoxFit.cover,
+      width: double.infinity,
+      fit: BoxFit.fill,
+      errorBuilder: (context, t, u) {
+        return Image(
+          width: double.infinity,
+          fit: BoxFit.fill,
+          image: NetworkImage(widget.altImage),
+        );
+      },
       frameBuilder: (context, child, v, b) {
         if (v == null)
           // ignore: curly_braces_in_flow_control_structures
