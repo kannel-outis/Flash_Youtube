@@ -19,17 +19,16 @@ class Utils {
   static ThemeData themeData(BuildContext context, Brightness brightness) {
     getBlockWidthAndHeight(context);
     final isDarkTheme = brightness == Brightness.dark;
-    print(blockWidth * 2.5);
     return ThemeData(
       brightness: brightness,
       fontFamily: "TT Firs Neue Regular",
       textTheme: TextTheme(
         bodyText1: TextStyle(
-          fontSize: blockWidth * 3.0 < 13 ? 13 : blockWidth * 3.0,
+          fontSize: blockWidth * 2.5 < 13 ? 13 : blockWidth * 2.5,
           color: isDarkTheme ? Colors.white : Colors.black,
         ),
         bodyText2: TextStyle(
-          fontSize: blockWidth * 2.5 < 9.0 ? 8.5 : blockWidth * 2.5,
+          fontSize: blockWidth * 2.0 < 9.0 ? 8.5 : blockWidth * 2.0,
           color: isDarkTheme ? Colors.white : Colors.black,
         ),
         headline3: TextStyle(

@@ -9,24 +9,49 @@ class VideoInfoTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final maxWidth = () {
+      double screenWidth = 0.0;
+      if (MediaQuery.of(context).orientation == Orientation.portrait) {
+        screenWidth =
+            MediaQuery.of(context).size.width - (20 + Utils.blockWidth * 4);
+        if (screenWidth < 550) {
+          return screenWidth;
+        } else if (screenWidth > 550 && screenWidth < 960) {
+          // print(screenWidth);
+          return screenWidth / 2;
+        } else {
+          return screenWidth / 3;
+        }
+      }
+      screenWidth = MediaQuery.of(context).size.height - 20;
+      if (screenWidth < 550) {
+        return screenWidth;
+      } else if (screenWidth > 550 && screenWidth < 960) {
+        // print(screenWidth);
+        return screenWidth / 2;
+      } else {
+        return screenWidth / 3;
+      }
+    }();
     return Container(
-      height: Utils.blockHeight * 31,
-      width: double.infinity,
-      constraints: const BoxConstraints(
-        minHeight: 250,
+      height: Utils.blockHeight * 22,
+      width: maxWidth,
+      constraints: BoxConstraints(
+        // minHeight: 250,
+        minWidth: maxWidth,
       ),
       child: Column(
         children: [
           Container(
-            height: Utils.blockHeight * 23,
-            // color: Colors.black,
+            height: Utils.blockHeight * 12,
+            color: Colors.black,
             child: Stack(
+              // .replaceAll("hqdefault", "maxresdefault")
+              // .toString()
               children: [
                 _FadeInImageWidget(
                   altImage: video.hqdefault,
-                  url: video.thumbnailUrl!
-                      .replaceAll("hqdefault", "maxresdefault")
-                      .toString(),
+                  url: video.thumbnailUrl!,
                   placeHolderChild: Container(
                     height: Utils.blockHeight * 20,
                     width: double.infinity,
@@ -57,24 +82,36 @@ class VideoInfoTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                    height: Utils.blockWidth * 13,
-                    width: Utils.blockWidth * 13,
-                    decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: FutureBuilder<Channel>(
-                      future: video.getUploaderChannelInfo(),
-                      builder: (context, snapshot) {
-                        if (!snapshot.hasData) {
-                          return const CircularProgressIndicator();
-                        }
-                        return _FadeInImageWidget(
-                          url: snapshot.data!.avatarUrl,
-                          placeHolderChild: const SizedBox(),
-                        );
-                      },
-                    )),
+                  height: Utils.blockWidth * 7,
+                  width: Utils.blockWidth * 7,
+                  decoration: BoxDecoration(
+                    color: Colors.yellow,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: video.uploaderChannelInfo == null
+                      ? FutureBuilder<Channel>(
+                          future: video.getUploaderChannelInfo(),
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const CircularProgressIndicator();
+                            }
+                            return ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: _FadeInImageWidget(
+                                url: snapshot.data!.avatarUrl,
+                                placeHolderChild: const SizedBox(),
+                              ),
+                            );
+                          },
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(50),
+                          child: _FadeInImageWidget(
+                            url: video.uploaderChannelInfo!.avatarUrl,
+                            placeHolderChild: const SizedBox(),
+                          ),
+                        ),
+                ),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(
@@ -111,6 +148,7 @@ class VideoInfoTile extends StatelessWidget {
                                     color: Colors.grey,
                                   ),
                               textAlign: TextAlign.left,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               // maxLines: 2,
                             ),

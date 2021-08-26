@@ -48,28 +48,30 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: FutureBuilder<List<YoutubeVideo>?>(
-          future: _memoizer.runOnce(() => Extract().getTrendingVideos()),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            return Padding(
-              padding: EdgeInsets.all(Utils.blockHeight * 1.2),
-              child: ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      VideoInfoTile(video: snapshot.data![index]),
-                      const SizedBox(height: 10)
-                    ],
-                  );
-                },
-              ),
+        future: _memoizer.runOnce(() => Extract().getTrendingVideos()),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          }),
+          }
+          return Padding(
+            padding: EdgeInsets.all(Utils.blockWidth * 2.0),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Wrap(
+                spacing: 10,
+                children: List.generate(
+                  snapshot.data!.length,
+                  (index) => VideoInfoTile(
+                    video: snapshot.data![index],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 }
