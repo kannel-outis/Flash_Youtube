@@ -5,46 +5,17 @@ import '/utils/extensions.dart';
 
 class VideoInfoTile extends StatelessWidget {
   final YoutubeVideo video;
-  const VideoInfoTile({Key? key, required this.video}) : super(key: key);
+  final double maxWidth;
+  const VideoInfoTile({Key? key, required this.video, required this.maxWidth})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final maxWidth = () {
-      double screenWidth = 0.0;
-      if (MediaQuery.of(context).orientation == Orientation.portrait) {
-        screenWidth =
-            MediaQuery.of(context).size.width - (20 + Utils.blockWidth * 4);
-        if (screenWidth < 550) {
-          return screenWidth;
-        } else if (screenWidth > 550 && screenWidth < 960) {
-          // print(screenWidth);
-          return screenWidth / 2;
-        } else {
-          return screenWidth / 3;
-        }
-      }
-      screenWidth = MediaQuery.of(context).size.height - 20;
-      if (screenWidth < 550) {
-        return screenWidth;
-      } else if (screenWidth > 550 && screenWidth < 960) {
-        // print(screenWidth);
-        return screenWidth / 2;
-      } else {
-        return screenWidth / 3;
-      }
-    }();
-    return Container(
-      height: Utils.blockHeight * 22,
-      width: maxWidth,
-      constraints: BoxConstraints(
-        // minHeight: 250,
-        minWidth: maxWidth,
-      ),
+    return SizedBox(
       child: Column(
         children: [
-          Container(
-            height: Utils.blockHeight * 12,
-            color: Colors.black,
+          AspectRatio(
+            aspectRatio: 16 / 9,
             child: Stack(
               // .replaceAll("hqdefault", "maxresdefault")
               // .toString()

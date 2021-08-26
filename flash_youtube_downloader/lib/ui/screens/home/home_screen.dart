@@ -14,6 +14,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late final AsyncMemoizer<List<YoutubeVideo>?> _memoizer;
+  int gridCount = 0;
 
   @override
   void initState() {
@@ -24,6 +25,44 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final maxWidth = () {
+      double screenWidth = 0.0;
+      if (MediaQuery.of(context).orientation == Orientation.portrait) {
+        screenWidth =
+            MediaQuery.of(context).size.width - (20 + Utils.blockWidth * 4);
+        if (screenWidth < 550) {
+          gridCount = 1;
+          return screenWidth;
+        } else if (screenWidth > 550 && screenWidth < 960) {
+          gridCount = 2;
+
+          return screenWidth / 2;
+        } else {
+          gridCount = 3;
+          return screenWidth / 3;
+        }
+      }
+      screenWidth = MediaQuery.of(context).size.height - 20;
+      if (screenWidth < 550) {
+        gridCount = 2;
+        return screenWidth;
+      } else if (screenWidth > 550 && screenWidth < 960) {
+        gridCount = 3;
+        return screenWidth / 2;
+      } else {
+        gridCount = 4;
+        return screenWidth / 3;
+      }
+    }();
+
+    final heightWithMaxHeight = () {
+      if (MediaQuery.of(context).size.width < 550) {
+        return 250;
+      } else if (MediaQuery.of(context).size.width > 700) {
+        return 400;
+      }
+      return Utils.blockHeight * 18;
+    }();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: theme.scaffoldBackgroundColor,
@@ -57,17 +96,41 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return Padding(
             padding: EdgeInsets.all(Utils.blockWidth * 2.0),
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: Wrap(
-                spacing: 10,
-                children: List.generate(
-                  snapshot.data!.length,
-                  (index) => VideoInfoTile(
-                    video: snapshot.data![index],
-                  ),
-                ),
+            // child: SingleChildScrollView(
+            //   physics: const AlwaysScrollableScrollPhysics(),
+            //   child: Wrap(
+            //     spacing: 10,
+            //     children: List.generate(
+            //       snapshot.data!.length,
+            //       (index) => Container(
+            //         color: Colors.black,
+            //         child: VideoInfoTile(
+            //           video: snapshot.data![index],
+            //           maxWidth: maxWidth,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            child: GridView.builder(
+              itemCount: snapshot.data!.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: gridCount,
+                crossAxisSpacing: 10,
+                // mainAxisSpacing: 20,
+
+                ///width / container height to get aspectRatio
+                childAspectRatio: maxWidth / heightWithMaxHeight,
               ),
+              itemBuilder: (context, index) {
+                return Container(
+                  // color: Colors.white,
+                  child: VideoInfoTile(
+                    video: snapshot.data![index],
+                    maxWidth: maxWidth,
+                  ),
+                );
+              },
             ),
           );
         },

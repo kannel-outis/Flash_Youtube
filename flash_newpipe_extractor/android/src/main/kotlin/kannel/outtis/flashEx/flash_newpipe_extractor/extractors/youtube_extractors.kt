@@ -37,7 +37,7 @@ class YoutubeExtractors{
             channelExtractor = YouTube.getChannelExtractor(channelUrl) as YoutubeChannelExtractor
             channelExtractor.fetchPage()
             val returnMap: MutableMap<String, Map<Int, Map<String, Any?>>> = mutableMapOf()
-            val channelMap: MutableMap<String, Any> = mutableMapOf(
+            val channelMap: MutableMap<String, Any?> = mutableMapOf(
                     "channelName" to channelExtractor.name,
                     "channelDescription" to channelExtractor.description,
                     "channelId" to channelExtractor.id,

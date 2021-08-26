@@ -102,7 +102,12 @@ class VideoInfoDecode(){
             itemMap["uploaderUrl"] = item.uploaderUrl
             itemMap["thumbnailUrl"] = item.thumbnailUrl
             itemMap["duration"] = item.duration
-            itemMap["uploadDate"] = item.uploadDate!!.offsetDateTime().toString()
+            if(item.uploadDate == null){
+                itemMap["uploadDate"] = null
+            }else{
+                itemMap["uploadDate"] = item.uploadDate!!.offsetDateTime().toString()
+            }
+
             itemMap["isUploaderVerified"] = item.isUploaderVerified
             return itemMap
         }
