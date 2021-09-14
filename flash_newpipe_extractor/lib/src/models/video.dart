@@ -61,7 +61,7 @@ class YoutubeVideo {
       textualUploadDate: map["textualUploadDate"],
       uploadDate: DateTime.tryParse(
         Utils.retrieveTime(
-          map["textualUploadDate"],
+          map["uploadDate"],
         ),
       ),
       duration: Duration(seconds: map["duration"]),

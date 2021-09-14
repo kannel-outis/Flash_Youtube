@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -21,13 +22,8 @@ class VideoInfoTile extends StatelessWidget {
               // .toString()
               children: [
                 _FadeInImageWidget(
-                  altImage: video.hqdefault,
-                  url: video.thumbnailUrl!,
-                  placeHolderChild: Container(
-                    height: Utils.blockHeight * 20,
-                    width: double.infinity,
-                    color: Theme.of(context).backgroundColor,
-                  ),
+                  url: video.maxresdefault,
+                  altImageUrl: video.hqdefault,
                 ),
                 Positioned(
                   bottom: 10,
@@ -70,7 +66,6 @@ class VideoInfoTile extends StatelessWidget {
                               borderRadius: BorderRadius.circular(50),
                               child: _FadeInImageWidget(
                                 url: snapshot.data!.avatarUrl,
-                                placeHolderChild: const SizedBox(),
                               ),
                             );
                           },
@@ -79,7 +74,6 @@ class VideoInfoTile extends StatelessWidget {
                           borderRadius: BorderRadius.circular(50),
                           child: _FadeInImageWidget(
                             url: video.uploaderChannelInfo!.avatarUrl,
-                            placeHolderChild: const SizedBox(),
                           ),
                         ),
                 ),
@@ -139,68 +133,27 @@ class VideoInfoTile extends StatelessWidget {
   }
 }
 
-class _FadeInImageWidget extends StatefulWidget {
+class _FadeInImageWidget extends StatelessWidget {
   final String url;
-  final String? altImage;
-  final Widget placeHolderChild;
+  final String? altImageUrl;
   const _FadeInImageWidget({
     Key? key,
     required this.url,
-    this.altImage,
-    required this.placeHolderChild,
+    this.altImageUrl,
   }) : super(key: key);
 
   @override
-  _FadeInImageWidgetState createState() => _FadeInImageWidgetState();
-}
-
-class _FadeInImageWidgetState extends State<_FadeInImageWidget>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 600));
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Image(
-      image: NetworkImage(widget.url),
+    return FadeInImage(
       width: double.infinity,
       fit: BoxFit.fill,
-      errorBuilder: (context, t, u) {
-        if (widget.altImage == null) return const SizedBox();
-        return Image(
+      placeholder: MemoryImage(Utils.transparentImage),
+      image: CachedNetworkImageProvider(url),
+      imageErrorBuilder: (context, obj, stackTrace) {
+        return CachedNetworkImage(
+          imageUrl: altImageUrl!,
+          fit: BoxFit.cover,
           width: double.infinity,
-          fit: BoxFit.fill,
-          image: NetworkImage(widget.altImage!),
-        );
-      },
-      frameBuilder: (context, child, v, b) {
-        if (v == null)
-          // ignore: curly_braces_in_flow_control_structures
-          return FadeTransition(
-            opacity: Tween<double>(begin: 0, end: -1).animate(_controller),
-            child: widget.placeHolderChild,
-          );
-        _controller.forward();
-        return Stack(
-          fit: StackFit.expand,
-          children: [
-            FadeTransition(
-              opacity: _controller,
-              child: child,
-            ),
-          ],
         );
       },
     );

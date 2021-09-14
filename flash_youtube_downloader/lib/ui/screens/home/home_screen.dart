@@ -96,35 +96,17 @@ class _HomeScreenState extends State<HomeScreen> {
           }
           return Padding(
             padding: EdgeInsets.all(Utils.blockWidth * 2.0),
-            // child: SingleChildScrollView(
-            //   physics: const AlwaysScrollableScrollPhysics(),
-            //   child: Wrap(
-            //     spacing: 10,
-            //     children: List.generate(
-            //       snapshot.data!.length,
-            //       (index) => Container(
-            //         color: Colors.black,
-            //         child: VideoInfoTile(
-            //           video: snapshot.data![index],
-            //           maxWidth: maxWidth,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             child: GridView.builder(
               itemCount: snapshot.data!.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: gridCount,
-                crossAxisSpacing: 10,
+                crossAxisSpacing: 15,
                 // mainAxisSpacing: 20,
-
                 ///width / container height to get aspectRatio
                 childAspectRatio: maxWidth / heightWithMaxHeight,
               ),
               itemBuilder: (context, index) {
-                return Container(
-                  // color: Colors.white,
+                return SizedBox(
                   child: VideoInfoTile(
                     video: snapshot.data![index],
                     maxWidth: maxWidth,
@@ -134,6 +116,18 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           );
         },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.local_fire_department),
+            label: "",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.trending_down),
+            label: "",
+          ),
+        ],
       ),
     );
   }

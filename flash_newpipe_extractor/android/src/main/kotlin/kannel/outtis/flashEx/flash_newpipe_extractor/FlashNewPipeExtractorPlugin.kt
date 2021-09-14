@@ -15,6 +15,8 @@ import kannel.outtis.flashEx.flash_newpipe_extractor.downloader.FlashDownloader
 import kannel.outtis.flashEx.flash_newpipe_extractor.extractors.YoutubeExtractors
 import kannel.outtis.flashEx.flash_newpipe_extractor.extractors.YoutubeVideoInfoExtractor
 import org.schabi.newpipe.extractor.NewPipe
+import org.schabi.newpipe.extractor.localization.ContentCountry
+import org.schabi.newpipe.extractor.localization.Localization
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -23,7 +25,8 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     val context = flutterPluginBinding.applicationContext
-    NewPipe.init(FlashDownloader.instance())
+//    TODO: always get contentCountry from shared preferences
+    NewPipe.init(FlashDownloader.instance(), Localization.DEFAULT, ContentCountry("NG"))
     val preferences: SharedPreferences = PreferenceManager
             .getDefaultSharedPreferences(context);
     val cookie:String? = preferences.getString("prefs_cookies_key", "");
@@ -75,4 +78,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
     channel.setMethodCallHandler(null)
   }
 }
+
+
+
 
