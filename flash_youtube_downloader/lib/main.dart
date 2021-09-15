@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'ui/screens/home/home_screen.dart';
 import 'utils/utils.dart';
 
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: Utils.themeData(context, Brightness.light),
           darkTheme: Utils.themeData(context, Brightness.dark),
-          home: const HomeScreen(),
+          home: HomeScreen(),
         ),
       ),
     );

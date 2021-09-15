@@ -1,17 +1,25 @@
+import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/utils/extensions.dart';
 
-class VideoInfoTile extends StatelessWidget {
+final channelInfoProvider =
+    FutureProvider.autoDispose.family<Channel, YoutubeVideo>((ref, video) {
+  return AsyncMemoizer<Channel>().runOnce(() => video.getUploaderChannelInfo());
+});
+
+class VideoInfoTile extends ConsumerWidget {
   final YoutubeVideo video;
   final double maxWidth;
   const VideoInfoTile({Key? key, required this.video, required this.maxWidth})
       : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader reader) {
+    final channelFuture = reader(channelInfoProvider(video));
     return SizedBox(
       child: Column(
         children: [
@@ -56,19 +64,17 @@ class VideoInfoTile extends StatelessWidget {
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: video.uploaderChannelInfo == null
-                      ? FutureBuilder<Channel>(
-                          future: video.getUploaderChannelInfo(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return const CircularProgressIndicator();
-                            }
+                      ? channelFuture.when(
+                          data: (data) {
                             return ClipRRect(
                               borderRadius: BorderRadius.circular(50),
                               child: _FadeInImageWidget(
-                                url: snapshot.data!.avatarUrl,
+                                url: data.avatarUrl,
                               ),
                             );
                           },
+                          loading: () => const CircularProgressIndicator(),
+                          error: (obj, stk) => const SizedBox(),
                         )
                       : ClipRRect(
                           borderRadius: BorderRadius.circular(50),

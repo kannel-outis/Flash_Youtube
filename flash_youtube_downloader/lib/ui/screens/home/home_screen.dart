@@ -1,29 +1,25 @@
 import 'package:async/async.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_youtube_downloader/providers/home/current_video_state_provider.dart';
 import 'package:flash_youtube_downloader/ui/widgets/video_info_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/utils/utils.dart';
-// import '';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+final trendingVideos = FutureProvider.autoDispose<List<YoutubeVideo>?>((ref) {
+  return AsyncMemoizer<List<YoutubeVideo>?>()
+      .runOnce(() => Extract().getTrendingVideos());
+});
 
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  late final AsyncMemoizer<List<YoutubeVideo>?> _memoizer;
+// ignore: must_be_immutable
+class HomeScreen extends ConsumerWidget {
+  HomeScreen({Key? key}) : super(key: key);
   int gridCount = 0;
 
   @override
-  void initState() {
-    super.initState();
-    _memoizer = AsyncMemoizer<List<YoutubeVideo>?>();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader ref) {
+    final futureTrendingVideos = ref(trendingVideos);
+    final currentVideoStateNotifier = ref(currentVideoStateProvider.notifier);
     final theme = Theme.of(context);
     final maxWidth = () {
       double screenWidth = 0.0;
@@ -86,34 +82,41 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: FutureBuilder<List<YoutubeVideo>?>(
-        future: _memoizer.runOnce(() => Extract().getTrendingVideos()),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          }
+      body: futureTrendingVideos.when(
+        data: (data) {
           return Padding(
             padding: EdgeInsets.all(Utils.blockWidth * 2.0),
             child: GridView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: data!.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: gridCount,
                 crossAxisSpacing: 15,
-                // mainAxisSpacing: 20,
-                ///width / container height to get aspectRatio
                 childAspectRatio: maxWidth / heightWithMaxHeight,
               ),
               itemBuilder: (context, index) {
-                return SizedBox(
-                  child: VideoInfoTile(
-                    video: snapshot.data![index],
-                    maxWidth: maxWidth,
+                return GestureDetector(
+                  onTap: () {
+                    currentVideoStateNotifier.setVideoState(data[index]);
+                  },
+                  child: SizedBox(
+                    child: VideoInfoTile(
+                      video: data[index],
+                      maxWidth: maxWidth,
+                    ),
                   ),
                 );
               },
             ),
+          );
+        },
+        loading: () {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        },
+        error: (obj, stackTrace) {
+          return const Center(
+            child: Text("Something Went Wrong....."),
           );
         },
       ),

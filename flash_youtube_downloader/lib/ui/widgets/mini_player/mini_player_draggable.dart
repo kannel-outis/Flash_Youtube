@@ -169,23 +169,21 @@ class MiniPlayerController extends ChangeNotifier {
 
   @protected
   _MiniPlayerState? get playerState => _playerState;
+  // ignore: avoid_setters_without_getters
   set setPlayerState(_MiniPlayerState? _state) {
     _playerState = _state;
   }
 
-  // final _MiniPlayerState _playerState = _MiniPlayerState();
   bool _isClosed;
   bool get isClosed => _isClosed;
 
   void closeMiniPlayer() {
-    // _playerState!._controller.fling(velocity: -1);
     _playerState!._controller.reverse();
     _isClosed = true;
     notifyListeners();
   }
 
   void openMiniPlayer() {
-    // _playerState!._controller.fling(velocity: 1);
     _playerState!._controller.forward();
     _isClosed = false;
     notifyListeners();
@@ -210,7 +208,11 @@ class MiniPlayerController extends ChangeNotifier {
     } else {
       _playerState!._controller
           .fling(velocity: _playerState!._controller.value < 0.5 ? -1.0 : 1.0);
-      _isClosed = _playerState!._controller.value < 0.5 ? true : false;
+      if (_playerState!._controller.value < 0.5) {
+        _isClosed = true;
+      } else {
+        _isClosed = false;
+      }
     }
     notifyListeners();
   }

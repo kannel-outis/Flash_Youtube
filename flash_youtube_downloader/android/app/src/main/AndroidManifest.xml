@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kannel.outtis.flashYt.flash_youtube_downloader">
+        <!-- android:label="flash_youtube_downloader" -->
    <application
-        android:label="flash_youtube_downloader"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
