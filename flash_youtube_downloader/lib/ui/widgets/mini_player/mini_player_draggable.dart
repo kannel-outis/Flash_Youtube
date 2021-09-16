@@ -183,18 +183,6 @@ class MiniPlayerController extends ChangeNotifier {
   bool get isClosed => _isClosed;
   double get range => maxHeight - minHeight;
 
-  double get percentage {
-    double percentage = 0.0;
-    _playerState!._controller.addListener(() {
-      final value =
-          _playerState!._calCulateSizeWithController(minHeight, maxHeight);
-      final dragRange = value - minHeight;
-      percentage = (dragRange * 100) / range;
-      notifyListeners();
-    });
-    return percentage;
-  }
-
   void closeMiniPlayer() {
     _playerState!._controller.reverse();
     _isClosed = true;
@@ -210,6 +198,11 @@ class MiniPlayerController extends ChangeNotifier {
   void _handleDragUpdate(DragUpdateDetails details) {
     _playerState!._controller.value -= details.primaryDelta! / maxHeight;
     // print(_playerState!._calCulateSizeWithController(minHeight, maxHeight));
+    final value =
+        _playerState!._calCulateSizeWithController(minHeight, maxHeight);
+    final dragRange = value - minHeight;
+    final percentage = (dragRange * 100) / range;
+    print(percentage);
   }
 
   void _handleDragEnd(DragEndDetails details) {

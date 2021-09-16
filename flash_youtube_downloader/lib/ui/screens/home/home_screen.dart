@@ -39,9 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
       maxHeight: MediaQuery.of(context).size.height,
       startOpen: false,
       animationDuration: const Duration(milliseconds: 300),
-    )..addListener(() {
-        print(_miniPlayerController.percentage);
-      });
+    );
   }
 
   @override
