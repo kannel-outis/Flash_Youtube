@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
           title: 'Flutter Demo',
           theme: Utils.themeData(context, Brightness.light),
           darkTheme: Utils.themeData(context, Brightness.dark),
-          home: HomeScreen(),
+          home: const HomeScreen(),
         ),
       ),
     );

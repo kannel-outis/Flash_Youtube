@@ -399,7 +399,7 @@ packages:
     description:
       path: "."
       ref: dev
-      resolved-ref: "48135512f92b3588d2769cc546d2f4840fddcdbb"
+      resolved-ref: e42d70ee1d8bb0e5fcf2b1276a9f5ef45ef684ef
       url: "https://github.com/kannel-outis/youtube_player_plugin.git"
     source: git
     version: "0.0.1"

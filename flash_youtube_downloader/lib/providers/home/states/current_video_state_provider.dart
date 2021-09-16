@@ -12,6 +12,7 @@ class CurrentVideoStateProvider extends StateNotifier<YoutubeVideo?> {
 
   // ignore: use_setters_to_change_properties
   void setVideoState(YoutubeVideo video) {
+    state = null;
     state = video;
   }
 

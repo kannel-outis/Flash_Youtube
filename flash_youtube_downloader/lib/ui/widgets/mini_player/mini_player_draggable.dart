@@ -31,6 +31,7 @@ class _MiniPlayerState extends State<MiniPlayer>
   @override
   void initState() {
     super.initState();
+    widget.miniPlayerController._playerState = this;
     final _value = () {
       if (widget.miniPlayerController.startOpen != null &&
           widget.miniPlayerController.startOpen == true) {
@@ -39,7 +40,6 @@ class _MiniPlayerState extends State<MiniPlayer>
         return 0.0;
       }
     }();
-    widget.miniPlayerController._playerState = this;
     _controller = AnimationController(
       vsync: this,
       duration: widget.miniPlayerController.animationDuration,
@@ -79,7 +79,8 @@ class _MiniPlayerState extends State<MiniPlayer>
                     MediaQuery.of(context).size.width,
                     valueMultiplier: 6.5),
                 0),
-            color: Colors.white,
+            // color: Colors.white,
+            color: Theme.of(context).scaffoldBackgroundColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -167,6 +168,10 @@ class MiniPlayerController extends ChangeNotifier {
 
   _MiniPlayerState? _playerState;
 
+  factory MiniPlayerController.nil() {
+    return MiniPlayerController(minHeight: 0, maxHeight: 0, startOpen: true);
+  }
+
   @protected
   _MiniPlayerState? get playerState => _playerState;
   // ignore: avoid_setters_without_getters
@@ -176,6 +181,19 @@ class MiniPlayerController extends ChangeNotifier {
 
   bool _isClosed;
   bool get isClosed => _isClosed;
+  double get range => maxHeight - minHeight;
+
+  double get percentage {
+    double percentage = 0.0;
+    _playerState!._controller.addListener(() {
+      final value =
+          _playerState!._calCulateSizeWithController(minHeight, maxHeight);
+      final dragRange = value - minHeight;
+      percentage = (dragRange * 100) / range;
+      notifyListeners();
+    });
+    return percentage;
+  }
 
   void closeMiniPlayer() {
     _playerState!._controller.reverse();
@@ -191,6 +209,7 @@ class MiniPlayerController extends ChangeNotifier {
 
   void _handleDragUpdate(DragUpdateDetails details) {
     _playerState!._controller.value -= details.primaryDelta! / maxHeight;
+    // print(_playerState!._calCulateSizeWithController(minHeight, maxHeight));
   }
 
   void _handleDragEnd(DragEndDetails details) {
