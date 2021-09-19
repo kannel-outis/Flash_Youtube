@@ -30,10 +30,13 @@ class MyApp extends StatelessWidget {
           //       value.getStreamOfQuality<VideoAudioStream>(Quality.large));
           // });
           _video = await extract.getTrendingVideos().then((value) => value![0]);
-          await _video!.getUploaderChannelInfo();
-          _video!.uploaderChannelInfo!.videoUploads.forEach((element) {
-            print(element.videoName);
+          await _video!.getFullInformation.then((value) {
+            print(value.relatedVideos.length);
+            print(value.relatedVideos[5].videoName);
           });
+          // _video!.uploaderChannelInfo!.videoUploads.forEach((element) {
+          //   print(element.videoName);
+          // });
         },
       ),
     ));

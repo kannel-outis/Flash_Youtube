@@ -1,5 +1,6 @@
 import 'package:flash_newpipe_extractor/src/models/_streamOfType_.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/streams.dart';
+import 'package:flash_newpipe_extractor/src/models/video.dart';
 import 'package:flash_newpipe_extractor/src/utils/enums.dart';
 
 import '../utils/utils.dart';
@@ -48,10 +49,12 @@ class YoutubeVideoInfo {
   List<AudioOnlyStream> _audioOnlyStreams = [];
   List<VideoOnlyStream> _videoOnlyStreams = [];
   List<VideoAudioStream> _videoAudioStreams = [];
+  List<YoutubeVideo> _relatedVideos = [];
 
   List<AudioOnlyStream> get audioOnlyStreams => _audioOnlyStreams;
   List<VideoOnlyStream> get videoOnlyStreams => _videoOnlyStreams;
   List<VideoAudioStream> get videoAudioStreams => _videoAudioStreams;
+  List<YoutubeVideo> get relatedVideos => _relatedVideos;
 
   void addAudioOnlyStream(AudioOnlyStream stream) {
     _audioOnlyStreams.add(stream);
@@ -63,6 +66,10 @@ class YoutubeVideoInfo {
 
   void addVideoAudioStream(VideoAudioStream stream) {
     _videoAudioStreams.add(stream);
+  }
+
+  void addRelatedVideo(YoutubeVideo relatedVideo) {
+    _relatedVideos.add(relatedVideo);
   }
 
   StreamOfType<T> getStreamOfQuality<T extends Streams>(Quality quality) {

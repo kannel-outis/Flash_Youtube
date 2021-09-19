@@ -14,13 +14,10 @@ class YoutubeExtractors{
 
 
         fun getTrendingPage(): Map<Int, Map<String, Any?>>{
-            var trendingExtractor: YoutubeTrendingExtractor? = null
-            var itemsPage : ListExtractor.InfoItemsPage<StreamInfoItem>? = null
-            trendingExtractor =  YouTube.kioskList.defaultKioskExtractor as YoutubeTrendingExtractor
+            val trendingExtractor =  YouTube.kioskList.defaultKioskExtractor as YoutubeTrendingExtractor
 
                 trendingExtractor.fetchPage()
-                itemsPage = trendingExtractor.initialPage
-                println(trendingExtractor.initialPage.hasNextPage())
+                val itemsPage = trendingExtractor.initialPage
                 val streamInfoItems = itemsPage.items
                 val itemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
                 for (i in 0 until streamInfoItems.size) {
@@ -33,8 +30,7 @@ class YoutubeExtractors{
         }
 
         fun getChannelInfo(channelUrl: String): Map<String, Map<Int, Map<String, Any?>>> {
-            var channelExtractor: YoutubeChannelExtractor? = null
-            channelExtractor = YouTube.getChannelExtractor(channelUrl) as YoutubeChannelExtractor
+           val channelExtractor = YouTube.getChannelExtractor(channelUrl) as YoutubeChannelExtractor
             channelExtractor.fetchPage()
             val returnMap: MutableMap<String, Map<Int, Map<String, Any?>>> = mutableMapOf()
             val channelMap: MutableMap<String, Any?> = mutableMapOf(

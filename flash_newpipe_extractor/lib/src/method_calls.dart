@@ -62,6 +62,11 @@ class FlashMethodCalls {
       final stream = VideoAudioStream.fromMap(value);
       fullinfo.addVideoAudioStream(stream);
     });
+
+    resultMap["relatedVideos"]!.forEach((key, value) {
+      final video = YoutubeVideo.fromMap(value);
+      fullinfo.addRelatedVideo(video);
+    });
     return fullinfo;
   }
 
