@@ -1,4 +1,6 @@
+import 'package:flash_newpipe_extractor/src/method_calls.dart';
 import 'package:flash_newpipe_extractor/src/models/_streamOfType_.dart';
+import 'package:flash_newpipe_extractor/src/models/comments.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/streams.dart';
 import 'package:flash_newpipe_extractor/src/models/video.dart';
 import 'package:flash_newpipe_extractor/src/utils/enums.dart';
@@ -50,11 +52,17 @@ class YoutubeVideoInfo {
   List<VideoOnlyStream> _videoOnlyStreams = [];
   List<VideoAudioStream> _videoAudioStreams = [];
   List<YoutubeVideo> _relatedVideos = [];
+  Comments? _comments;
 
   List<AudioOnlyStream> get audioOnlyStreams => _audioOnlyStreams;
   List<VideoOnlyStream> get videoOnlyStreams => _videoOnlyStreams;
   List<VideoAudioStream> get videoAudioStreams => _videoAudioStreams;
   List<YoutubeVideo> get relatedVideos => _relatedVideos;
+  Comments? get comments => _comments;
+
+  Future<Comments?> getComments() async {
+    return _comments = await FlashMethodCalls.getvideoComments(url);
+  }
 
   void addAudioOnlyStream(AudioOnlyStream stream) {
     _audioOnlyStreams.add(stream);

@@ -1,5 +1,6 @@
 package kannel.outtis.flashEx.flash_newpipe_extractor.decoders
 
+import org.schabi.newpipe.extractor.comments.CommentsInfoItem
 import org.schabi.newpipe.extractor.stream.StreamExtractor
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
@@ -109,6 +110,20 @@ class VideoInfoDecode(){
             }
 
             itemMap["isUploaderVerified"] = item.isUploaderVerified
+            return itemMap
+        }
+
+        fun decodeCommentsToMap(item: CommentsInfoItem): Map<String, Any?>{
+            val itemMap: MutableMap<String, Any?> = mutableMapOf()
+            itemMap["commentId"] = item.commentId
+            itemMap["commentText"] = item.commentText
+            itemMap["isHeartedByUploader"] = item.isHeartedByUploader
+            itemMap["isPinned"] = item.isPinned
+            itemMap["likeCount"] = item.likeCount
+            itemMap["textualUploadDate"] = item.textualUploadDate
+            itemMap["uploaderAvatarUrl"] = item.uploaderAvatarUrl
+            itemMap["uploaderName"] = item.uploaderName
+            itemMap["uploaderUrl"] = item.uploaderUrl
             return itemMap
         }
     }

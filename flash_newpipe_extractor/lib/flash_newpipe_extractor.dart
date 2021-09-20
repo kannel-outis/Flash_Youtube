@@ -7,3 +7,4 @@ export 'src/models/stream/videoOnlyStream.dart';
 export 'src/models/stream/audioOnlyStream.dart';
 export 'src/models/stream/videoAudioStream.dart';
 export 'src/utils/enums.dart';
+export 'src/error/error.dart';

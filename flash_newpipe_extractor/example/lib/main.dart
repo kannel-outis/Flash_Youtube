@@ -29,14 +29,24 @@ class MyApp extends StatelessWidget {
           //   value![70].getFullInformation.then((value) =>
           //       value.getStreamOfQuality<VideoAudioStream>(Quality.large));
           // });
-          _video = await extract.getTrendingVideos().then((value) => value![0]);
-          await _video!.getFullInformation.then((value) {
-            print(value.relatedVideos.length);
-            print(value.relatedVideos[5].videoName);
+          _video = await extract.getTrendingVideos().then((value) => value![6]);
+          await _video!.getFullInformation.then((value) async {
+            value.getComments().then(
+              (value) {
+                value!.comments!.forEach((element) {
+                  print(element.commentText);
+                });
+              },
+            );
           });
-          // _video!.uploaderChannelInfo!.videoUploads.forEach((element) {
-          //   print(element.videoName);
-          // });
+
+          // _video!.getUploaderChannelInfo().then(
+          //       (value) => value!.videoUploads.forEach(
+          //         (element) {
+          //           print(element.videoName);
+          //         },
+          //       ),
+          //     );
         },
       ),
     ));

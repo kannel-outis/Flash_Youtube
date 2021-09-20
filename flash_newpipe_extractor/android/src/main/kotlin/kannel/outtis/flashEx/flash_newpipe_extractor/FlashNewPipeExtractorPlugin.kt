@@ -64,6 +64,13 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
             result.success(channelInfo)
           }
         }
+        call.method.equals("getComments")->{
+          val url = call.argument<String>("url")
+          val comments = YoutubeVideoInfoExtractor.getCommentsFromUrl(url!!)
+          handler.post {
+            result.success(comments)
+          }
+        }
           else -> {
             handler.post(Runnable {
               result.notImplemented()
