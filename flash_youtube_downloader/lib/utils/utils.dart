@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 class Utils {
   static late double blockHeight;
   static late double blockWidth;
+  static late Orientation orientation;
 
   static void getBlockWidthAndHeight(BuildContext context) {
-    if (MediaQuery.of(context).orientation == Orientation.portrait) {
+    orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.portrait) {
       blockHeight = MediaQuery.of(context).size.height / 100;
       blockWidth = MediaQuery.of(context).size.width / 100;
     } else {
@@ -43,6 +45,7 @@ class Utils {
           color: isDarkTheme ? Colors.white : Colors.black,
         ),
       ),
+      primaryIconTheme: IconThemeData(size: blockWidth * 3),
     );
   }
 

@@ -59,9 +59,6 @@ class _MiniPlayerState extends State<MiniPlayer>
   void didUpdateWidget(covariant MiniPlayer oldWidget) {
     super.didUpdateWidget(oldWidget);
     widget.miniPlayerController._playerState = this;
-    if (oldWidget.miniPlayerController != widget.miniPlayerController) {
-      setState(() {});
-    }
   }
 
   @override
@@ -180,8 +177,8 @@ class MiniPlayerController extends ChangeNotifier {
     _playerState = _state;
   }
 
-  bool _isClosed = true;
-  bool get isClosed => _isClosed;
+  bool? _isClosed;
+  bool get isClosed => _isClosed ?? true;
 
   void closeMiniPlayer() {
     _playerState!._controller.reverse();
@@ -197,6 +194,7 @@ class MiniPlayerController extends ChangeNotifier {
 
   void _handleDragUpdate(DragUpdateDetails details) {
     _playerState!._controller.value -= details.primaryDelta! / maxHeight;
+    // notifyListeners();
     // print(_playerState!._calCulateSizeWithController(minHeight, maxHeight));
   }
 
@@ -221,6 +219,6 @@ class MiniPlayerController extends ChangeNotifier {
         _isClosed = false;
       }
     }
-    notifyListeners();
+    // notifyListeners();
   }
 }

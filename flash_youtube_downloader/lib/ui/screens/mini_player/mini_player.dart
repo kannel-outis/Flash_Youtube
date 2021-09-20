@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/providers/home/states/current_video_state_provider.dart';
 import 'package:flash_youtube_downloader/ui/screens/home/home_screen.dart';
+import 'package:flash_youtube_downloader/ui/widgets/comment_tile.dart';
 import 'package:flash_youtube_downloader/ui/widgets/grid_view_widget.dart';
 import 'package:flash_youtube_downloader/ui/widgets/info_icon.dart';
 import 'package:flash_youtube_downloader/ui/widgets/mini_player/mini_player_draggable.dart';
@@ -129,7 +130,7 @@ class MiniPlayerWidget extends HookWidget {
                 children: [
                   AnimatedContainer(
                     duration: const Duration(milliseconds: 300),
-                    height: (Utils.blockHeight * 15) + containerHeight.value,
+                    height: (Utils.blockHeight * 13.5) + containerHeight.value,
                     decoration: const BoxDecoration(
                         // color: Colors.black,
                         ),
@@ -209,7 +210,7 @@ class MiniPlayerWidget extends HookWidget {
                           ),
 
                           ///likes, dislikes, share and download / save
-                          Container(
+                          SizedBox(
                             // color: Colors.pink,
                             height: Utils.blockHeight * 5,
                             child: Row(
@@ -257,13 +258,13 @@ class MiniPlayerWidget extends HookWidget {
                               ),
                               // color: Colors.white,
                             ),
-                            height: Utils.blockHeight * 5,
+                            height: Utils.blockHeight * 3.5,
                             padding: const EdgeInsets.symmetric(horizontal: 17),
                             child: Row(
                               children: [
                                 Container(
-                                  height: 60,
-                                  width: 60,
+                                  height: Utils.blockWidth * 7,
+                                  width: Utils.blockWidth * 7,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(50),
                                   ),
@@ -353,8 +354,7 @@ class MiniPlayerWidget extends HookWidget {
                         ? useProvider(
                                 commentsprovider(currentVideoState.videoInfo!))
                             .when(
-                            data: (data) =>
-                                Text(data!.comments![0].commentText!),
+                            data: (data) => const SizedBox(),
                             loading: () => const Center(
                               child: CircularProgressIndicator(),
                             ),
@@ -362,9 +362,11 @@ class MiniPlayerWidget extends HookWidget {
                               child: Text("Something went wrong. comments off"),
                             ),
                           )
-                        : Center(
-                            child: Text(currentVideoState.videoInfo!.comments!
-                                .comments![0].commentText!),
+                        : Column(
+                            children: currentVideoState
+                                .videoInfo!.comments!.comments!
+                                .map((e) => CommentTile(e: e))
+                                .toList(),
                           ),
                   ),
                 ],

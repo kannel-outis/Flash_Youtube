@@ -28,94 +28,84 @@ final youtubePlayerController =
   return YoutubeControllerState();
 });
 
+final miniPlayerC = ChangeNotifierProvider<MiniPlayerController>((ref) {
+  return MiniPlayerController(
+      minHeight: Utils.blockHeight * 13,
+      maxHeight: Utils.blockHeight * 100,
+      startOpen: false,
+      animationDuration: const Duration(milliseconds: 100));
+});
+
 // ignore: must_be_immutable
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int gridCount = 0;
-  MiniPlayerController _miniPlayerController = MiniPlayerController.nil();
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _miniPlayerController = MiniPlayerController(
-      minHeight: (MediaQuery.of(context).size.height / 100) * 13,
-      maxHeight: MediaQuery.of(context).size.height,
-      startOpen: false,
-      animationDuration: const Duration(milliseconds: 100),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer(builder: (context, watch, child) {
-      final theme = Theme.of(context);
-      final currentVideoState = watch(currentVideoStateProvider);
-      return Scaffold(
-        body: CustomWillScope(
-          controller: _miniPlayerController,
-          child: Stack(
-            children: [
-              Scaffold(
-                appBar: AppBar(
-                  backgroundColor: theme.scaffoldBackgroundColor,
-                  toolbarHeight: 70,
-                  elevation: 0.0,
-                  title: Row(
-                    children: [
-                      SizedBox(
-                        child: Image.asset(
-                          "assets/icons/youtube.png",
-                          scale: 18.0,
-                        ),
-                      ),
-                      const Text("Trending"),
-                    ],
-                  ),
-                  actions: const [
-                    Icon(Icons.search),
+  Widget build(BuildContext context, ScopedReader watch) {
+    final theme = Theme.of(context);
+    final currentVideoState = watch(currentVideoStateProvider);
+    final _miniPlayerController = watch(miniPlayerC);
+    return Scaffold(
+      body: CustomWillScope(
+        controller: _miniPlayerController,
+        child: Stack(
+          children: [
+            Scaffold(
+              appBar: AppBar(
+                backgroundColor: theme.scaffoldBackgroundColor,
+                toolbarHeight: 70,
+                elevation: 0.0,
+                title: Row(
+                  children: [
                     SizedBox(
-                      width: 20,
+                      child: Image.asset(
+                        "assets/icons/youtube.png",
+                        scale: 18.0,
+                      ),
                     ),
+                    const Text("Trending"),
                   ],
                 ),
-                body: _Trending(_miniPlayerController),
+                actions: const [
+                  Icon(Icons.search),
+                  SizedBox(
+                    width: 20,
+                  ),
+                ],
               ),
-              if (currentVideoState != null)
-                MiniPlayerWidget(controller: _miniPlayerController)
-              else
-                const SizedBox(),
-            ],
-          ),
+              body: _Trending(_miniPlayerController),
+            ),
+            if (currentVideoState != null)
+              MiniPlayerWidget(controller: _miniPlayerController)
+            else
+              const SizedBox(),
+          ],
         ),
-        // bottomNavigationBar: BottomNavigationBar(
-        //   items: const [
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.local_fire_department),
-        //       label: "",
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.trending_down),
-        //       label: "",
-        //     ),
-        //   ],
-        // ),
-      );
-    });
+      ),
+      // bottomNavigationBar: BottomNavigationBar(
+      //   items: const [
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.local_fire_department),
+      //       label: "",
+      //     ),
+      //     BottomNavigationBarItem(
+      //       icon: Icon(Icons.trending_down),
+      //       label: "",
+      //     ),
+      //   ],
+      // ),
+    );
   }
 }
 
+// ignore: must_be_immutable
 class _Trending extends ConsumerWidget {
   final MiniPlayerController _miniPlayerController;
-  const _Trending(this._miniPlayerController);
+  _Trending(this._miniPlayerController);
+  int gridCount = 0;
+
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    int gridCount = 0;
     final futureTrendingVideos = watch(trendingVideos);
 
     final maxWidth = () {
