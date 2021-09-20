@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
+        // showPerformanceOverlay: true,
         builder: (context, child) => MaterialApp(
           title: 'Flutter Demo',
           theme: Utils.themeData(context, Brightness.light),

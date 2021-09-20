@@ -7,15 +7,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/utils/extensions.dart';
 
 final channelInfoProvider =
-    FutureProvider.autoDispose.family<Channel, YoutubeVideo>((ref, video) {
-  return AsyncMemoizer<Channel>().runOnce(() => video.getUploaderChannelInfo());
+    FutureProvider.family<Channel?, YoutubeVideo>((ref, video) {
+  return AsyncMemoizer<Channel?>()
+      .runOnce(() => video.getUploaderChannelInfo());
 });
 
 class VideoInfoTile extends ConsumerWidget {
   final YoutubeVideo video;
   final double maxWidth;
-  const VideoInfoTile({Key? key, required this.video, required this.maxWidth})
-      : super(key: key);
+  final bool showChannelProfilePic;
+  const VideoInfoTile({
+    Key? key,
+    required this.video,
+    required this.maxWidth,
+    this.showChannelProfilePic = true,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader reader) {
@@ -56,33 +62,38 @@ class VideoInfoTile extends ConsumerWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  height: Utils.blockWidth * 7,
-                  width: Utils.blockWidth * 7,
-                  decoration: BoxDecoration(
-                    color: Colors.yellow,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: video.uploaderChannelInfo == null
-                      ? channelFuture.when(
-                          data: (data) {
-                            return ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: _FadeInImageWidget(
-                                url: data.avatarUrl,
-                              ),
-                            );
-                          },
-                          loading: () => const CircularProgressIndicator(),
-                          error: (obj, stk) => const SizedBox(),
-                        )
-                      : ClipRRect(
-                          borderRadius: BorderRadius.circular(50),
-                          child: _FadeInImageWidget(
-                            url: video.uploaderChannelInfo!.avatarUrl,
+                if (!showChannelProfilePic)
+                  const SizedBox()
+                else
+                  Container(
+                    height: Utils.blockWidth * 7,
+                    width: Utils.blockWidth * 7,
+                    decoration: BoxDecoration(
+                      color: Colors.yellow,
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                    child: video.uploaderChannelInfo == null
+                        ? channelFuture.when(
+                            data: (data) {
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(50),
+                                child: _FadeInImageWidget(
+                                  url: data != null
+                                      ? data.avatarUrl
+                                      : Utils.dummyPictureUrl,
+                                ),
+                              );
+                            },
+                            loading: () => const CircularProgressIndicator(),
+                            error: (obj, stk) => const SizedBox(),
+                          )
+                        : ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: _FadeInImageWidget(
+                              url: video.uploaderChannelInfo!.avatarUrl,
+                            ),
                           ),
-                        ),
-                ),
+                  ),
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(

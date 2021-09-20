@@ -8,15 +8,13 @@ class MiniPlayer extends StatefulWidget {
   final Widget? child;
   final Widget? playerChild;
   final Widget? collapseChild;
-  final Function(double)? onDragUpdate;
-  final Function()? onDragEnd;
+  final Function(double)? percentage;
   const MiniPlayer({
     Key? key,
     this.child,
+    this.percentage,
     this.playerChild,
     this.collapseChild,
-    this.onDragEnd,
-    this.onDragUpdate,
     required this.miniPlayerController,
   }) : super(key: key);
 
@@ -31,7 +29,10 @@ class _MiniPlayerState extends State<MiniPlayer>
   @override
   void initState() {
     super.initState();
+
     widget.miniPlayerController._playerState = this;
+    final range = widget.miniPlayerController.maxHeight -
+        widget.miniPlayerController.minHeight;
     final _value = () {
       if (widget.miniPlayerController.startOpen != null &&
           widget.miniPlayerController.startOpen == true) {
@@ -44,7 +45,14 @@ class _MiniPlayerState extends State<MiniPlayer>
       vsync: this,
       duration: widget.miniPlayerController.animationDuration,
       value: _value,
-    );
+    )..addListener(() {
+        final value = _calCulateSizeWithController(
+            widget.miniPlayerController.minHeight,
+            widget.miniPlayerController.maxHeight);
+        final dragRange = value - widget.miniPlayerController.minHeight;
+        final percentage = (dragRange * 100) / range;
+        widget.percentage?.call(percentage);
+      });
   }
 
   @override
@@ -99,15 +107,10 @@ class _MiniPlayerState extends State<MiniPlayer>
                             onVerticalDragEnd: (e) {
                               widget.miniPlayerController._handleDragEnd(e);
                               setState(() {});
-                              if (widget.onDragEnd != null) widget.onDragEnd!();
                             },
                             onVerticalDragUpdate: (e) {
                               widget.miniPlayerController._handleDragUpdate(e);
                               setState(() {});
-                              if (widget.onDragUpdate != null) {
-                                widget.onDragUpdate!(
-                                    _calCulateSizeWithController(8, 17));
-                              }
                             },
                             child: const AspectRatio(
                               aspectRatio: 2.0,
@@ -122,7 +125,7 @@ class _MiniPlayerState extends State<MiniPlayer>
                 Expanded(
                   child: AnimatedOpacity(
                     duration: const Duration(milliseconds: 500),
-                    opacity: _controller.value >= 0.7 ? 1 : 0,
+                    opacity: _controller.value >= 0.8 ? 1 : 0,
                     child: widget.child ?? const SizedBox(),
                   ),
                 ),
@@ -179,9 +182,8 @@ class MiniPlayerController extends ChangeNotifier {
     _playerState = _state;
   }
 
-  bool _isClosed;
+  bool _isClosed = true;
   bool get isClosed => _isClosed;
-  double get range => maxHeight - minHeight;
 
   void closeMiniPlayer() {
     _playerState!._controller.reverse();
@@ -198,11 +200,6 @@ class MiniPlayerController extends ChangeNotifier {
   void _handleDragUpdate(DragUpdateDetails details) {
     _playerState!._controller.value -= details.primaryDelta! / maxHeight;
     // print(_playerState!._calCulateSizeWithController(minHeight, maxHeight));
-    final value =
-        _playerState!._calCulateSizeWithController(minHeight, maxHeight);
-    final dragRange = value - minHeight;
-    final percentage = (dragRange * 100) / range;
-    print(percentage);
   }
 
   void _handleDragEnd(DragEndDetails details) {

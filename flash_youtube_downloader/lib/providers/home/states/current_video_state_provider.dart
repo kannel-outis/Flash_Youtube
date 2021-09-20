@@ -2,8 +2,7 @@ import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final currentVideoStateProvider =
-    StateNotifierProvider.autoDispose<CurrentVideoStateProvider, YoutubeVideo?>(
-        (ref) {
+    StateNotifierProvider<CurrentVideoStateProvider, YoutubeVideo?>((ref) {
   return CurrentVideoStateProvider(null);
 });
 

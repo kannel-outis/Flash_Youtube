@@ -59,6 +59,9 @@ class Utils {
     }
   }
 
+  static const dummyPictureUrl =
+      "http://dreamvilla.life/wp-content/uploads/2017/07/dummy-profile-pic-300x300.png";
+
   static final Uint8List transparentImage = Uint8List.fromList(<int>[
     0x89,
     0x50,
