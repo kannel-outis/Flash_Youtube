@@ -63,11 +63,13 @@ class YoutubeVideo {
       uploaderUrl: map["uploaderUrl"],
       isUploaderVerified: map["isUploaderVerified"],
       textualUploadDate: map["textualUploadDate"],
-      uploadDate: DateTime.tryParse(
-        Utils.retrieveTime(
-          map["uploadDate"],
-        ),
-      ),
+      uploadDate: map["uploadDate"] != null
+          ? DateTime.tryParse(
+              Utils.retrieveTime(
+                map["uploadDate"],
+              ),
+            )
+          : DateTime(1999),
       duration: Duration(seconds: map["duration"]),
       thumbnailUrl: map["thumbnailUrl"],
       uploaderName: map["uploaderName"],
