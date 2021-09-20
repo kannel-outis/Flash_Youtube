@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flash_newpipe_extractor/src/error/error.dart';
 import 'package:flash_newpipe_extractor/src/models/channel.dart';
 import 'package:flash_newpipe_extractor/src/models/comments.dart';
-import 'package:flash_newpipe_extractor/src/models/comments_info.dart';
+import 'package:flash_newpipe_extractor/src/models/comment_info.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/audioOnlyStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoAudioStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoOnlyStream.dart';
