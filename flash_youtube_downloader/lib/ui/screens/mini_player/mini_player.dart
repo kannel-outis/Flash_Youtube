@@ -1,4 +1,6 @@
+import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/providers/home/states/current_video_state_provider.dart';
 import 'package:flash_youtube_downloader/ui/screens/home/home_screen.dart';
 import 'package:flash_youtube_downloader/ui/widgets/grid_view_widget.dart';
@@ -11,6 +13,11 @@ import 'package:flutter_html/flutter_html.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:youtube_player/youtube_player.dart';
 import '/utils/extensions.dart';
+
+final commentsprovider =
+    FutureProvider.family<Comments?, YoutubeVideoInfo>((ref, videoInfo) {
+  return AsyncMemoizer<Comments?>().runOnce(() => videoInfo.getComments());
+});
 
 // ignore: unused_element
 class MiniPlayerWidget extends HookWidget {
@@ -102,8 +109,19 @@ class MiniPlayerWidget extends HookWidget {
                   loading: () => const Center(
                     child: CircularProgressIndicator(),
                   ),
-                  error: (o, s) => const Center(
-                    child: Text("Something happened"),
+                  error: (o, s) => Center(
+                    child: Column(
+                      children: [
+                        const Text("Something happened"),
+                        const SizedBox(height: 10),
+                        IconButton(
+                          onPressed: () {
+                            context.refresh(videoStateFullInfo);
+                          },
+                          icon: const Icon(Icons.refresh_outlined),
+                        )
+                      ],
+                    ),
                   ),
                 ),
               )
@@ -328,6 +346,26 @@ class MiniPlayerWidget extends HookWidget {
                       showUploaderPic: false,
                       physics: const NeverScrollableScrollPhysics(),
                     ),
+                  ),
+                  const SizedBox(height: 15),
+                  Container(
+                    child: currentVideoState.videoInfo!.comments == null
+                        ? useProvider(
+                                commentsprovider(currentVideoState.videoInfo!))
+                            .when(
+                            data: (data) =>
+                                Text(data!.comments![0].commentText!),
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            error: (o, s) => const Center(
+                              child: Text("Something went wrong. comments off"),
+                            ),
+                          )
+                        : Center(
+                            child: Text(currentVideoState.videoInfo!.comments!
+                                .comments![0].commentText!),
+                          ),
                   ),
                 ],
               ),

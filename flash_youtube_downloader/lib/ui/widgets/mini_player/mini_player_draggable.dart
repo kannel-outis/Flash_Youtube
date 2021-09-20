@@ -106,11 +106,9 @@ class _MiniPlayerState extends State<MiniPlayer>
                             behavior: HitTestBehavior.translucent,
                             onVerticalDragEnd: (e) {
                               widget.miniPlayerController._handleDragEnd(e);
-                              setState(() {});
                             },
                             onVerticalDragUpdate: (e) {
                               widget.miniPlayerController._handleDragUpdate(e);
-                              setState(() {});
                             },
                             child: const AspectRatio(
                               aspectRatio: 2.0,

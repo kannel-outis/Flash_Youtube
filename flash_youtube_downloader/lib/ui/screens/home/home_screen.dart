@@ -3,6 +3,7 @@ import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/providers/home/states/current_video_state_provider.dart';
 import 'package:flash_youtube_downloader/providers/home/states/youtube_controller_state.dart';
 import 'package:flash_youtube_downloader/ui/screens/mini_player/mini_player.dart';
+import 'package:flash_youtube_downloader/ui/widgets/custom_will_scope.dart';
 import 'package:flash_youtube_downloader/ui/widgets/grid_view_widget.dart';
 import 'package:flash_youtube_downloader/ui/widgets/mini_player/mini_player_draggable.dart';
 import 'package:flutter/material.dart';
@@ -56,38 +57,41 @@ class _HomeScreenState extends State<HomeScreen> {
       final theme = Theme.of(context);
       final currentVideoState = watch(currentVideoStateProvider);
       return Scaffold(
-        body: Stack(
-          children: [
-            Scaffold(
-              appBar: AppBar(
-                backgroundColor: theme.scaffoldBackgroundColor,
-                toolbarHeight: 70,
-                elevation: 0.0,
-                title: Row(
-                  children: [
-                    SizedBox(
-                      child: Image.asset(
-                        "assets/icons/youtube.png",
-                        scale: 18.0,
+        body: CustomWillScope(
+          controller: _miniPlayerController,
+          child: Stack(
+            children: [
+              Scaffold(
+                appBar: AppBar(
+                  backgroundColor: theme.scaffoldBackgroundColor,
+                  toolbarHeight: 70,
+                  elevation: 0.0,
+                  title: Row(
+                    children: [
+                      SizedBox(
+                        child: Image.asset(
+                          "assets/icons/youtube.png",
+                          scale: 18.0,
+                        ),
                       ),
+                      const Text("Trending"),
+                    ],
+                  ),
+                  actions: const [
+                    Icon(Icons.search),
+                    SizedBox(
+                      width: 20,
                     ),
-                    const Text("Trending"),
                   ],
                 ),
-                actions: const [
-                  Icon(Icons.search),
-                  SizedBox(
-                    width: 20,
-                  ),
-                ],
+                body: _Trending(_miniPlayerController),
               ),
-              body: _Trending(_miniPlayerController),
-            ),
-            if (currentVideoState != null)
-              MiniPlayerWidget(controller: _miniPlayerController)
-            else
-              const SizedBox(),
-          ],
+              if (currentVideoState != null)
+                MiniPlayerWidget(controller: _miniPlayerController)
+              else
+                const SizedBox(),
+            ],
+          ),
         ),
         // bottomNavigationBar: BottomNavigationBar(
         //   items: const [
