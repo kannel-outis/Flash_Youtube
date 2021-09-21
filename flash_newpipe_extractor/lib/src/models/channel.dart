@@ -20,6 +20,8 @@ class Channel {
     this.subscriberCount,
     required this.url,
   });
+
+  String get hdAvatarUrl => avatarUrl.replaceAll("=s48", "=s400");
   final List<YoutubeVideo> _listOfVideo = [];
   List<YoutubeVideo> get videoUploads => _listOfVideo;
   void addToVideoList(YoutubeVideo video) {

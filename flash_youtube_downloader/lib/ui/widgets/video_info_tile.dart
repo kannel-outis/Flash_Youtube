@@ -2,6 +2,7 @@ import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/providers/home/states/current_video_state_provider.dart';
+import 'package:flash_youtube_downloader/ui/screens/channel/channel_info.dart';
 import 'package:flash_youtube_downloader/ui/screens/home/home_screen.dart';
 import 'package:flash_youtube_downloader/ui/widgets/mini_player/mini_player_draggable.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
@@ -36,7 +37,8 @@ class VideoInfoTile extends ConsumerWidget {
     final youtubePlayerControllerNotifier =
         reader(youtubePlayerController.notifier);
     final currentVideoState = reader(currentVideoStateProvider);
-    return SizedBox(
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
       child: Column(
         children: [
           GestureDetector(
@@ -91,34 +93,45 @@ class VideoInfoTile extends ConsumerWidget {
                 if (!showChannelProfilePic)
                   const SizedBox()
                 else
-                  Container(
-                    height: Utils.blockWidth * 7,
-                    width: Utils.blockWidth * 7,
-                    decoration: BoxDecoration(
-                      color: Colors.yellow,
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: video.uploaderChannelInfo == null
-                        ? channelFuture.when(
-                            data: (data) {
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(50),
-                                child: _FadeInImageWidget(
-                                  url: data != null
-                                      ? data.avatarUrl
-                                      : Utils.dummyPictureUrl,
-                                ),
-                              );
-                            },
-                            loading: () => const CircularProgressIndicator(),
-                            error: (obj, stk) => const SizedBox(),
-                          )
-                        : ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: _FadeInImageWidget(
-                              url: video.uploaderChannelInfo!.avatarUrl,
+                  GestureDetector(
+                    onTap: () {
+                      Utils.navigationKey.currentState!.push(
+                        MaterialPageRoute(
+                          builder: (context) => ChannelInfo(
+                              controller: _miniPlayerController,
+                              youtubeVideo: video),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      height: Utils.blockWidth * 7,
+                      width: Utils.blockWidth * 7,
+                      decoration: BoxDecoration(
+                        color: Colors.yellow,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: video.uploaderChannelInfo == null
+                          ? channelFuture.when(
+                              data: (data) {
+                                return ClipRRect(
+                                  borderRadius: BorderRadius.circular(50),
+                                  child: _FadeInImageWidget(
+                                    url: data != null
+                                        ? data.avatarUrl
+                                        : Utils.dummyPictureUrl,
+                                  ),
+                                );
+                              },
+                              loading: () => const CircularProgressIndicator(),
+                              error: (obj, stk) => const SizedBox(),
+                            )
+                          : ClipRRect(
+                              borderRadius: BorderRadius.circular(50),
+                              child: _FadeInImageWidget(
+                                url: video.uploaderChannelInfo!.avatarUrl,
+                              ),
                             ),
-                          ),
+                    ),
                   ),
                 Expanded(
                   child: Padding(
@@ -201,6 +214,17 @@ class _FadeInImageWidget extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+class DummyPage extends StatelessWidget {
+  const DummyPage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
     );
   }
 }

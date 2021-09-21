@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/providers/home/states/current_video_state_provider.dart';
+import 'package:flash_youtube_downloader/ui/screens/channel/channel_info.dart';
 import 'package:flash_youtube_downloader/ui/screens/home/home_screen.dart';
 import 'package:flash_youtube_downloader/ui/widgets/comment_tile.dart';
+import 'package:flash_youtube_downloader/ui/widgets/error_widget.dart';
 import 'package:flash_youtube_downloader/ui/widgets/grid_view_widget.dart';
 import 'package:flash_youtube_downloader/ui/widgets/info_icon.dart';
 import 'package:flash_youtube_downloader/ui/widgets/mini_player/mini_player_draggable.dart';
@@ -102,48 +104,37 @@ class MiniPlayerWidget extends HookWidget {
             ),
           ),
         ),
-        child: (currentVideoState!.videoInfo == null)
-            ? SizedBox(
-                child: fullVideoInfo.when(
-                  data: (data) {
-                    return const SizedBox();
-                  },
-                  loading: () => const Center(
-                    child: CircularProgressIndicator(),
-                  ),
-                  error: (o, s) => Center(
-                    child: Column(
-                      children: [
-                        const Text("Something happened"),
-                        const SizedBox(height: 10),
-                        IconButton(
-                          onPressed: () {
-                            context.refresh(videoStateFullInfo);
-                          },
-                          icon: const Icon(Icons.refresh_outlined),
-                        )
-                      ],
+        child: Material(
+          child: (currentVideoState!.videoInfo == null)
+              ? SizedBox(
+                  child: fullVideoInfo.when(
+                    data: (data) {
+                      return const SizedBox();
+                    },
+                    loading: () => const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                    error: (o, s) => CustomErrorWidget<YoutubeVideoInfo>(
+                      future: videoStateFullInfo,
                     ),
                   ),
-                ),
-              )
-            : SingleChildScrollView(
-                child: Column(
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      height:
-                          (Utils.blockHeight * 13.5) + containerHeight.value,
-                      decoration: const BoxDecoration(
-                          // color: Colors.black,
-                          ),
-                      padding: const EdgeInsets.only(top: 5),
-                      child: SingleChildScrollView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        child: Column(
-                          children: [
-                            Material(
-                              child: InkWell(
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        height:
+                            (Utils.blockHeight * 13.5) + containerHeight.value,
+                        decoration: const BoxDecoration(
+                            // color: Colors.black,
+                            ),
+                        padding: const EdgeInsets.only(top: 5),
+                        child: SingleChildScrollView(
+                          physics: const NeverScrollableScrollPhysics(),
+                          child: Column(
+                            children: [
+                              InkWell(
                                 onTap: () {
                                   print(
                                       currentVideoState.videoInfo!.description);
@@ -215,176 +206,193 @@ class MiniPlayerWidget extends HookWidget {
                                   ),
                                 ),
                               ),
-                            ),
 
-                            ///likes, dislikes, share and download / save
-                            SizedBox(
-                              // color: Colors.pink,
-                              height: Utils.blockHeight * 5,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  InfoIcon(
-                                    icon: Icons.thumb_up_alt_outlined,
-                                    label: currentVideoState
-                                        .videoInfo!.likeCount
-                                        .toString()
-                                        .convertToViews(),
-                                  ),
-                                  SizedBox(width: Utils.blockWidth * 7),
-                                  InfoIcon(
-                                    icon: Icons.thumb_down_alt_outlined,
-                                    label: currentVideoState
-                                        .videoInfo!.dislikeCount
-                                        .toString()
-                                        .convertToViews(),
-                                  ),
-                                  SizedBox(width: Utils.blockWidth * 7),
-                                  const InfoIcon(
-                                    icon: Icons.reply_outlined,
-                                    label: "share",
-                                  ),
-                                  SizedBox(width: Utils.blockWidth * 7),
-                                  const InfoIcon(
-                                    icon: Icons.vertical_align_bottom_outlined,
-                                    label: "download",
-                                  ),
-                                  SizedBox(width: Utils.blockWidth * 7),
-                                  const InfoIcon(
-                                    icon: Icons.library_add_outlined,
-                                    label: "save",
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(top: 5),
-                              decoration: const BoxDecoration(
-                                border: Border(
-                                  top:
-                                      BorderSide(width: .5, color: Colors.grey),
-                                  bottom:
-                                      BorderSide(width: .5, color: Colors.grey),
+                              ///likes, dislikes, share and download / save
+                              SizedBox(
+                                // color: Colors.pink,
+                                height: Utils.blockHeight * 5,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    InfoIcon(
+                                      icon: Icons.thumb_up_alt_outlined,
+                                      label: currentVideoState
+                                          .videoInfo!.likeCount
+                                          .toString()
+                                          .convertToViews(),
+                                    ),
+                                    SizedBox(width: Utils.blockWidth * 7),
+                                    InfoIcon(
+                                      icon: Icons.thumb_down_alt_outlined,
+                                      label: currentVideoState
+                                          .videoInfo!.dislikeCount
+                                          .toString()
+                                          .convertToViews(),
+                                    ),
+                                    SizedBox(width: Utils.blockWidth * 7),
+                                    const InfoIcon(
+                                      icon: Icons.reply_outlined,
+                                      label: "share",
+                                    ),
+                                    SizedBox(width: Utils.blockWidth * 7),
+                                    const InfoIcon(
+                                      icon:
+                                          Icons.vertical_align_bottom_outlined,
+                                      label: "download",
+                                    ),
+                                    SizedBox(width: Utils.blockWidth * 7),
+                                    const InfoIcon(
+                                      icon: Icons.library_add_outlined,
+                                      label: "save",
+                                    ),
+                                  ],
                                 ),
-                                // color: Colors.white,
                               ),
-                              height: Utils.blockHeight * 3.5,
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 17),
-                              child: Row(
-                                children: [
-                                  Container(
-                                    height: Utils.blockWidth * 7,
-                                    width: Utils.blockWidth * 7,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(50),
-                                    ),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(50),
-                                      child: FadeInImage(
-                                        fit: BoxFit.fill,
-                                        image: CachedNetworkImageProvider(
-                                            currentVideoState
-                                                .videoInfo!.uploaderAvatarUrl),
-                                        placeholder:
-                                            MemoryImage(Utils.transparentImage),
-                                      ),
-                                    ),
+                              Container(
+                                margin: const EdgeInsets.only(top: 5),
+                                decoration: const BoxDecoration(
+                                  border: Border(
+                                    top: BorderSide(
+                                        width: .5, color: Colors.grey),
+                                    bottom: BorderSide(
+                                        width: .5, color: Colors.grey),
                                   ),
-                                  SizedBox(
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.only(left: 10.0),
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            currentVideoState
-                                                .videoInfo!.uploaderName,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyText1,
+                                  // color: Colors.white,
+                                ),
+                                height: Utils.blockHeight * 3.5,
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 17),
+                                child: Row(
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        _miniPlayerController.closeMiniPlayer();
+                                        Utils.navigationKey.currentState!.push(
+                                          MaterialPageRoute(
+                                            builder: (context) => ChannelInfo(
+                                              controller: _miniPlayerController,
+                                              youtubeVideo: currentVideoState,
+                                            ),
                                           ),
-                                          Text(
-                                            "${currentVideoState.uploaderChannelInfo!.subscriberCount.toString().convertToViews()} subscribers",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subtitle1!
-                                                .copyWith(color: Colors.grey),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              padding: const EdgeInsets.all(10),
-                              // child: Text(currentVideoState.videoInfo!.description!),
-                              child: currentVideoState.videoInfo!.description!
-                                      .contains("<")
-                                  ? Html(
-                                      data: currentVideoState
-                                          .videoInfo!.description,
-                                      style: {
-                                        "*": Style(
-                                          fontSize:
-                                              FontSize(Utils.blockWidth * 2.6),
-                                          fontWeight: FontWeight.bold,
-                                          // color: Colors.white,
-                                        ),
+                                        );
                                       },
-                                    )
-                                  : Text(
-                                      currentVideoState.videoInfo!.description!,
-                                      style: theme.textTheme.subtitle2),
-                            )
-                          ],
+                                      child: Container(
+                                        height: Utils.blockWidth * 7,
+                                        width: Utils.blockWidth * 7,
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                        ),
+                                        child: ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(50),
+                                          child: FadeInImage(
+                                            fit: BoxFit.fill,
+                                            image: CachedNetworkImageProvider(
+                                                currentVideoState.videoInfo!
+                                                    .uploaderAvatarUrl),
+                                            placeholder: MemoryImage(
+                                                Utils.transparentImage),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 10.0),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              currentVideoState
+                                                  .videoInfo!.uploaderName,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText1,
+                                            ),
+                                            Text(
+                                              "${currentVideoState.uploaderChannelInfo!.subscriberCount.toString().convertToViews()} subscribers",
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1!
+                                                  .copyWith(color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(10),
+                                // child: Text(currentVideoState.videoInfo!.description!),
+                                child: currentVideoState.videoInfo!.description!
+                                        .contains("<")
+                                    ? Html(
+                                        data: currentVideoState
+                                            .videoInfo!.description,
+                                        style: {
+                                          "*": Style(
+                                            fontSize: FontSize(
+                                                Utils.blockWidth * 2.6),
+                                            fontWeight: FontWeight.bold,
+                                            // color: Colors.white,
+                                          ),
+                                        },
+                                      )
+                                    : Text(
+                                        currentVideoState
+                                            .videoInfo!.description!,
+                                        style: theme.textTheme.subtitle2),
+                              )
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: GridViewWidget(
-                        gridCount: gridCount,
-                        data: currentVideoState.videoInfo!.relatedVideos,
-                        maxWidth: maxWidth,
-                        heightWithMaxHeight: heightWithMaxHeight,
-                        miniPlayerController: _miniPlayerController,
-                        showUploaderPic: false,
-                        physics: const NeverScrollableScrollPhysics(),
+                      const SizedBox(height: 10),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: GridViewWidget(
+                          gridCount: gridCount,
+                          data: currentVideoState.videoInfo!.relatedVideos,
+                          maxWidth: maxWidth,
+                          heightWithMaxHeight: heightWithMaxHeight,
+                          miniPlayerController: _miniPlayerController,
+                          showUploaderPic: false,
+                          physics: const NeverScrollableScrollPhysics(),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 15),
-                    Container(
-                      child: currentVideoState.videoInfo!.comments == null
-                          ? useProvider(commentsprovider(
-                                  currentVideoState.videoInfo!))
-                              .when(
-                              data: (data) => const SizedBox(),
-                              loading: () => const Center(
-                                child: CircularProgressIndicator(),
+                      const SizedBox(height: 15),
+                      Container(
+                        child: currentVideoState.videoInfo!.comments == null
+                            ? useProvider(commentsprovider(
+                                    currentVideoState.videoInfo!))
+                                .when(
+                                data: (data) => const SizedBox(),
+                                loading: () => const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                                error: (o, s) => CustomErrorWidget<Comments?>(
+                                    future: commentsprovider(
+                                        currentVideoState.videoInfo!)),
+                              )
+                            : Column(
+                                children: currentVideoState
+                                    .videoInfo!.comments!.comments!
+                                    .map((e) => CommentTile(e: e))
+                                    .toList(),
                               ),
-                              error: (o, s) => const Center(
-                                child:
-                                    Text("Something went wrong. comments off"),
-                              ),
-                            )
-                          : Column(
-                              children: currentVideoState
-                                  .videoInfo!.comments!.comments!
-                                  .map((e) => CommentTile(e: e))
-                                  .toList(),
-                            ),
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }

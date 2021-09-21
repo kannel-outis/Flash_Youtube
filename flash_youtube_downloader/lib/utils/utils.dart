@@ -9,6 +9,8 @@ class Utils {
   static late double blockWidth;
   static late Orientation orientation;
 
+  static final navigationKey = GlobalKey<NavigatorState>();
+
   static void getBlockWidthAndHeight(BuildContext context) {
     orientation = MediaQuery.of(context).orientation;
     if (orientation == Orientation.portrait) {
