@@ -1,6 +1,9 @@
 import 'package:async/async.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_youtube_downloader/providers/home/states/current_video_state_provider.dart';
+import 'package:flash_youtube_downloader/ui/screens/home/home_screen.dart';
+import 'package:flash_youtube_downloader/ui/widgets/mini_player/mini_player_draggable.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +19,9 @@ class VideoInfoTile extends ConsumerWidget {
   final YoutubeVideo video;
   final double maxWidth;
   final bool showChannelProfilePic;
-  const VideoInfoTile({
+  final MiniPlayerController _miniPlayerController;
+  const VideoInfoTile(
+    this._miniPlayerController, {
     Key? key,
     required this.video,
     required this.maxWidth,
@@ -26,35 +31,56 @@ class VideoInfoTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader reader) {
     final channelFuture = reader(channelInfoProvider(video));
+    final currentVideoStateNotifier =
+        reader(currentVideoStateProvider.notifier);
+    final youtubePlayerControllerNotifier =
+        reader(youtubePlayerController.notifier);
+    final currentVideoState = reader(currentVideoStateProvider);
     return SizedBox(
       child: Column(
         children: [
-          AspectRatio(
-            aspectRatio: 16 / 9,
-            child: Stack(
-              // .replaceAll("hqdefault", "maxresdefault")
-              // .toString()
-              children: [
-                _FadeInImageWidget(
-                  url: video.maxresdefault,
-                  altImageUrl: video.hqdefault,
-                ),
-                Positioned(
-                  bottom: 10,
-                  right: 20,
-                  child: Container(
-                    color: Colors.black.withOpacity(.7),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Center(
-                      child: Text(
-                        Utils.trimTime(video.duration.toString()),
-                        style: Theme.of(context).textTheme.subtitle1,
+          GestureDetector(
+            onTap: () {
+              if (currentVideoState == null ||
+                  video.url != currentVideoState.url) {
+                currentVideoStateNotifier.setVideoState(video);
+                youtubePlayerControllerNotifier.youtubeControllerState =
+                    video.url;
+              }
+              if (_miniPlayerController.isClosed) {
+                Future.delayed(const Duration(milliseconds: 20), () {
+                  _miniPlayerController.openMiniPlayer();
+                });
+              }
+              // print(youtubePlayerControllerNotifier.state!.isDisposed);
+            },
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Stack(
+                // .replaceAll("hqdefault", "maxresdefault")
+                // .toString()
+                children: [
+                  _FadeInImageWidget(
+                    url: video.maxresdefault,
+                    altImageUrl: video.hqdefault,
+                  ),
+                  Positioned(
+                    bottom: 10,
+                    right: 20,
+                    child: Container(
+                      color: Colors.black.withOpacity(.7),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      child: Center(
+                        child: Text(
+                          Utils.trimTime(video.duration.toString()),
+                          style: Theme.of(context).textTheme.subtitle1,
+                        ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
           Padding(
@@ -161,18 +187,20 @@ class _FadeInImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeInImage(
-      width: double.infinity,
-      fit: BoxFit.fill,
-      placeholder: MemoryImage(Utils.transparentImage),
-      image: CachedNetworkImageProvider(url),
-      imageErrorBuilder: (context, obj, stackTrace) {
-        return CachedNetworkImage(
-          imageUrl: altImageUrl!,
-          fit: BoxFit.cover,
-          width: double.infinity,
-        );
-      },
+    return GestureDetector(
+      child: FadeInImage(
+        width: double.infinity,
+        fit: BoxFit.fill,
+        placeholder: MemoryImage(Utils.transparentImage),
+        image: CachedNetworkImageProvider(url),
+        imageErrorBuilder: (context, obj, stackTrace) {
+          return CachedNetworkImage(
+            imageUrl: altImageUrl!,
+            fit: BoxFit.cover,
+            width: double.infinity,
+          );
+        },
+      ),
     );
   }
 }

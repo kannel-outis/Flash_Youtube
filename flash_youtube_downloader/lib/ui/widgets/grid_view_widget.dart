@@ -30,10 +30,6 @@ class GridViewWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
-    final currentVideoStateNotifier = watch(currentVideoStateProvider.notifier);
-    final youtubePlayerControllerNotifier =
-        watch(youtubePlayerController.notifier);
-    final currentVideoState = watch(currentVideoStateProvider);
     return GridView.builder(
       shrinkWrap: true,
       physics: physics,
@@ -44,27 +40,12 @@ class GridViewWidget extends ConsumerWidget {
         childAspectRatio: maxWidth / heightWithMaxHeight,
       ),
       itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            if (currentVideoState == null ||
-                data[index].url != currentVideoState.url) {
-              currentVideoStateNotifier.setVideoState(data[index]);
-              youtubePlayerControllerNotifier.youtubeControllerState =
-                  data[index].url;
-            }
-            if (_miniPlayerController.isClosed) {
-              Future.delayed(const Duration(milliseconds: 20), () {
-                _miniPlayerController.openMiniPlayer();
-              });
-            }
-            // print(youtubePlayerControllerNotifier.state!.isDisposed);
-          },
-          child: SizedBox(
-            child: VideoInfoTile(
-              showChannelProfilePic: showUploaderPic,
-              video: data[index],
-              maxWidth: maxWidth,
-            ),
+        return SizedBox(
+          child: VideoInfoTile(
+            _miniPlayerController,
+            showChannelProfilePic: showUploaderPic,
+            video: data[index],
+            maxWidth: maxWidth,
           ),
         );
       },
