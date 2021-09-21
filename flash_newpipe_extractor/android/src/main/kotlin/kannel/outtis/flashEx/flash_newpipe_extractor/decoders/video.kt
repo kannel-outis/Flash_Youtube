@@ -73,6 +73,7 @@ class VideoInfoDecode(){
 
         fun decoderToMap(extractor:StreamExtractor): Map<String, Any?>{
             val fullVideoInformation:MutableMap<String, Any?> = mutableMapOf()
+//            TODO: get hlsUrl, license and so on
             fullVideoInformation["id"] = extractor.id
             fullVideoInformation["url"] = extractor.url
             fullVideoInformation["videoName"] = extractor.name
