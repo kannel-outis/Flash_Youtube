@@ -1,4 +1,3 @@
-import 'package:async/async.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/providers/home/states/current_video_state_provider.dart';
 import 'package:flash_youtube_downloader/providers/home/states/youtube_controller_state.dart';
@@ -13,14 +12,12 @@ import 'package:youtube_player/youtube_player.dart';
 import '/utils/utils.dart';
 
 final trendingVideos = FutureProvider<List<YoutubeVideo>?>((ref) {
-  return AsyncMemoizer<List<YoutubeVideo>?>()
-      .runOnce(() => Extract().getTrendingVideos());
+  return Extract().getTrendingVideos();
 });
 
 final videoStateFullInfo = FutureProvider<YoutubeVideoInfo>((ref) {
   final videoState = ref.watch(currentVideoStateProvider);
-  return AsyncMemoizer<YoutubeVideoInfo>()
-      .runOnce(() => videoState!.getFullInformation);
+  return videoState!.getFullInformation;
 });
 final youtubePlayerController =
     StateNotifierProvider<YoutubeControllerState, YoutubePlayerController?>(
