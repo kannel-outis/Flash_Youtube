@@ -23,22 +23,30 @@ class MyApp extends StatelessWidget {
           darkTheme: Utils.themeData(context, Brightness.dark),
           home: const HomeScreen(),
           builder: (context, child) {
-            return Stack(
-              children: [
-                child!,
-                Consumer(
-                  builder: (context, watch, child) {
-                    final currentVideoState = watch(currentVideoStateProvider);
-                    final _miniPlayerController = watch(miniPlayerC);
-                    if (currentVideoState != null) {
-                      return MiniPlayerWidget(
-                          controller: _miniPlayerController);
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-              ],
+            return Consumer(
+              builder: (context, watch, child) {
+                final currentVideoState = watch(currentVideoStateProvider);
+                final _miniPlayerController = watch(miniPlayerC);
+                return Stack(
+                  children: [
+                    child!,
+                    if (currentVideoState != null)
+                      GestureDetector(
+                        onHorizontalDragUpdate: (e) {
+                          // for dismissing mini player
+                          if (_miniPlayerController.isClosed) {
+                            print(e.globalPosition);
+                          }
+                        },
+                        child:
+                            MiniPlayerWidget(controller: _miniPlayerController),
+                      )
+                    else
+                      const SizedBox(),
+                  ],
+                );
+              },
+              child: child,
             );
           },
         ),

@@ -1,8 +1,12 @@
 extension ConvertView on String {
   // ignore: avoid_positional_boolean_parameters
-  String convertToViews([bool shorten = true]) {
+  String convertToViews([bool shorten = true, bool rawThousands = true]) {
     if (!contains(".")) {
+      if (this == "-1") {
+        return "0";
+      }
       final List<String> characters = split("").reversed.toList();
+
       for (var i = 0; i < characters.length; i++) {
         if (i % 4 == 0) {
           characters.insert(i, ",");
@@ -17,6 +21,9 @@ extension ConvertView on String {
       }
       if (!shorten) {
         return characters.reversed.join().substring(0, characters.length - 1);
+      }
+      if (!rawThousands && list.length == 2) {
+        newConvert = "${list.first}K";
       }
       return newConvert;
     } else {

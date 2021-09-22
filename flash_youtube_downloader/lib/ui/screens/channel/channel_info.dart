@@ -4,19 +4,31 @@ import 'package:flash_youtube_downloader/ui/widgets/error_widget.dart';
 import 'package:flash_youtube_downloader/ui/widgets/grid_view_widget.dart';
 import 'package:flash_youtube_downloader/ui/widgets/mini_player/mini_player_draggable.dart';
 import 'package:flash_youtube_downloader/ui/widgets/video_info_tile.dart';
-import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'dart:math' as math;
+import '../../../utils/extensions.dart';
+import '../../../utils/utils.dart';
 
+final _extract = Provider<Extract>((ref) => Extract());
+
+// ignore: must_be_immutable
 class ChannelInfo extends HookWidget {
   final MiniPlayerController controller;
-  final YoutubeVideo youtubeVideo;
-  ChannelInfo({Key? key, required this.controller, required this.youtubeVideo})
-      : super(key: key);
+  final YoutubeVideo? youtubeVideo;
+  final String? uploaderUrl;
+  ChannelInfo({
+    Key? key,
+    this.uploaderUrl,
+    required this.controller,
+    this.youtubeVideo,
+  }) : super(key: key);
   int gridCount = 0;
+  final channelInfoExtractProvider =
+      FutureProvider.family<Channel?, String>((ref, uploaderUrl) {
+    return ref.read(_extract).getChannelInfo(uploaderUrl);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -59,16 +71,19 @@ class ChannelInfo extends HookWidget {
       return Utils.blockHeight * 18;
     }();
     final theme = Theme.of(context);
-    final channelReader = useProvider(channelInfoProvider(youtubeVideo));
+    final channelReader = useProvider(uploaderUrl == null
+        ? channelInfoProvider(youtubeVideo!)
+        : channelInfoExtractProvider(uploaderUrl!));
     final tabController = useTabController(initialLength: 3);
     return Container(
       color: theme.scaffoldBackgroundColor,
       child: channelReader.when(
         data: (data) {
-          // data.s
           return FutureBuilder<PaletteGenerator>(
             future: PaletteGenerator.fromImageProvider(
-                CachedNetworkImageProvider(data!.bannerUrl!)),
+                CachedNetworkImageProvider(data!.bannerUrl == null
+                    ? "https://s.ytimg.com/yts/img/channels/c4/default_banner-vflYp0HrA.jpg"
+                    : data.bannerUrl!)),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return const Center(
@@ -139,16 +154,56 @@ class ChannelInfo extends HookWidget {
                                         decoration: BoxDecoration(
                                           image: DecorationImage(
                                             fit: BoxFit.cover,
-                                            image: CachedNetworkImageProvider(
-                                                data.bannerUrl!),
+                                            image: CachedNetworkImageProvider(data
+                                                        .bannerUrl ==
+                                                    null
+                                                ? "https://s.ytimg.com/yts/img/channels/c4/default_banner-vflYp0HrA.jpg"
+                                                : data.bannerUrl!),
                                           ),
                                         ),
                                       ),
                                       Container(
-                                        height: Utils.blockHeight * 9,
+                                        height: Utils.blockHeight * 7,
                                         width: double.infinity,
                                         decoration: const BoxDecoration(
                                           color: Colors.black,
+                                        ),
+                                        child: Row(
+                                          // mainAxisAlignment:
+                                          //     MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                              // circle size plus left padding
+                                              width:
+                                                  (Utils.blockWidth * 25) + 30,
+                                            ),
+                                            Expanded(
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    data.name,
+                                                    style: theme
+                                                        .textTheme.headline5,
+                                                  ),
+                                                  const SizedBox(height: 10),
+                                                  Text(
+                                                    "${data.subscriberCount.toString().convertToViews(true, false)} subscribers",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .subtitle2!
+                                                        .copyWith(
+                                                          color: Colors.white
+                                                              .withOpacity(.7),
+                                                        ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ],
@@ -158,8 +213,8 @@ class ChannelInfo extends HookWidget {
                                   left: 30,
                                   top: ((Utils.blockHeight * 12) / 2).abs(),
                                   child: Container(
-                                    height: 150,
-                                    width: 150,
+                                    height: Utils.blockWidth * 25,
+                                    width: Utils.blockWidth * 25,
                                     decoration: BoxDecoration(
                                       color: snapshot.data!.dominantColor!.color
                                           .withOpacity(.8),
@@ -202,7 +257,9 @@ class ChannelInfo extends HookWidget {
           child: CircularProgressIndicator(),
         ),
         error: (o, s) => CustomErrorWidget<Channel?>(
-          future: channelInfoProvider(youtubeVideo),
+          future: uploaderUrl == null
+              ? channelInfoProvider(youtubeVideo!)
+              : channelInfoExtractProvider(uploaderUrl!),
         ),
       ),
     );

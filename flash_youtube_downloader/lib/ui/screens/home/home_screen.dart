@@ -30,7 +30,7 @@ final miniPlayerC = ChangeNotifierProvider<MiniPlayerController>((ref) {
       minHeight: Utils.blockHeight * 13,
       maxHeight: Utils.blockHeight * 100,
       startOpen: false,
-      animationDuration: const Duration(milliseconds: 100));
+      animationDuration: const Duration(milliseconds: 200));
 });
 
 // ignore: must_be_immutable
@@ -40,7 +40,6 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
-    final currentVideoState = watch(currentVideoStateProvider);
     final _miniPlayerController = watch(miniPlayerC);
     return Scaffold(
       body: CustomWillScope(

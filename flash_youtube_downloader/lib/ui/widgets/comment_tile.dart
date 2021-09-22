@@ -1,13 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_youtube_downloader/ui/screens/channel/channel_info.dart';
+import 'package:flash_youtube_downloader/ui/widgets/mini_player/mini_player_draggable.dart';
 import 'package:flutter/material.dart';
 import '/utils/extensions.dart';
 import '/utils/utils.dart';
 
 class CommentTile extends StatelessWidget {
   final CommentInfo e;
+  final MiniPlayerController _miniPlayerController;
 
-  const CommentTile({Key? key, required this.e}) : super(key: key);
+  const CommentTile(this._miniPlayerController, {Key? key, required this.e})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -21,16 +25,29 @@ class CommentTile extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 10),
-            height: Utils.blockWidth * 7,
-            width: Utils.blockWidth * 7,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(50),
-              child: FadeInImage(
-                fit: BoxFit.fill,
-                image: CachedNetworkImageProvider(e.uploaderAvatarUrl!),
-                placeholder: MemoryImage(Utils.transparentImage),
+          GestureDetector(
+            onTap: () {
+              _miniPlayerController.closeMiniPlayer();
+              Utils.navigationKey.currentState!.push(
+                MaterialPageRoute(
+                  builder: (context) => ChannelInfo(
+                    controller: _miniPlayerController,
+                    uploaderUrl: e.uploaderUrl,
+                  ),
+                ),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 10),
+              height: Utils.blockWidth * 7,
+              width: Utils.blockWidth * 7,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(50),
+                child: FadeInImage(
+                  fit: BoxFit.fill,
+                  image: CachedNetworkImageProvider(e.uploaderAvatarUrl!),
+                  placeholder: MemoryImage(Utils.transparentImage),
+                ),
               ),
             ),
           ),

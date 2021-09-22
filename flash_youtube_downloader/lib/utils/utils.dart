@@ -25,7 +25,10 @@ class Utils {
   static ThemeData themeData(BuildContext context, Brightness brightness) {
     getBlockWidthAndHeight(context);
     final isDarkTheme = brightness == Brightness.dark;
+    final theme = Theme.of(context);
     return ThemeData(
+      scaffoldBackgroundColor:
+          isDarkTheme ? const Color(0xFF292929) : theme.backgroundColor,
       brightness: brightness,
       fontFamily: "TT Firs Neue Regular",
       textTheme: TextTheme(

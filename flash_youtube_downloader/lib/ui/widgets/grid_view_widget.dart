@@ -32,6 +32,8 @@ class GridViewWidget extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     return GridView.builder(
       shrinkWrap: true,
+      addAutomaticKeepAlives: false,
+      cacheExtent: data.length.toDouble() * 3,
       physics: physics,
       itemCount: data.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

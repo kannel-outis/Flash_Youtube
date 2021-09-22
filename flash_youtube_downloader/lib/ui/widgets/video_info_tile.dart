@@ -63,7 +63,7 @@ class VideoInfoTile extends ConsumerWidget {
                 // .toString()
                 children: [
                   _FadeInImageWidget(
-                    url: video.maxresdefault,
+                    url: video.sddefault,
                     altImageUrl: video.hqdefault,
                   ),
                   Positioned(
@@ -113,22 +113,44 @@ class VideoInfoTile extends ConsumerWidget {
                       child: video.uploaderChannelInfo == null
                           ? channelFuture.when(
                               data: (data) {
-                                return ClipRRect(
-                                  borderRadius: BorderRadius.circular(50),
-                                  child: _FadeInImageWidget(
-                                    url: data != null
-                                        ? data.avatarUrl
-                                        : Utils.dummyPictureUrl,
+                                return Container(
+                                  // borderRadius: BorderRadius.circular(50),
+                                  // child: _FadeInImageWidget(
+                                  //   url: data != null
+                                  //       ? data.avatarUrl
+                                  //       : Utils.dummyPictureUrl,
+                                  // ),
+                                  height: Utils.blockWidth * 7,
+                                  width: Utils.blockWidth * 7,
+                                  decoration: BoxDecoration(
+                                    color: Colors.yellow,
+                                    borderRadius: BorderRadius.circular(50),
+                                    image: DecorationImage(
+                                      image: CachedNetworkImageProvider(
+                                          data != null
+                                              ? data.avatarUrl
+                                              : Utils.dummyPictureUrl),
+                                    ),
                                   ),
                                 );
                               },
                               loading: () => const CircularProgressIndicator(),
                               error: (obj, stk) => const SizedBox(),
                             )
-                          : ClipRRect(
-                              borderRadius: BorderRadius.circular(50),
-                              child: _FadeInImageWidget(
-                                url: video.uploaderChannelInfo!.avatarUrl,
+                          : Container(
+                              // borderRadius: BorderRadius.circular(50),
+                              // child: _FadeInImageWidget(
+                              //   url: video.uploaderChannelInfo!.avatarUrl,
+                              // ),
+                              height: Utils.blockWidth * 7,
+                              width: Utils.blockWidth * 7,
+                              decoration: BoxDecoration(
+                                color: Colors.yellow,
+                                borderRadius: BorderRadius.circular(50),
+                                image: DecorationImage(
+                                  image: CachedNetworkImageProvider(
+                                      video.uploaderChannelInfo!.avatarUrl),
+                                ),
                               ),
                             ),
                     ),
@@ -200,6 +222,26 @@ class _FadeInImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return CachedNetworkImage(
+      width: double.infinity,
+      imageUrl: url,
+      fit: BoxFit.cover,
+      errorWidget: (context, s, d) => CachedNetworkImage(
+        imageUrl: altImageUrl!,
+        fit: BoxFit.cover,
+        width: double.infinity,
+      ),
+      // decoration: BoxDecoration(
+      //   image: DecorationImage( image: CachedNetworkImageProvider(url),
+      //   imageErrorBuilder: (context, obj, stackTrace) {
+      //     return CachedNetworkImage(
+      //       imageUrl: altImageUrl!,
+      //       fit: BoxFit.cover,
+      //       width: double.infinity,
+      //     );
+      //   },)
+      // ),
+    );
     return GestureDetector(
       child: FadeInImage(
         width: double.infinity,
