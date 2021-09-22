@@ -43,10 +43,12 @@ class YoutubeExtractors{
                        "channelId" to channelExtractor.id,
                        "channelAvatarUrl" to channelExtractor.avatarUrl,
                        "channelBannerUrl" to channelExtractor.bannerUrl,
+                       "channelHasNextPage" to channelExtractor.initialPage.hasNextPage(),
                        "channelFeedUrl" to channelExtractor.feedUrl,
                        "channelSubscriberCount" to channelExtractor.subscriberCount,
                        "channelUrl" to channelExtractor.url)
                val items = channelExtractor.initialPage.items
+//                channelExtractor.initialPage
                val itemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
                for (i in 0 until items.size) {
                    val item = items[i]

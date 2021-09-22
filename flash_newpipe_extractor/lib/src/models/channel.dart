@@ -1,3 +1,4 @@
+import 'package:flash_newpipe_extractor/src/models/page.dart';
 import 'package:flash_newpipe_extractor/src/models/video.dart';
 
 class Channel {
@@ -9,8 +10,13 @@ class Channel {
   final String? feedUrl;
   final int? subscriberCount;
   final String url;
+  final bool hasVideosNextPage;
+  final Page? nextpage;
 
   Channel({
+    //
+    this.hasVideosNextPage = false,
+    this.nextpage,
     required this.name,
     this.description,
     required this.id,
@@ -21,7 +27,7 @@ class Channel {
     required this.url,
   });
 
-  String get hdAvatarUrl => avatarUrl.replaceAll("=s48", "=s400");
+  String get hdAvatarUrl => avatarUrl.replaceAll("=s48", "=s150");
   final List<YoutubeVideo> _listOfVideo = [];
   List<YoutubeVideo> get videoUploads => _listOfVideo;
   void addToVideoList(YoutubeVideo video) {
@@ -30,6 +36,7 @@ class Channel {
 
   factory Channel.fromMap(Map<String, dynamic> map) {
     return Channel(
+      hasVideosNextPage: map["channelHasNextPage"],
       name: map["channelName"],
       id: map["channelId"],
       avatarUrl: map["channelAvatarUrl"],
