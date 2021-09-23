@@ -1,7 +1,10 @@
-import 'package:flash_newpipe_extractor/src/models/page.dart';
+import 'package:flash_newpipe_extractor/src/models/growable_page_list.dart';
+import 'package:flash_newpipe_extractor/src/models/page/page.dart';
+import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
 import 'package:flash_newpipe_extractor/src/models/video.dart';
 
-class Channel {
+class Channel extends PageManager<YoutubeVideo, Channel>
+    implements GrowablePageList<YoutubeVideo, Channel> {
   final String name;
   final String? description;
   final String id;
@@ -10,10 +13,10 @@ class Channel {
   final String? feedUrl;
   final int? subscriberCount;
   final String url;
-  final Page? nextpage;
+  // final Page? nextpage;
 
   Channel({
-    this.nextpage,
+    // this.nextpage,
     required this.name,
     this.description,
     required this.id,
@@ -23,19 +26,17 @@ class Channel {
     this.subscriberCount,
     required this.url,
   }) {
-    if (nextpage != null) {
-      this.nextpage!.channel = this;
-    }
+    super.child = this;
   }
 
   String get hdAvatarUrl => avatarUrl.replaceAll("=s48", "=s150");
   final List<YoutubeVideo> _listOfVideo = [];
   List<YoutubeVideo> get videoUploads => _listOfVideo;
-  void addToVideoList(YoutubeVideo video) {
+
+  @override
+  void addToGrowableList(YoutubeVideo video) {
     _listOfVideo.add(video);
   }
-
-  Future<void> requestNextpage() async {}
 
   factory Channel.fromMap(Map<String, dynamic> map) {
     return Channel(
@@ -47,7 +48,13 @@ class Channel {
       description: map["channelDescription"],
       feedUrl: map["channelFeedUrl"],
       subscriberCount: map["channelSubscriberCount"],
-      nextpage: Page.fromMap(Map.from(map["nextPageInfo"])),
+      // nextpage: Page.fromMap(Map.from(map["nextPageInfo"])),
     );
   }
+
+  @override
+  Page? get childPage => super.page;
+
+  @override
+  Channel? get child => this;
 }

@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flash_newpipe_extractor/src/error/error.dart';
 import 'package:flash_newpipe_extractor/src/models/channel.dart';
-import 'package:flash_newpipe_extractor/src/models/comments.dart';
-import 'package:flash_newpipe_extractor/src/models/comment_info.dart';
-import 'package:flash_newpipe_extractor/src/models/page.dart';
+import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
+import 'package:flash_newpipe_extractor/src/models/comment/comment_info.dart';
+import 'package:flash_newpipe_extractor/src/models/growable_page_list.dart';
+import 'package:flash_newpipe_extractor/src/models/page/page.dart';
+import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/audioOnlyStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoAudioStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoOnlyStream.dart';
@@ -79,8 +81,10 @@ class FlashMethodCalls {
         Utils.convertToType(result);
 
     final channel = Channel.fromMap(_resultMap["channelInfo"]![0]!);
+    channel.setPage =
+        Page.fromMap(Map.from(_resultMap["channelInfo"]![0]!["nextPageInfo"]));
     _resultMap["channelFirstPageVideos"]!.forEach((key, value) {
-      channel.addToVideoList(YoutubeVideo.fromMap(value));
+      channel.addToGrowableList(YoutubeVideo.fromMap(value));
     });
     return channel;
   }
@@ -102,19 +106,25 @@ class FlashMethodCalls {
     }
   }
 
-  static Future<void> getChannelNextPageItems(Page page) async {
+  // next page
+
+  static Future<void> getItemsNextPage(GrowablePageList manager) async {
+    final _manager = manager;
     final result = await _channel.invokeMethod(
       "getChannelNextPageItems",
       {
-        "channelUrl": page.ids![1],
-        "pageInfo": page.toMap(),
+        // change url to optional
+        "channelUrl": _manager.childPage!.ids![1],
+        "pageInfo": _manager.childPage!.toMap(),
       },
     );
     final Map<String, Map<int, Map<String, dynamic>>> _resultMap =
         Utils.convertToType(result);
-    final _page = Page.fromMap(_resultMap["newPageInfo"]![0]!);
+    final _page =
+        Page.fromMap(Map.from(_resultMap["page"]![0]!["newPageInfo"]));
+    _manager.child.setPage = _page;
     _resultMap["items"]!.forEach((key, value) {
-      page.getChannel!.addToVideoList(YoutubeVideo.fromMap(value));
+      _manager.addToGrowableList(YoutubeVideo.fromMap(value));
     });
   }
 }

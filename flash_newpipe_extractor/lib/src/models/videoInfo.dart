@@ -1,6 +1,6 @@
 import 'package:flash_newpipe_extractor/src/method_calls.dart';
 import 'package:flash_newpipe_extractor/src/models/_streamOfType_.dart';
-import 'package:flash_newpipe_extractor/src/models/comments.dart';
+import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/streams.dart';
 import 'package:flash_newpipe_extractor/src/models/video.dart';
 import 'package:flash_newpipe_extractor/src/utils/enums.dart';
@@ -61,6 +61,7 @@ class YoutubeVideoInfo {
   Comments? get comments => _comments;
 
   Future<Comments?> getComments() async {
+    // re engineer comments to use page manager to get nextpage info
     return _comments = await FlashMethodCalls.getvideoComments(url);
   }
 

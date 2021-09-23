@@ -78,7 +78,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
           val body = call.argument<Map<String, Any>>("pageInfo")!!["body"] as ByteArray?
           val id = call.argument<Map<String, Any>>("pageInfo")!!["id"] as String?
           val ids = call.argument<Map<String, Any>>("pageInfo")!!["ids"] as List<String>?
-          val newItems = YoutubeExtractors.getChannelNextPageItems(Page(pageUrl!!, id!!, ids!!, null, body), url!!)
+          val newItems = YoutubeExtractors.getChannelNextPageItems(Page(pageUrl!!, id, ids!!, null, body), url!!)
           handler.post {
             result.success(newItems)
           }

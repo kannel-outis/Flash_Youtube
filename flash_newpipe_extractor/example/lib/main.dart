@@ -33,11 +33,11 @@ class MyApp extends StatelessWidget {
           //   value![70].getFullInformation.then((value) =>
           //       value.getStreamOfQuality<VideoAudioStream>(Quality.large));
           // });
-          _video =
-              await extract.getTrendingVideos().then((value) => value![20]);
-          if (_video != null) {
-            print(_video!.uploaderName);
-          }
+          // _video =
+          //     await extract.getTrendingVideos().then((value) => value![20]);
+          // if (_video != null) {
+          //   print(_video!.uploaderName);
+          // }
 
           // await _video!.getFullInformation.then((value) async {
           //   value.getComments().then(
@@ -49,15 +49,25 @@ class MyApp extends StatelessWidget {
           //   );
           // });
 
-          await _video!.getUploaderChannelInfo().then((value) {
-            for (var name in value!.videoUploads) {
-              print(name.videoName);
-            }
-            print(
-                "::::::::::::::::::::::::::::::::::::::: next page ::::::::::::::::::::::::::::::");
-            value.nextpage!.nextpageItems();
-            // print(value!.nextpage!.body);
-          });
+          // await _video!.getUploaderChannelInfo().then((value) async {
+          //   print(value!.videoUploads.length);
+          //   // for (var name in value!.videoUploads) {
+          //   //   print(name.videoName);
+          //   // }
+          //   print(
+          //       "::::::::::::::::::::::::::::::::::::::: next page ::::::::::::::::::::::::::::::");
+          //   await value
+          //       .nextpageItems()
+          //       .then((v) => print(value.videoUploads.length));
+
+          //   // print(value!.nextpage!.body);
+          // });
+          if (_video!.uploaderChannelInfo!.page!.hasNextPage) {
+            await _video!.uploaderChannelInfo!.nextpageItems();
+            print(_video!.uploaderChannelInfo!.videoUploads.length);
+          } else {
+            print("no next page");
+          }
         },
       ),
     ));

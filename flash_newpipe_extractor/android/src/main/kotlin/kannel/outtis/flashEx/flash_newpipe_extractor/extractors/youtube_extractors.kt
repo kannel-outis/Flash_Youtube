@@ -106,7 +106,7 @@ class YoutubeExtractors{
                         "url" to null,
                         "body" to null,
                         "ids" to null,
-                        "channelHasNextPage" to channelExtractor.initialPage.hasNextPage()
+                        "channelHasNextPage" to newPage.hasNextPage()
                 )
             }
             returnMap["page"] = mapOf(0 to pageMap)

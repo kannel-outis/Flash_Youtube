@@ -1,5 +1,3 @@
-import 'package:flash_newpipe_extractor/src/method_calls.dart';
-import 'package:flash_newpipe_extractor/src/models/channel.dart';
 import 'dart:typed_data';
 
 class Page {
@@ -34,20 +32,9 @@ class Page {
     );
   }
 
-  void nextpageItems() async {
-    await FlashMethodCalls.getChannelNextPageItems(this);
-    // return _channel!.addToVideoList(video);
-  }
-
-  Channel? _channel;
-  Channel? get getChannel => _channel;
-  set channel(Channel? channel) {
-    _channel = channel;
-  }
-
   Map<String, dynamic> toMap() {
     return {
-      "id": _channel!.id,
+      "id": id,
       "url": url,
       "body": body,
       "ids": ids,
@@ -59,8 +46,8 @@ class Page {
       url: map["url"],
       id: map["id"],
       hasNextPage: map["channelHasNextPage"],
-      ids: List.from(map["ids"]),
-      body: map["body"] as Uint8List?,
+      ids: map["ids"] == null ? null : List.from(map["ids"]),
+      body: map["body"] == null ? null : map["body"] as Uint8List?,
     );
   }
 }

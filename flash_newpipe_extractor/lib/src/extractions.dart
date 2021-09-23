@@ -1,5 +1,5 @@
 import 'package:flash_newpipe_extractor/src/models/channel.dart';
-import 'package:flash_newpipe_extractor/src/models/comments.dart';
+import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 
 import 'method_calls.dart';
 import 'models/video.dart';

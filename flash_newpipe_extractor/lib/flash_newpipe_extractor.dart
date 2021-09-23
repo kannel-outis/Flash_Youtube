@@ -8,5 +8,5 @@ export 'src/models/stream/audioOnlyStream.dart';
 export 'src/models/stream/videoAudioStream.dart';
 export 'src/utils/enums.dart';
 export 'src/error/error.dart';
-export 'src/models/comments.dart';
-export 'src/models/comment_info.dart';
+export 'src/models/comment/comments.dart';
+export 'src/models/comment/comment_info.dart';
