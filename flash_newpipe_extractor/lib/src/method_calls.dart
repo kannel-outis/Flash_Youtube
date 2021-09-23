@@ -3,6 +3,7 @@ import 'package:flash_newpipe_extractor/src/error/error.dart';
 import 'package:flash_newpipe_extractor/src/models/channel.dart';
 import 'package:flash_newpipe_extractor/src/models/comments.dart';
 import 'package:flash_newpipe_extractor/src/models/comment_info.dart';
+import 'package:flash_newpipe_extractor/src/models/page.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/audioOnlyStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoAudioStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoOnlyStream.dart';
@@ -99,5 +100,21 @@ class FlashMethodCalls {
       });
       return Comments(isDisabled: false, comments: _commentsInfolist);
     }
+  }
+
+  static Future<void> getChannelNextPageItems(Page page) async {
+    final result = await _channel.invokeMethod(
+      "getChannelNextPageItems",
+      {
+        "channelUrl": page.ids![1],
+        "pageInfo": page.toMap(),
+      },
+    );
+    final Map<String, Map<int, Map<String, dynamic>>> _resultMap =
+        Utils.convertToType(result);
+    final _page = Page.fromMap(_resultMap["newPageInfo"]![0]!);
+    _resultMap["items"]!.forEach((key, value) {
+      page.getChannel!.addToVideoList(YoutubeVideo.fromMap(value));
+    });
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -10,6 +12,8 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
   YoutubeVideo? _video;
+  final String dummyEmptyChannel =
+      "https://www.youtube.com/channel/UC3Zgh4DgfCqYxcEgQO6Y9_w";
 
   @override
   Widget build(BuildContext context) {
@@ -29,24 +33,31 @@ class MyApp extends StatelessWidget {
           //   value![70].getFullInformation.then((value) =>
           //       value.getStreamOfQuality<VideoAudioStream>(Quality.large));
           // });
-          _video = await extract.getTrendingVideos().then((value) => value![6]);
-          await _video!.getFullInformation.then((value) async {
-            value.getComments().then(
-              (value) {
-                value!.comments!.forEach((element) {
-                  print(element.commentText);
-                });
-              },
-            );
-          });
+          _video =
+              await extract.getTrendingVideos().then((value) => value![20]);
+          if (_video != null) {
+            print(_video!.uploaderName);
+          }
 
-          // _video!.getUploaderChannelInfo().then(
-          //       (value) => value!.videoUploads.forEach(
-          //         (element) {
-          //           print(element.videoName);
-          //         },
-          //       ),
-          //     );
+          // await _video!.getFullInformation.then((value) async {
+          //   value.getComments().then(
+          //     (value) {
+          //       value!.comments!.forEach((element) {
+          //         print(element.commentText);
+          //       });
+          //     },
+          //   );
+          // });
+
+          await _video!.getUploaderChannelInfo().then((value) {
+            for (var name in value!.videoUploads) {
+              print(name.videoName);
+            }
+            print(
+                "::::::::::::::::::::::::::::::::::::::: next page ::::::::::::::::::::::::::::::");
+            value.nextpage!.nextpageItems();
+            // print(value!.nextpage!.body);
+          });
         },
       ),
     ));

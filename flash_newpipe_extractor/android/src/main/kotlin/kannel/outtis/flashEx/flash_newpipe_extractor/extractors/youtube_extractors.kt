@@ -1,8 +1,11 @@
 package kannel.outtis.flashEx.flash_newpipe_extractor.extractors
 
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import kannel.outtis.flashEx.flash_newpipe_extractor.decoders.VideoInfoDecode
 import org.schabi.newpipe.extractor.ListExtractor
+import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import org.schabi.newpipe.extractor.ServiceList.YouTube
 import org.schabi.newpipe.extractor.exceptions.ContentNotAvailableException
@@ -43,10 +46,28 @@ class YoutubeExtractors{
                        "channelId" to channelExtractor.id,
                        "channelAvatarUrl" to channelExtractor.avatarUrl,
                        "channelBannerUrl" to channelExtractor.bannerUrl,
-                       "channelHasNextPage" to channelExtractor.initialPage.hasNextPage(),
                        "channelFeedUrl" to channelExtractor.feedUrl,
                        "channelSubscriberCount" to channelExtractor.subscriberCount,
-                       "channelUrl" to channelExtractor.url)
+                       "channelUrl" to channelExtractor.url
+               )
+                if(channelExtractor.initialPage.hasNextPage()){
+                    channelMap["nextPageInfo"] = mutableMapOf(
+                            "id" to channelExtractor.initialPage.nextPage.id,
+                            "url" to channelExtractor.initialPage.nextPage.url,
+                            "ids" to channelExtractor.initialPage.nextPage.ids,
+                            "body" to channelExtractor.initialPage.nextPage.body,
+                            "channelHasNextPage" to channelExtractor.initialPage.hasNextPage()
+                    )
+//                    channelExtractor.getPage().
+                }else{
+                    channelMap["nextPageInfo"] = mutableMapOf(
+                            "id" to null,
+                            "url" to null,
+                            "body" to null,
+                            "ids" to null,
+                            "channelHasNextPage" to channelExtractor.initialPage.hasNextPage()
+                    )
+                }
                val items = channelExtractor.initialPage.items
 //                channelExtractor.initialPage
                val itemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
@@ -63,6 +84,40 @@ class YoutubeExtractors{
                returnMap["channelFirstPageVideos"] = null
                 return returnMap
            }
+        }
+
+        fun getChannelNextPageItems(page: Page, channelUrl: String): Map<String, Map<Int, Map<String, Any?>>?>{
+            val returnMap: MutableMap<String, Map<Int, Map<String, Any?>>?> = mutableMapOf()
+            val channelExtractor = YouTube.getChannelExtractor(channelUrl) as YoutubeChannelExtractor
+            channelExtractor.fetchPage()
+            val newPage = channelExtractor.getPage(page)
+            val pageMap:MutableMap<String, Any?> = mutableMapOf()
+            if(newPage.hasNextPage()){
+                pageMap["newPageInfo"] = mutableMapOf(
+                        "id" to newPage.nextPage.id,
+                        "url" to newPage.nextPage.url,
+                        "ids" to newPage.nextPage.ids,
+                        "body" to newPage.nextPage.body,
+                        "channelHasNextPage" to newPage.hasNextPage()
+                )
+            }else{
+                pageMap["newPageInfo"] = mutableMapOf(
+                        "id" to null,
+                        "url" to null,
+                        "body" to null,
+                        "ids" to null,
+                        "channelHasNextPage" to channelExtractor.initialPage.hasNextPage()
+                )
+            }
+            returnMap["page"] = mapOf(0 to pageMap)
+            val itemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
+            for (i in 0 until newPage.items.size){
+                val item = newPage.items[i]
+                itemsMap[i] = VideoInfoDecode.toMap(item)
+            }
+            returnMap["items"] = itemsMap
+            return returnMap
+
         }
     }
 }

@@ -10,12 +10,9 @@ class Channel {
   final String? feedUrl;
   final int? subscriberCount;
   final String url;
-  final bool hasVideosNextPage;
   final Page? nextpage;
 
   Channel({
-    //
-    this.hasVideosNextPage = false,
     this.nextpage,
     required this.name,
     this.description,
@@ -25,7 +22,11 @@ class Channel {
     this.feedUrl,
     this.subscriberCount,
     required this.url,
-  });
+  }) {
+    if (nextpage != null) {
+      this.nextpage!.channel = this;
+    }
+  }
 
   String get hdAvatarUrl => avatarUrl.replaceAll("=s48", "=s150");
   final List<YoutubeVideo> _listOfVideo = [];
@@ -34,9 +35,10 @@ class Channel {
     _listOfVideo.add(video);
   }
 
+  Future<void> requestNextpage() async {}
+
   factory Channel.fromMap(Map<String, dynamic> map) {
     return Channel(
-      hasVideosNextPage: map["channelHasNextPage"],
       name: map["channelName"],
       id: map["channelId"],
       avatarUrl: map["channelAvatarUrl"],
@@ -45,6 +47,7 @@ class Channel {
       description: map["channelDescription"],
       feedUrl: map["channelFeedUrl"],
       subscriberCount: map["channelSubscriberCount"],
+      nextpage: Page.fromMap(Map.from(map["nextPageInfo"])),
     );
   }
 }

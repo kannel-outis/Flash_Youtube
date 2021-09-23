@@ -15,6 +15,7 @@ import kannel.outtis.flashEx.flash_newpipe_extractor.downloader.FlashDownloader
 import kannel.outtis.flashEx.flash_newpipe_extractor.extractors.YoutubeExtractors
 import kannel.outtis.flashEx.flash_newpipe_extractor.extractors.YoutubeVideoInfoExtractor
 import org.schabi.newpipe.extractor.NewPipe
+import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.localization.ContentCountry
 import org.schabi.newpipe.extractor.localization.Localization
 import java.util.concurrent.ExecutorService
@@ -69,6 +70,17 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
           val comments = YoutubeVideoInfoExtractor.getCommentsFromUrl(url!!)
           handler.post {
             result.success(comments)
+          }
+        }
+        call.method.equals("getChannelNextPageItems")->{
+          val url = call.argument<String>("channelUrl")
+          val pageUrl = call.argument<Map<String, Any>>("pageInfo")!!["url"] as String?
+          val body = call.argument<Map<String, Any>>("pageInfo")!!["body"] as ByteArray?
+          val id = call.argument<Map<String, Any>>("pageInfo")!!["id"] as String?
+          val ids = call.argument<Map<String, Any>>("pageInfo")!!["ids"] as List<String>?
+          val newItems = YoutubeExtractors.getChannelNextPageItems(Page(pageUrl!!, id!!, ids!!, null, body), url!!)
+          handler.post {
+            result.success(newItems)
           }
         }
           else -> {

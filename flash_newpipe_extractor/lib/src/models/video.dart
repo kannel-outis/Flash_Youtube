@@ -49,12 +49,13 @@ class YoutubeVideo {
   Channel? _uploaderChannel;
   Channel? get uploaderChannelInfo => _uploaderChannel;
   Future<Channel?> getUploaderChannelInfo() async {
-    try {
-      return _uploaderChannel =
-          await FlashMethodCalls.getChannelInfo(uploaderUrl!);
-    } catch (e) {
-      return null;
-    }
+    // try {
+    return _uploaderChannel =
+        await FlashMethodCalls.getChannelInfo(uploaderUrl!);
+    // } catch (e) {
+    //   print(e.toString());
+    //   return null;
+    // }
   }
 
   factory YoutubeVideo.fromMap(Map<String, dynamic> map) {
