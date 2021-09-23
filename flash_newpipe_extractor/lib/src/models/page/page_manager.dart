@@ -5,6 +5,7 @@ import '../../method_calls.dart';
 
 // class PageManager<T extends PageManager<T>> {
 class PageManager<K, T extends GrowablePageList<K, T>> {
+  int _pageIncrement = 1;
   T? _child;
   set child(T? child) {
     _child = child;
@@ -20,6 +21,10 @@ class PageManager<K, T extends GrowablePageList<K, T>> {
     if (_child == null) {
       return;
     }
-    await FlashMethodCalls.getItemsNextPage(_child!);
+    await FlashMethodCalls.getItemsNextPage(_child!).then((value) {
+      _page = _page!.copyWith(
+        pageNumber: _page!.pageNumber + _pageIncrement,
+      );
+    });
   }
 }

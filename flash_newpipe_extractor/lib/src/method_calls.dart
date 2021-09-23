@@ -120,8 +120,8 @@ class FlashMethodCalls {
     );
     final Map<String, Map<int, Map<String, dynamic>>> _resultMap =
         Utils.convertToType(result);
-    final _page =
-        Page.fromMap(Map.from(_resultMap["page"]![0]!["newPageInfo"]));
+    final _page = Page.fromMap(Map.from(_resultMap["page"]![0]!["newPageInfo"]))
+        .copyWith(pageNumber: _manager.child.page.pageNumber);
     _manager.child.setPage = _page;
     _resultMap["items"]!.forEach((key, value) {
       _manager.addToGrowableList(YoutubeVideo.fromMap(value));
