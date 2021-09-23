@@ -6,8 +6,10 @@ import android.util.Log
 import kannel.outtis.flashEx.flash_newpipe_extractor.decoders.VideoInfoDecode
 import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.Page
+import org.schabi.newpipe.extractor.ServiceList
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import org.schabi.newpipe.extractor.ServiceList.YouTube
+import org.schabi.newpipe.extractor.comments.CommentsInfoItem
 import org.schabi.newpipe.extractor.exceptions.ContentNotAvailableException
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeChannelExtractor
 import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeTrendingExtractor
@@ -86,11 +88,11 @@ class YoutubeExtractors{
            }
         }
 
-        fun getChannelNextPageItems(page: Page, channelUrl: String): Map<String, Map<Int, Map<String, Any?>>?>{
+        fun getNextPageItems(page: Page, channelUrl: String?, isComments: Boolean, videoUrl:String?): Map<String, Map<Int, Map<String, Any?>>?>{
             val returnMap: MutableMap<String, Map<Int, Map<String, Any?>>?> = mutableMapOf()
-            val channelExtractor = YouTube.getChannelExtractor(channelUrl) as YoutubeChannelExtractor
-            channelExtractor.fetchPage()
-            val newPage = channelExtractor.getPage(page)
+            val extractor = if(isComments)  YouTube.getCommentsExtractor(videoUrl)  else YouTube.getChannelExtractor(channelUrl) as YoutubeChannelExtractor
+            extractor.fetchPage()
+            val newPage = if(isComments) extractor.getPage(Page(videoUrl, page.id))  else extractor.getPage(page)
             val pageMap:MutableMap<String, Any?> = mutableMapOf()
             if(newPage.hasNextPage()){
                 pageMap["newPageInfo"] = mutableMapOf(
@@ -113,7 +115,8 @@ class YoutubeExtractors{
             val itemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
             for (i in 0 until newPage.items.size){
                 val item = newPage.items[i]
-                itemsMap[i] = VideoInfoDecode.toMap(item)
+                itemsMap[i] = if(isComments)  VideoInfoDecode.decodeCommentsToMap(item as CommentsInfoItem)
+                else VideoInfoDecode.toMap(item as StreamInfoItem)
             }
             returnMap["items"] = itemsMap
             return returnMap

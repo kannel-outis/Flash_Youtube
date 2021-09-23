@@ -1,8 +1,8 @@
 import 'package:flash_newpipe_extractor/src/method_calls.dart';
-import 'package:flash_newpipe_extractor/src/models/videoInfo.dart';
+import 'package:flash_newpipe_extractor/src/models/video/videoInfo.dart';
 
-import '../utils/utils.dart';
-import 'channel.dart';
+import '../../utils/utils.dart';
+import '../channel/channel.dart';
 
 class YoutubeVideo {
   final String? videoName;
@@ -49,13 +49,13 @@ class YoutubeVideo {
   Channel? _uploaderChannel;
   Channel? get uploaderChannelInfo => _uploaderChannel;
   Future<Channel?> getUploaderChannelInfo() async {
-    // try {
-    return _uploaderChannel =
-        await FlashMethodCalls.getChannelInfo(uploaderUrl!);
-    // } catch (e) {
-    //   print(e.toString());
-    //   return null;
-    // }
+    try {
+      return _uploaderChannel =
+          await FlashMethodCalls.getChannelInfo(uploaderUrl!);
+    } catch (e) {
+      print(e.toString());
+      return null;
+    }
   }
 
   factory YoutubeVideo.fromMap(Map<String, dynamic> map) {

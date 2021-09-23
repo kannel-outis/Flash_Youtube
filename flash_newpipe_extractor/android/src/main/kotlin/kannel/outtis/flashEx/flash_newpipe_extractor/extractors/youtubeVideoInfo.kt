@@ -1,10 +1,10 @@
 package kannel.outtis.flashEx.flash_newpipe_extractor.extractors
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import kannel.outtis.flashEx.flash_newpipe_extractor.decoders.VideoInfoDecode
-import org.schabi.newpipe.extractor.ListExtractor
 import org.schabi.newpipe.extractor.ServiceList
 import org.schabi.newpipe.extractor.comments.CommentsInfoItem
-import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeTrendingExtractor
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItemsCollector
 
@@ -39,8 +39,28 @@ class YoutubeVideoInfoExtractor{
           val items = extractor.initialPage.items
           if(extractor.isCommentsDisabled){
 //              return mutableMapOf("disabled" to extractor.isCommentsDisabled)
-              fullCommentsInfo[200] = mutableMapOf("disabled" to extractor.isCommentsDisabled)
+              fullCommentsInfo[20000] = mutableMapOf("disabled" to extractor.isCommentsDisabled)
           }
+
+          if(extractor.initialPage.hasNextPage()){
+              fullCommentsInfo[20001] = mutableMapOf(
+                      "id" to extractor.initialPage.nextPage.id,
+                      "url" to extractor.initialPage.nextPage.url,
+                      "ids" to extractor.initialPage.nextPage.ids,
+                      "body" to extractor.initialPage.nextPage.body,
+                      "channelHasNextPage" to extractor.initialPage.hasNextPage()
+
+              )
+          }else{
+              fullCommentsInfo[20001] = mutableMapOf(
+                      "id" to null,
+                      "url" to null,
+                      "body" to null,
+                      "ids" to null,
+                      "channelHasNextPage" to extractor.initialPage.hasNextPage()
+              )
+          }
+
           for(i in 0 until items.size){
               val item: CommentsInfoItem = items[i]
               fullCommentsInfo[i] = VideoInfoDecode.decodeCommentsToMap(item)

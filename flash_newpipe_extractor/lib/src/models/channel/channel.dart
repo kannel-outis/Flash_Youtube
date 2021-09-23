@@ -1,10 +1,10 @@
 import 'package:flash_newpipe_extractor/src/models/growable_page_list.dart';
 import 'package:flash_newpipe_extractor/src/models/page/page.dart';
 import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
-import 'package:flash_newpipe_extractor/src/models/video.dart';
+import 'package:flash_newpipe_extractor/src/models/video/video.dart';
 
 class Channel extends PageManager<YoutubeVideo, Channel>
-    implements GrowablePageList<YoutubeVideo, Channel> {
+    implements GrowablePage<YoutubeVideo, Channel> {
   final String name;
   final String? description;
   final String id;
@@ -13,10 +13,8 @@ class Channel extends PageManager<YoutubeVideo, Channel>
   final String? feedUrl;
   final int? subscriberCount;
   final String url;
-  // final Page? nextpage;
 
   Channel({
-    // this.nextpage,
     required this.name,
     this.description,
     required this.id,
@@ -48,7 +46,6 @@ class Channel extends PageManager<YoutubeVideo, Channel>
       description: map["channelDescription"],
       feedUrl: map["channelFeedUrl"],
       subscriberCount: map["channelSubscriberCount"],
-      // nextpage: Page.fromMap(Map.from(map["nextPageInfo"])),
     );
   }
 

@@ -42,12 +42,21 @@ class MyApp extends StatelessWidget {
           // await _video!.getFullInformation.then((value) async {
           //   value.getComments().then(
           //     (value) {
-          //       value!.comments!.forEach((element) {
+          //       value!.comments.forEach((element) {
           //         print(element.commentText);
           //       });
           //     },
           //   );
           // });
+// print(_video!.videoInfo!.comments!.page!.id);
+          // if (_video!.videoInfo!.comments!.page!.hasNextPage) {
+          //   await _video!.videoInfo!.comments!.nextpageItems();
+          //   _video!.videoInfo!.comments!.comments.forEach((element) {
+          //     print(element.commentText);
+          //   });
+          // } else {
+          //   print("next page");
+          // }
 
           // await _video!.getUploaderChannelInfo().then((value) async {
           //   print(value!.videoUploads.length);
@@ -59,16 +68,14 @@ class MyApp extends StatelessWidget {
           //   await value
           //       .nextpageItems()
           //       .then((v) => print(value.videoUploads.length));
-
-          //   // print(value!.nextpage!.body);
           // });
-          if (_video!.uploaderChannelInfo!.page!.hasNextPage) {
-            await _video!.uploaderChannelInfo!.nextpageItems();
-            print(_video!.uploaderChannelInfo!.videoUploads.length);
-            print(_video!.uploaderChannelInfo!.page!.pageNumber);
-          } else {
-            print("no next page");
-          }
+          // if (_video!.uploaderChannelInfo!.page!.hasNextPage) {
+          //   await _video!.uploaderChannelInfo!.nextpageItems();
+          //   print(_video!.uploaderChannelInfo!.videoUploads.length);
+          //   print(_video!.uploaderChannelInfo!.page!.pageNumber);
+          // } else {
+          //   print("no next page");
+          // }
         },
       ),
     ));

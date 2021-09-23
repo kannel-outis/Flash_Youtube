@@ -1,9 +1,9 @@
-import 'package:flash_newpipe_extractor/src/models/channel.dart';
+import 'package:flash_newpipe_extractor/src/models/channel/channel.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 
 import 'method_calls.dart';
-import 'models/video.dart';
-import 'models/videoInfo.dart';
+import 'models/video/video.dart';
+import 'models/video/videoInfo.dart';
 
 class Extract {
   Future<List<YoutubeVideo>?> getTrendingVideos() async {

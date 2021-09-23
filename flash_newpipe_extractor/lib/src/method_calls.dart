@@ -1,18 +1,17 @@
 import 'dart:async';
 import 'package:flash_newpipe_extractor/src/error/error.dart';
-import 'package:flash_newpipe_extractor/src/models/channel.dart';
+import 'package:flash_newpipe_extractor/src/models/channel/channel.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comment_info.dart';
 import 'package:flash_newpipe_extractor/src/models/growable_page_list.dart';
 import 'package:flash_newpipe_extractor/src/models/page/page.dart';
-import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/audioOnlyStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoAudioStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoOnlyStream.dart';
-import 'package:flash_newpipe_extractor/src/models/videoInfo.dart';
+import 'package:flash_newpipe_extractor/src/models/video/videoInfo.dart';
 import 'package:flutter/services.dart';
 
-import 'models/video.dart';
+import 'models/video/video.dart';
 import 'utils/utils.dart';
 
 class FlashMethodCalls {
@@ -94,27 +93,29 @@ class FlashMethodCalls {
   static Future<Comments> getvideoComments(String url) async {
     final result = await _channel.invokeMethod("getComments", {"url": url});
     final _resultMap = Utils.convertToMapType(result);
-    final List<CommentInfo> _commentsInfolist = [];
-    if (_resultMap.containsKey(200)) {
-      return Comments(isDisabled: true);
-    } else {
-      _resultMap.forEach((key, value) {
-        final commentInfo = CommentInfo.fromMap(value);
-        _commentsInfolist.add(commentInfo);
-      });
-      return Comments(isDisabled: false, comments: _commentsInfolist);
-    }
+    final comments = Comments(
+        isDisabled: _resultMap.containsKey(20000) ? true : false, url: url);
+    _resultMap.forEach((key, value) {
+      final commentInfo = CommentInfo.fromMap(value);
+      comments.addToGrowableList(commentInfo);
+    });
+    comments.setPage = Page.fromMap(Map.from(_resultMap[20001]!));
+    return comments;
   }
 
   // next page
 
-  static Future<void> getItemsNextPage(GrowablePageList manager) async {
+  static Future<void> getItemsNextPage(
+      GrowablePage manager, bool isComments) async {
     final _manager = manager;
     final result = await _channel.invokeMethod(
       "getChannelNextPageItems",
       {
-        // change url to optional
-        "channelUrl": _manager.childPage!.ids![1],
+        "isComments": isComments,
+        "videoUrl": isComments ? (_manager.child as Comments).url : "",
+        "channelUrl": _manager.childPage!.ids == null
+            ? null
+            : _manager.childPage!.ids![1],
         "pageInfo": _manager.childPage!.toMap(),
       },
     );
@@ -123,8 +124,12 @@ class FlashMethodCalls {
     final _page = Page.fromMap(Map.from(_resultMap["page"]![0]!["newPageInfo"]))
         .copyWith(pageNumber: _manager.child.page.pageNumber);
     _manager.child.setPage = _page;
-    _resultMap["items"]!.forEach((key, value) {
-      _manager.addToGrowableList(YoutubeVideo.fromMap(value));
-    });
+    _resultMap["items"]!.forEach(
+      (key, value) {
+        _manager.addToGrowableList(
+          isComments ? CommentInfo.fromMap(value) : YoutubeVideo.fromMap(value),
+        );
+      },
+    );
   }
 }
