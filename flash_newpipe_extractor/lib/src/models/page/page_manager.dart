@@ -1,7 +1,7 @@
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_newpipe_extractor/src/models/growable_page_list.dart';
-import 'package:flash_newpipe_extractor/src/models/page/page.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flash_newpipe_extractor/src/models/page/page.dart' as p;
+import 'package:flutter/widgets.dart';
 
 import '../../method_calls.dart';
 
@@ -14,9 +14,9 @@ class PageManager<T, K extends GrowablePage<T, K>> {
     _child = child;
   }
 
-  Page? _page;
-  Page? get page => _page;
-  set setPage(Page page) {
+  p.Page? _page;
+  p.Page? get page => _page;
+  set setPage(p.Page page) {
     _page = page;
   }
 

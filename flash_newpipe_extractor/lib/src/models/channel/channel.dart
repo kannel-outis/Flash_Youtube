@@ -1,7 +1,8 @@
 import 'package:flash_newpipe_extractor/src/models/growable_page_list.dart';
-import 'package:flash_newpipe_extractor/src/models/page/page.dart';
+import 'package:flash_newpipe_extractor/src/models/page/page.dart' as p;
 import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
 import 'package:flash_newpipe_extractor/src/models/video/video.dart';
+import 'package:flutter/widgets.dart';
 
 class Channel extends PageManager<YoutubeVideo, Channel>
     implements GrowablePage<YoutubeVideo, Channel> {
@@ -31,6 +32,7 @@ class Channel extends PageManager<YoutubeVideo, Channel>
   final List<YoutubeVideo> _listOfVideo = [];
   List<YoutubeVideo> get videoUploads => _listOfVideo;
 
+  @protected
   @override
   void addToGrowableList(YoutubeVideo video) {
     _listOfVideo.add(video);
@@ -50,7 +52,7 @@ class Channel extends PageManager<YoutubeVideo, Channel>
   }
 
   @override
-  Page? get childPage => super.page;
+  p.Page? get childPage => super.page;
 
   @override
   Channel? get child => this;

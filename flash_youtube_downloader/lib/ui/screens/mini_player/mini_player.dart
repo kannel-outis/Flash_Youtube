@@ -384,7 +384,7 @@ class MiniPlayerWidget extends HookWidget {
                               )
                             : Column(
                                 children: currentVideoState
-                                    .videoInfo!.comments!.comments!
+                                    .videoInfo!.comments!.commentsInfo
                                     .map(
                                       (e) => CommentTile(
                                         _miniPlayerController,

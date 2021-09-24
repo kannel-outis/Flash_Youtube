@@ -45,7 +45,8 @@ class CommentTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(50),
                 child: FadeInImage(
                   fit: BoxFit.fill,
-                  image: CachedNetworkImageProvider(e.uploaderAvatarUrl!),
+                  image: CachedNetworkImageProvider(e.uploaderAvatarUrl ??
+                      "https://s.ytimg.com/yts/img/channels/c4/default_banner-vflYp0HrA.jpg"),
                   placeholder: MemoryImage(Utils.transparentImage),
                 ),
               ),
@@ -63,12 +64,13 @@ class CommentTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "${e.uploaderName!}  •  ${e.textualUploadDate!} ",
+                          "${e.uploaderName}  •  ${e.textualUploadDate} ",
                           style: theme.textTheme.bodyText2!
                               .copyWith(color: Colors.grey),
                         ),
                         const SizedBox(height: 5),
-                        Text(e.commentText!, style: theme.textTheme.bodyText1),
+                        Text(e.commentText ?? "cannot load this at the minute",
+                            style: theme.textTheme.bodyText1),
                       ],
                     ),
                   ),
@@ -86,12 +88,13 @@ class CommentTile extends StatelessWidget {
                                 size: theme.primaryIconTheme.size,
                               ),
                               const SizedBox(width: 7),
-                              Text(e.likeCount!.toString().convertToViews())
+                              Text(e.likeCount.toString().convertToViews())
                             ],
                           ),
                         ),
                         const SizedBox(width: 20),
-                        if (e.isHeartedByUploader!)
+                        if (e.isHeartedByUploader != null &&
+                            e.isHeartedByUploader!)
                           Icon(
                             Icons.favorite,
                             color: Colors.red,

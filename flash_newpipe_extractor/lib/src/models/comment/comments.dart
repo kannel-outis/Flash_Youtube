@@ -1,6 +1,7 @@
 import 'package:flash_newpipe_extractor/src/models/comment/comment_info.dart';
-import 'package:flash_newpipe_extractor/src/models/page/page.dart';
+import 'package:flash_newpipe_extractor/src/models/page/page.dart' as p;
 import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
+import 'package:flutter/widgets.dart';
 
 import '../growable_page_list.dart';
 
@@ -16,8 +17,9 @@ class Comments extends PageManager<CommentInfo, Comments>
     super.child = this;
   }
   List<CommentInfo> _commentsInfo = [];
-  List<CommentInfo> get comments => _commentsInfo;
+  List<CommentInfo> get commentsInfo => _commentsInfo;
 
+  @protected
   @override
   void addToGrowableList(CommentInfo item) {
     _commentsInfo.add(item);
@@ -27,5 +29,5 @@ class Comments extends PageManager<CommentInfo, Comments>
   Comments? get child => this;
 
   @override
-  Page? get childPage => super.page;
+  p.Page? get childPage => super.page;
 }
