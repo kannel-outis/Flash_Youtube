@@ -13,7 +13,7 @@ class VideoInfoTile extends StatelessWidget {
     return Container(
       // color: Colors.black,
       margin: const EdgeInsets.only(bottom: 20),
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.only(left: 10),
       width: double.infinity,
       height: 130,
       child: Row(

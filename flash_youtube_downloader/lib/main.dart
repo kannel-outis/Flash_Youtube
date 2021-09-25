@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'providers/home/states/current_video_state_provider.dart';
+import 'providers/home/current_video_state_provider.dart';
 import 'ui/screens/home/home_screen.dart';
 import 'ui/screens/mini_player/mini_player.dart';
 import 'utils/utils.dart';

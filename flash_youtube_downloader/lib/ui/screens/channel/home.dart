@@ -146,6 +146,7 @@ class _Home extends StatelessWidget {
           ),
           GridViewWidget(
             physics: const NeverScrollableScrollPhysics(),
+            showUploaderPic: false,
             gridCount: gridCount,
             itemsCount: 20,
             data: data.videoUploads,

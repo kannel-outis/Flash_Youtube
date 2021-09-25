@@ -1,6 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
-import 'package:flash_youtube_downloader/providers/home/states/current_video_state_provider.dart';
+import 'package:flash_youtube_downloader/providers/home/current_video_state_provider.dart';
 import 'package:flash_youtube_downloader/ui/screens/channel/channel_info.dart';
 import 'package:flash_youtube_downloader/ui/screens/home/home_screen.dart';
 import 'package:flash_youtube_downloader/ui/widgets/comment_tile.dart';
