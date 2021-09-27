@@ -2,7 +2,7 @@ part of channel_info;
 
 // ignore: must_be_immutable
 class _Home extends StatelessWidget {
-  final Channel data;
+  final ChannelInfo data;
   final PaletteGenerator colorGen;
   final MiniPlayerController controller;
   _Home(

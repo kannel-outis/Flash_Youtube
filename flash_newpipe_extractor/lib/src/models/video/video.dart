@@ -1,10 +1,12 @@
 import 'package:flash_newpipe_extractor/src/method_calls.dart';
 import 'package:flash_newpipe_extractor/src/models/video/videoInfo.dart';
+import 'package:flash_newpipe_extractor/src/utils/enums.dart';
 
 import '../../utils/utils.dart';
-import '../channel/channel.dart';
+import '../channel/channel_info.dart';
+import '../info_item.dart';
 
-class YoutubeVideo {
+class YoutubeVideo extends InfoItem {
   final String? videoName;
   final String url;
   final int? viewCount;
@@ -27,7 +29,11 @@ class YoutubeVideo {
     this.duration,
     this.uploadDate,
     this.isUploaderVerified,
-  });
+  }) : super(
+            name: videoName!,
+            avatarThumbnailUrl: thumbnailUrl!,
+            type: InfoType.VIDEO,
+            url: url);
   String get id => Utils.getIdFromUrl(url);
 
   YoutubeVideoInfo? _videoInfo;
@@ -46,9 +52,9 @@ class YoutubeVideo {
   String get maxresdefault =>
       "https://img.youtube.com/vi/$id/maxresdefault.jpg";
 
-  Channel? _uploaderChannel;
-  Channel? get uploaderChannelInfo => _uploaderChannel;
-  Future<Channel?> getUploaderChannelInfo() async {
+  ChannelInfo? _uploaderChannel;
+  ChannelInfo? get uploaderChannelInfo => _uploaderChannel;
+  Future<ChannelInfo?> getUploaderChannelInfo() async {
     try {
       return _uploaderChannel =
           await FlashMethodCalls.getChannelInfo(uploaderUrl!);

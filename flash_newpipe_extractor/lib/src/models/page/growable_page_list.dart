@@ -1,6 +1,6 @@
 import 'package:flutter/widgets.dart';
 
-import 'page/page.dart' as page;
+import 'page.dart' as page;
 
 abstract class GrowablePage<T, K> {
   final page.Page? childPage;

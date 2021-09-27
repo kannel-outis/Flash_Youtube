@@ -23,11 +23,11 @@ part 'about.dart';
 final _extract = Provider<Extract>((ref) => Extract());
 
 // ignore: must_be_immutable
-class ChannelInfo extends HookWidget {
+class ChannelInfoPage extends HookWidget {
   final MiniPlayerController controller;
   final YoutubeVideo? youtubeVideo;
   final String? uploaderUrl;
-  ChannelInfo({
+  ChannelInfoPage({
     Key? key,
     this.uploaderUrl,
     required this.controller,
@@ -35,7 +35,7 @@ class ChannelInfo extends HookWidget {
   }) : super(key: key);
   int gridCount = 0;
   final channelInfoExtractProvider =
-      FutureProvider.family<Channel?, String>((ref, uploaderUrl) {
+      FutureProvider.family<ChannelInfo?, String>((ref, uploaderUrl) {
     return ref.read(_extract).getChannelInfo(uploaderUrl);
   });
 
@@ -130,7 +130,7 @@ class ChannelInfo extends HookWidget {
         loading: () => const Center(
           child: CircularProgressIndicator(),
         ),
-        error: (o, s) => CustomErrorWidget<Channel?>(
+        error: (o, s) => CustomErrorWidget<ChannelInfo?>(
           future: uploaderUrl == null
               ? channelInfoProvider(youtubeVideo!)
               : channelInfoExtractProvider(uploaderUrl!),

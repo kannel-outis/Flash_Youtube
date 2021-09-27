@@ -1,4 +1,4 @@
-import 'package:flash_newpipe_extractor/src/models/channel/channel.dart';
+import 'package:flash_newpipe_extractor/src/models/channel/channel_info.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 
 import 'method_calls.dart';
@@ -14,11 +14,19 @@ class Extract {
     return await FlashMethodCalls.getVideoInfoFromUrl(url);
   }
 
-  Future<Channel> getChannelInfo(String channelUrl) async {
+  Future<ChannelInfo> getChannelInfo(String channelUrl) async {
     return await FlashMethodCalls.getChannelInfo(channelUrl);
   }
 
   Future<Comments> getComments(String url) async {
     return await FlashMethodCalls.getvideoComments(url);
+  }
+
+  Future<List<String>> getSearchSuggestions(String query) async {
+    return await FlashMethodCalls.getSearchSuggestions(query);
+  }
+
+  Future<void> getSearchResults(String query) async {
+    await FlashMethodCalls.getSearchResults(query);
   }
 }

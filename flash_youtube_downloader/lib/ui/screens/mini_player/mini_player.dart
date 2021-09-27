@@ -270,7 +270,8 @@ class MiniPlayerWidget extends HookWidget {
                                         _miniPlayerController.closeMiniPlayer();
                                         Utils.navigationKey.currentState!.push(
                                           MaterialPageRoute(
-                                            builder: (context) => ChannelInfo(
+                                            builder: (context) =>
+                                                ChannelInfoPage(
                                               controller: _miniPlayerController,
                                               youtubeVideo: currentVideoState,
                                             ),

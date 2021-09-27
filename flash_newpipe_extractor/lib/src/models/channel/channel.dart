@@ -1,59 +1,38 @@
-import 'package:flash_newpipe_extractor/src/models/growable_page_list.dart';
-import 'package:flash_newpipe_extractor/src/models/page/page.dart' as p;
-import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
-import 'package:flash_newpipe_extractor/src/models/video/video.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flash_newpipe_extractor/src/models/info_item.dart';
+import 'package:flash_newpipe_extractor/src/utils/enums.dart';
 
-class Channel extends PageManager<YoutubeVideo, Channel>
-    implements GrowablePage<YoutubeVideo, Channel> {
-  final String name;
+class Channel extends InfoItem {
+  final String channelName;
   final String? description;
-  final String id;
-  final String avatarUrl;
-  final String? bannerUrl;
-  final String? feedUrl;
-  final int? subscriberCount;
-  final String url;
+  final bool isVerified;
+  final int streamCount;
+  final int subscriberCount;
+  final String thumbnailUrl;
+  final String channelUrl;
 
-  Channel({
-    required this.name,
+  const Channel({
+    required this.channelName,
     this.description,
-    required this.id,
-    required this.avatarUrl,
-    this.bannerUrl,
-    this.feedUrl,
-    this.subscriberCount,
-    required this.url,
-  }) {
-    super.child = this;
-  }
-
-  String get hdAvatarUrl => avatarUrl.replaceAll("=s48", "=s150");
-  final List<YoutubeVideo> _listOfVideo = [];
-  List<YoutubeVideo> get videoUploads => _listOfVideo;
-
-  @protected
-  @override
-  void addToGrowableList(YoutubeVideo video) {
-    _listOfVideo.add(video);
-  }
+    this.isVerified = false,
+    required this.streamCount,
+    required this.subscriberCount,
+    required this.thumbnailUrl,
+    required this.channelUrl,
+  }) : super(
+          avatarThumbnailUrl: thumbnailUrl,
+          name: channelName,
+          type: InfoType.CHANNEL,
+          url: channelUrl,
+        );
 
   factory Channel.fromMap(Map<String, dynamic> map) {
     return Channel(
-      name: map["channelName"],
-      id: map["channelId"],
-      avatarUrl: map["channelAvatarUrl"],
-      url: map["channelUrl"],
-      bannerUrl: map["channelBannerUrl"],
-      description: map["channelDescription"],
-      feedUrl: map["channelFeedUrl"],
-      subscriberCount: map["channelSubscriberCount"],
+      channelName: map["channelName"],
+      isVerified: map["isVerified"] as bool,
+      streamCount: int.tryParse(map["streamCount"]) ?? 0,
+      subscriberCount: int.tryParse(map["subscriberCount"]) ?? 0,
+      thumbnailUrl: map["thumbnailUrl"],
+      channelUrl: map["channelUrl"],
     );
   }
-
-  @override
-  p.Page? get childPage => super.page;
-
-  @override
-  Channel? get child => this;
 }

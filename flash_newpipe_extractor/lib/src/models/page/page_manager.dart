@@ -1,5 +1,5 @@
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
-import 'package:flash_newpipe_extractor/src/models/growable_page_list.dart';
+import 'package:flash_newpipe_extractor/src/models/page/growable_page_list.dart';
 import 'package:flash_newpipe_extractor/src/models/page/page.dart' as p;
 import 'package:flutter/widgets.dart';
 
@@ -21,6 +21,7 @@ class PageManager<T, K extends GrowablePage<T, K>> {
   }
 
   Future<void> nextpageItems() async {
+    // TODO: engineer to work with search
     if (_child == null) {
       return;
     }

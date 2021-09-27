@@ -2,7 +2,7 @@ export 'src/extractions.dart';
 export 'src/models/stream/streams.dart';
 export 'src/models/video/video.dart';
 export 'src/models/video/videoInfo.dart';
-export 'src/models/channel/channel.dart';
+export 'src/models/channel/channel_info.dart';
 export 'src/models/stream/videoOnlyStream.dart';
 export 'src/models/stream/audioOnlyStream.dart';
 export 'src/models/stream/videoAudioStream.dart';

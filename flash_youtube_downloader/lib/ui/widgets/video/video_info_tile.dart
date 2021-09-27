@@ -11,8 +11,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '/utils/extensions.dart';
 
 final channelInfoProvider =
-    FutureProvider.family<Channel?, YoutubeVideo>((ref, video) {
-  return AsyncMemoizer<Channel?>()
+    FutureProvider.family<ChannelInfo?, YoutubeVideo>((ref, video) {
+  return AsyncMemoizer<ChannelInfo?>()
       .runOnce(() => video.getUploaderChannelInfo());
 });
 
@@ -97,7 +97,7 @@ class VideoInfoTile extends ConsumerWidget {
                     onTap: () {
                       Utils.navigationKey.currentState!.push(
                         MaterialPageRoute(
-                          builder: (context) => ChannelInfo(
+                          builder: (context) => ChannelInfoPage(
                               controller: _miniPlayerController,
                               youtubeVideo: video),
                         ),

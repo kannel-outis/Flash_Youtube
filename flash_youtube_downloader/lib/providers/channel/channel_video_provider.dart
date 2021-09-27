@@ -2,17 +2,17 @@ import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final channelVideoProvider = StateNotifierProvider.autoDispose
-    .family<ChannelVideoProvider, bool, Channel>((ref, channel) {
+    .family<ChannelVideoProvider, bool, ChannelInfo>((ref, channel) {
   print(channel.name);
   return ChannelVideoProvider(channel);
 });
 
 class ChannelVideoProvider extends StateNotifier<bool> {
-  ChannelVideoProvider(Channel channel)
+  ChannelVideoProvider(ChannelInfo channel)
       : _channel = channel,
         super(false);
 
-  late final Channel _channel;
+  late final ChannelInfo _channel;
 
   bool _hasReachedEnd = false;
 

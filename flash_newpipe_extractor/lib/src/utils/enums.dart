@@ -18,3 +18,5 @@ enum Quality {
   //144p
   tiny,
 }
+
+enum InfoType { PLAYLIST, CHANNEL, VIDEO }

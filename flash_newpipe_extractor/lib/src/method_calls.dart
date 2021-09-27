@@ -1,9 +1,10 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:flash_newpipe_extractor/src/error/error.dart';
-import 'package:flash_newpipe_extractor/src/models/channel/channel.dart';
+import 'package:flash_newpipe_extractor/src/models/channel/channel_info.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comment_info.dart';
-import 'package:flash_newpipe_extractor/src/models/growable_page_list.dart';
+import 'package:flash_newpipe_extractor/src/models/page/growable_page_list.dart';
 import 'package:flash_newpipe_extractor/src/models/page/page.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/audioOnlyStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoAudioStream.dart';
@@ -11,6 +12,7 @@ import 'package:flash_newpipe_extractor/src/models/stream/videoOnlyStream.dart';
 import 'package:flash_newpipe_extractor/src/models/video/videoInfo.dart';
 import 'package:flutter/services.dart';
 
+import 'models/search/search.dart';
 import 'models/video/video.dart';
 import 'utils/utils.dart';
 
@@ -66,7 +68,7 @@ class FlashMethodCalls {
     return fullinfo;
   }
 
-  static Future<Channel> getChannelInfo(String channelUrl) async {
+  static Future<ChannelInfo> getChannelInfo(String channelUrl) async {
     final result = await _channel.invokeMethod(
       "getChannelInfo",
       {
@@ -79,7 +81,7 @@ class FlashMethodCalls {
     final Map<String, Map<int, Map<String, dynamic>>> _resultMap =
         Utils.convertToType(result);
 
-    final channel = Channel.fromMap(_resultMap["channelInfo"]![0]!);
+    final channel = ChannelInfo.fromMap(_resultMap["channelInfo"]![0]!);
     channel.setPage =
         Page.fromMap(Map.from(_resultMap["channelInfo"]![0]!["nextPageInfo"]));
     _resultMap["channelFirstPageVideos"]!.forEach((key, value) {
@@ -131,5 +133,29 @@ class FlashMethodCalls {
         );
       },
     );
+  }
+
+  // search
+
+  // TODO: do page
+
+  static Future<List<String>> getSearchSuggestions(String query) async {
+    final result = await _channel.invokeMethod("getSearchSuggestions", {
+      "query": query,
+    });
+    return List<String>.from(result);
+  }
+
+  static Future<void> getSearchResults(String query) async {
+    final result = await _channel.invokeMethod(
+      "getSearchResults",
+      {
+        "query": query,
+      },
+    );
+    final _resultMap = Map<String, dynamic>.from(result);
+    final search = Search.fromMap(_resultMap);
+    print(search.isCorrectedSearch);
+    log(result.toString());
   }
 }

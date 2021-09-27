@@ -4,8 +4,10 @@ import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
+import 'test.dart';
+
 void main() {
-  runApp(MyApp());
+  runApp(Test());
 }
 
 // ignore: must_be_immutable

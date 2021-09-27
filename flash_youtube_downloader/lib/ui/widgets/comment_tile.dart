@@ -30,7 +30,7 @@ class CommentTile extends StatelessWidget {
               _miniPlayerController.closeMiniPlayer();
               Utils.navigationKey.currentState!.push(
                 MaterialPageRoute(
-                  builder: (context) => ChannelInfo(
+                  builder: (context) => ChannelInfoPage(
                     controller: _miniPlayerController,
                     uploaderUrl: e.uploaderUrl,
                   ),

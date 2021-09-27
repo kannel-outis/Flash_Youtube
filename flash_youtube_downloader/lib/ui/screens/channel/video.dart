@@ -2,7 +2,7 @@ part of channel_info;
 
 // ignore: unused_element
 class _Videos extends HookWidget {
-  final Channel channel;
+  final ChannelInfo channel;
 
   const _Videos({Key? key, required this.channel}) : super(key: key);
 

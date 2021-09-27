@@ -2,7 +2,7 @@ package kannel.outtis.flashEx.flash_newpipe_extractor.extractors
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import kannel.outtis.flashEx.flash_newpipe_extractor.decoders.VideoInfoDecode
+import kannel.outtis.flashEx.flash_newpipe_extractor.decoders.InfoDecoder
 import org.schabi.newpipe.extractor.ServiceList
 import org.schabi.newpipe.extractor.comments.CommentsInfoItem
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
@@ -15,17 +15,17 @@ class YoutubeVideoInfoExtractor{
           val extractor = ServiceList.YouTube.getStreamExtractor(url)
           extractor.fetchPage()
           val fullVideoInformation:MutableMap<String, Map<Int, Map<String, Any?>>> = mutableMapOf()
-          fullVideoInformation["fullVideoInfo"] = mapOf(0 to VideoInfoDecode.decoderToMap(extractor))
-          fullVideoInformation["audioStreamsMap"] = VideoInfoDecode.decodeAudioStreams(extractor)
-          fullVideoInformation["videoOnlyStream"] = VideoInfoDecode.decodeVideoOnlyStreams(extractor)
-          fullVideoInformation["videoAudioStream"] = VideoInfoDecode.decodeVideoAudioStream(extractor)
+          fullVideoInformation["fullVideoInfo"] = mapOf(0 to InfoDecoder.decoderToMap(extractor))
+          fullVideoInformation["audioStreamsMap"] = InfoDecoder.decodeAudioStreams(extractor)
+          fullVideoInformation["videoOnlyStream"] = InfoDecoder.decodeVideoOnlyStreams(extractor)
+          fullVideoInformation["videoAudioStream"] = InfoDecoder.decodeVideoAudioStream(extractor)
 
           val streamCollector:StreamInfoItemsCollector = extractor.relatedItems as StreamInfoItemsCollector
           val streamItemsInfo = streamCollector.streamInfoItemList
           val itemsInfoMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
           for (i in 0 until streamItemsInfo.size){
               val item: StreamInfoItem = streamItemsInfo[i]
-              itemsInfoMap[i] = VideoInfoDecode.toMap(item)
+              itemsInfoMap[i] = InfoDecoder.toMap(item)
           }
           fullVideoInformation["relatedVideos"] = itemsInfoMap
           return fullVideoInformation
@@ -63,7 +63,7 @@ class YoutubeVideoInfoExtractor{
 
           for(i in 0 until items.size){
               val item: CommentsInfoItem = items[i]
-              fullCommentsInfo[i] = VideoInfoDecode.decodeCommentsToMap(item)
+              fullCommentsInfo[i] = InfoDecoder.decodeCommentsToMap(item)
           }
           return fullCommentsInfo
       }

@@ -85,6 +85,21 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
             result.success(newItems)
           }
         }
+
+        call.method.equals("getSearchSuggestions")->{
+          val query = call.argument<String>("query")
+          val suggestions = YoutubeExtractors.getQuerySuggestions(query!!)
+          handler.post {
+            result.success(suggestions)
+          }
+        }
+        call.method.equals("getSearchResults")->{
+          val query = call.argument<String>("query")
+          val searchResult = YoutubeExtractors.getSearchResults(query!!)
+          handler.post {
+            result.success(searchResult)
+          }
+        }
           else -> {
             handler.post(Runnable {
               result.notImplemented()
