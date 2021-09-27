@@ -93,11 +93,11 @@ class YoutubeExtractors{
            }
         }
 
-        fun getNextPageItems(page: Page, channelUrl: String?, isComments: Boolean, videoUrl:String?): Map<String, Map<Int, Map<String, Any?>>?>{
+        fun getNextPageItems(page: Page, channelUrl: String?, type: String, videoUrl:String?, query: String?): Map<String, Map<Int, Map<String, Any?>>?>{
             val returnMap: MutableMap<String, Map<Int, Map<String, Any?>>?> = mutableMapOf()
-            val extractor = if(isComments)  YouTube.getCommentsExtractor(videoUrl)  else YouTube.getChannelExtractor(channelUrl) as YoutubeChannelExtractor
+            val extractor = if(type == "comments")  YouTube.getCommentsExtractor(videoUrl)  else if (type == "searches")  YouTube.getSearchExtractor(query) else YouTube.getChannelExtractor(channelUrl) as YoutubeChannelExtractor
             extractor.fetchPage()
-            val newPage = if(isComments) extractor.getPage(Page(videoUrl, page.id))  else extractor.getPage(page)
+            val newPage = if(type == "comments") extractor.getPage(Page(videoUrl, page.id))  else extractor.getPage(page)
             val pageMap:MutableMap<String, Any?> = mutableMapOf()
             if(newPage.hasNextPage()){
                 pageMap["newPageInfo"] = mutableMapOf(
@@ -118,11 +118,44 @@ class YoutubeExtractors{
             }
             returnMap["page"] = mapOf(0 to pageMap)
             val itemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
+//            val searchVideosItemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
+            val playlistItemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
+            val channelItemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
             for (i in 0 until newPage.items.size){
                 val item = newPage.items[i]
-                itemsMap[i] = if(isComments)  InfoDecoder.decodeCommentsToMap(item as CommentsInfoItem)
-                else InfoDecoder.toMap(item as StreamInfoItem)
+                when (type) {
+                    "comments" -> {
+                        itemsMap[i] =  InfoDecoder.decodeCommentsToMap(item as CommentsInfoItem)
+                    }
+                    "channels" -> {
+                        itemsMap[i] =  InfoDecoder.toMap(item as StreamInfoItem)
+                    }
+                    else ->{
+                        when (item.infoType) {
+                            InfoItem.InfoType.STREAM -> {
+                                item as StreamInfoItem
+                                itemsMap[i] = InfoDecoder.toMap(item)
+                            }
+                            InfoItem.InfoType.CHANNEL ->{
+                                item as ChannelInfoItem
+                                channelItemsMap[i] = InfoDecoder.decodeChannelsToMap(item)
+                            }InfoItem.InfoType.PLAYLIST -> {
+                            item as PlaylistInfoItem
+                            playlistItemsMap[i] = InfoDecoder.decodePlayListToMap(item)
+                        }
+                            else -> {}
+                        }
+                    }
+                }
             }
+            if(playlistItemsMap.isNotEmpty()){
+                returnMap["playList"] = playlistItemsMap
+            }
+            if(channelItemsMap.isNotEmpty()){
+                returnMap["channel"] = channelItemsMap
+            }
+
+
             returnMap["items"] = itemsMap
             return returnMap
 
@@ -154,6 +187,7 @@ class YoutubeExtractors{
                         item as PlaylistInfoItem
                         playListInfoMap[i] = InfoDecoder.decodePlayListToMap(item)
                     }
+                    else -> {}
                 }
             }
             return mutableMapOf<String, Any?>(

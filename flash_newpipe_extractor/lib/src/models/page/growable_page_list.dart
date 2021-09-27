@@ -1,5 +1,3 @@
-import 'package:flutter/widgets.dart';
-
 import 'page.dart' as page;
 
 abstract class GrowablePage<T, K> {
@@ -7,6 +5,5 @@ abstract class GrowablePage<T, K> {
   final K? child;
   const GrowablePage(this.childPage, this.child);
 
-  @protected
   void addToGrowableList(T item);
 }

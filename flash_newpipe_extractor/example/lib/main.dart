@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'test.dart';
 
 void main() {
-  runApp(Test());
+  runApp(MyApp());
 }
 
 // ignore: must_be_immutable
@@ -43,17 +43,17 @@ class MyApp extends StatelessWidget {
 
           // await _video!.getFullInformation.then((value) async {
           //   value.getComments().then(
-          //     (value) {
-          //       value!.comments.forEach((element) {
-          //         print(element.commentText);
-          //       });
+          //     (value) async {
+          //       await value!
+          //           .nextpageItems()
+          //           .then((v) => print(value.commentsInfo.length));
           //     },
           //   );
           // });
 // print(_video!.videoInfo!.comments!.page!.id);
           // if (_video!.videoInfo!.comments!.page!.hasNextPage) {
           //   await _video!.videoInfo!.comments!.nextpageItems();
-          //   _video!.videoInfo!.comments!.comments.forEach((element) {
+          //   _video!.videoInfo!.comments!.commentsInfo.forEach((element) {
           //     print(element.commentText);
           //   });
           // } else {
@@ -71,13 +71,13 @@ class MyApp extends StatelessWidget {
           //       .nextpageItems()
           //       .then((v) => print(value.videoUploads.length));
           // });
-          // if (_video!.uploaderChannelInfo!.page!.hasNextPage) {
-          //   await _video!.uploaderChannelInfo!.nextpageItems();
-          //   print(_video!.uploaderChannelInfo!.videoUploads.length);
-          //   print(_video!.uploaderChannelInfo!.page!.pageNumber);
-          // } else {
-          //   print("no next page");
-          // }
+          if (_video!.uploaderChannelInfo!.page!.hasNextPage) {
+            await _video!.uploaderChannelInfo!.nextpageItems();
+            print(_video!.uploaderChannelInfo!.videoUploads.length);
+            print(_video!.uploaderChannelInfo!.page!.pageNumber);
+          } else {
+            print("no next page");
+          }
         },
       ),
     ));

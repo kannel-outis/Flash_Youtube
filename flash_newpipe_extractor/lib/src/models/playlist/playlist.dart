@@ -24,7 +24,7 @@ class Playlist extends InfoItem {
   factory Playlist.fromMap(Map<String, dynamic> map) {
     return Playlist(
       uploaderName: map["uploaderName"],
-      streamCount: int.tryParse(map["streamCount"]) ?? 0,
+      streamCount: map["streamCount"],
       playListName: map["playListName"],
       thumbnailUrl: map["thumbnailUrl"],
       playListUrl: map["playListUrl"],

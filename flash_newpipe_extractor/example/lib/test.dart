@@ -12,6 +12,7 @@ class Test extends StatefulWidget {
 class _TestState extends State<Test> {
   late final TextEditingController _controller;
   List<String> _suggestions = [];
+  Search? _search;
 
   @override
   void initState() {
@@ -51,7 +52,17 @@ class _TestState extends State<Test> {
             // ),
             TextButton(
               onPressed: () async {
-                await Extract().getSearchResults(_controller.value.text);
+                // _search =
+                //     await Extract().getSearchResults(_controller.value.text);
+                // if (_search!.page!.hasNextPage)
+                //   await _search!
+                //       .nextpageItems()
+                //       .then((value) => print(_search!.searchResults.length));
+                // else
+                //   print("done");
+                // for (var item in _search!.searchResults) {
+                //   print(item.name);
+                // }
               },
               child: const Center(
                 child: Text("testing"),

@@ -29,8 +29,8 @@ class Channel extends InfoItem {
     return Channel(
       channelName: map["channelName"],
       isVerified: map["isVerified"] as bool,
-      streamCount: int.tryParse(map["streamCount"]) ?? 0,
-      subscriberCount: int.tryParse(map["subscriberCount"]) ?? 0,
+      streamCount: map["streamCount"],
+      subscriberCount: map["subscriberCount"],
       thumbnailUrl: map["thumbnailUrl"],
       channelUrl: map["channelUrl"],
     );

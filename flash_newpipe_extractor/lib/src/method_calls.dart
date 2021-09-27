@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:developer';
 import 'package:flash_newpipe_extractor/src/error/error.dart';
+import 'package:flash_newpipe_extractor/src/models/channel/channel.dart';
 import 'package:flash_newpipe_extractor/src/models/channel/channel_info.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comment_info.dart';
 import 'package:flash_newpipe_extractor/src/models/page/growable_page_list.dart';
 import 'package:flash_newpipe_extractor/src/models/page/page.dart';
+import 'package:flash_newpipe_extractor/src/models/playlist/playlist.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/audioOnlyStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoAudioStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoOnlyStream.dart';
@@ -107,17 +109,24 @@ class FlashMethodCalls {
 
   // next page
 
-  static Future<void> getItemsNextPage(
-      GrowablePage manager, bool isComments) async {
+  static Future<void> getItemsNextPage(GrowablePage manager) async {
     final _manager = manager;
     final result = await _channel.invokeMethod(
       "getChannelNextPageItems",
       {
-        "isComments": isComments,
-        "videoUrl": isComments ? (_manager.child as Comments).url : "",
-        "channelUrl": _manager.childPage!.ids == null
-            ? null
-            : _manager.childPage!.ids![1],
+        "Type": () {
+          if (manager is Search) {
+            return "searches";
+          } else if (manager is ChannelInfo) {
+            return "channels";
+          }
+          return "comments";
+        }(),
+        "videoUrl": manager is Comments ? _manager.child.url : null,
+        "query": manager is Search
+            ? manager.child!.searchSuggestion ?? manager.child!.searchString
+            : null,
+        "channelUrl": manager is ChannelInfo ? manager.child!.url : null,
         "pageInfo": _manager.childPage!.toMap(),
       },
     );
@@ -129,15 +138,25 @@ class FlashMethodCalls {
     _resultMap["items"]!.forEach(
       (key, value) {
         _manager.addToGrowableList(
-          isComments ? CommentInfo.fromMap(value) : YoutubeVideo.fromMap(value),
+          manager is Comments
+              ? CommentInfo.fromMap(value)
+              : YoutubeVideo.fromMap(value),
         );
       },
     );
+    if (_resultMap.containsKey("playList")) {
+      _resultMap["playList"]!.forEach((key, value) {
+        _manager.addToGrowableList(Playlist.fromMap(value));
+      });
+    }
+    if (_resultMap.containsKey("channel")) {
+      _resultMap["channel"]!.forEach((key, value) {
+        _manager.addToGrowableList(Channel.fromMap(value));
+      });
+    }
   }
 
   // search
-
-  // TODO: do page
 
   static Future<List<String>> getSearchSuggestions(String query) async {
     final result = await _channel.invokeMethod("getSearchSuggestions", {
@@ -146,7 +165,7 @@ class FlashMethodCalls {
     return List<String>.from(result);
   }
 
-  static Future<void> getSearchResults(String query) async {
+  static Future<Search> getSearchResults(String query) async {
     final result = await _channel.invokeMethod(
       "getSearchResults",
       {
@@ -155,7 +174,29 @@ class FlashMethodCalls {
     );
     final _resultMap = Map<String, dynamic>.from(result);
     final search = Search.fromMap(_resultMap);
-    print(search.isCorrectedSearch);
+    final _page =
+        Page.fromMap(Map<String, dynamic>.from(_resultMap["nextPageInfo"]));
+    final Map<int, dynamic> _videoMap =
+        Map<int, dynamic>.from(_resultMap["videos"]);
+    final Map<int, dynamic> _channelMap =
+        Map<int, dynamic>.from(_resultMap["channels"]);
+    final Map<int, dynamic> _playlistMap =
+        Map<int, dynamic>.from(_resultMap["playLists"]);
+    _videoMap.forEach((key, value) {
+      final _video = YoutubeVideo.fromMap(Map<String, dynamic>.from(value));
+      search.addToGrowableList(_video);
+    });
+    _channelMap.forEach((key, value) {
+      final _channel = Channel.fromMap(Map<String, dynamic>.from(value));
+      search.addToGrowableList(_channel);
+    });
+    _playlistMap.forEach((key, value) {
+      final _playList = Playlist.fromMap(Map<String, dynamic>.from(value));
+      search.addToGrowableList(_playList);
+    });
+    search.setPage = _page;
+    print(search.searchResults.length);
     log(result.toString());
+    return search;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_newpipe_extractor/src/models/info_item.dart';
 import 'package:flash_newpipe_extractor/src/models/page/growable_page_list.dart';
 import 'package:flash_newpipe_extractor/src/models/page/page.dart' as p;
 import 'package:flutter/widgets.dart';
@@ -25,8 +26,7 @@ class PageManager<T, K extends GrowablePage<T, K>> {
     if (_child == null) {
       return;
     }
-    await FlashMethodCalls.getItemsNextPage(_child!, _child is Comments)
-        .then((value) {
+    await FlashMethodCalls.getItemsNextPage(_child!).then((value) {
       _page = _page!.copyWith(
         pageNumber: _page!.pageNumber + _pageIncrement,
       );

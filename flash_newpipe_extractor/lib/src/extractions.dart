@@ -2,6 +2,7 @@ import 'package:flash_newpipe_extractor/src/models/channel/channel_info.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 
 import 'method_calls.dart';
+import 'models/search/search.dart';
 import 'models/video/video.dart';
 import 'models/video/videoInfo.dart';
 
@@ -26,7 +27,7 @@ class Extract {
     return await FlashMethodCalls.getSearchSuggestions(query);
   }
 
-  Future<void> getSearchResults(String query) async {
-    await FlashMethodCalls.getSearchResults(query);
+  Future<Search> getSearchResults(String query) async {
+    return await FlashMethodCalls.getSearchResults(query);
   }
 }
