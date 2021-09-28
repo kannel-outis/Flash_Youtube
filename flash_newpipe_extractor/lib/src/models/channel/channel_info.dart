@@ -3,7 +3,7 @@ import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
 import 'package:flash_newpipe_extractor/src/models/video/video.dart';
 
 class ChannelInfo extends PageManager<YoutubeVideo, ChannelInfo>
-    implements GrowablePage<YoutubeVideo> {
+    implements GrowablePage<YoutubeVideo, ChannelInfo> {
   final String name;
   final String? description;
   final String id;
@@ -49,7 +49,7 @@ class ChannelInfo extends PageManager<YoutubeVideo, ChannelInfo>
   }
 
   @override
-  PageManager get manager => this;
+  PageManager<YoutubeVideo, ChannelInfo> get manager => this;
 
   @override
   String get type => "channels";

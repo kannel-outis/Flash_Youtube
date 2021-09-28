@@ -4,7 +4,7 @@ import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
 import '../page/growable_page_list.dart';
 
 class Comments extends PageManager<CommentInfo, Comments>
-    implements GrowablePage<CommentInfo> {
+    implements GrowablePage<CommentInfo, Comments> {
   final bool isDisabled;
   final String url;
 
@@ -23,7 +23,7 @@ class Comments extends PageManager<CommentInfo, Comments>
   }
 
   @override
-  PageManager get manager => this;
+  PageManager<CommentInfo, Comments> get manager => this;
 
   @override
   String get type => "comments";

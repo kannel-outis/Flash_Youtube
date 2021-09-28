@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import '../../method_calls.dart';
 
-class PageManager<T, K extends GrowablePage<T>> {
+class PageManager<T, K extends GrowablePage<T, K>> {
   final String? query;
   final String? channelUrl;
   final String? videoUrl;

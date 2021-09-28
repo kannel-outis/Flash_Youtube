@@ -3,7 +3,7 @@ import 'package:flash_newpipe_extractor/src/models/page/growable_page_list.dart'
 import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
 
 class Search extends PageManager<InfoItem, Search>
-    implements GrowablePage<InfoItem> {
+    implements GrowablePage<InfoItem, Search> {
   final String? searchSuggestion;
   final String searchString;
   final List<String> metaInfo;
@@ -26,7 +26,7 @@ class Search extends PageManager<InfoItem, Search>
   }
 
   @override
-  PageManager get manager => this;
+  PageManager<InfoItem, Search> get manager => this;
 
   factory Search.fromMap(Map<String, dynamic> map) {
     return Search(
