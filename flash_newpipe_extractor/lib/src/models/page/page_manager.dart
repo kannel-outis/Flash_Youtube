@@ -1,12 +1,19 @@
-import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
-import 'package:flash_newpipe_extractor/src/models/info_item.dart';
 import 'package:flash_newpipe_extractor/src/models/page/growable_page_list.dart';
 import 'package:flash_newpipe_extractor/src/models/page/page.dart' as p;
 import 'package:flutter/widgets.dart';
 
 import '../../method_calls.dart';
 
-class PageManager<T, K extends GrowablePage<T, K>> {
+class PageManager<T, K extends GrowablePage<T>> {
+  final String? query;
+  final String? channelUrl;
+  final String? videoUrl;
+  PageManager({
+    this.query,
+    this.channelUrl,
+    this.videoUrl,
+  });
+
   int _pageIncrement = 1;
   K? _child;
 
@@ -22,7 +29,6 @@ class PageManager<T, K extends GrowablePage<T, K>> {
   }
 
   Future<void> nextpageItems() async {
-    // TODO: engineer to work with search
     if (_child == null) {
       return;
     }

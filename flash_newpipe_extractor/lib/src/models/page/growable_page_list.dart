@@ -1,9 +1,9 @@
-import 'page.dart' as page;
+import 'page_manager.dart';
 
-abstract class GrowablePage<T, K> {
-  final page.Page? childPage;
-  final K? child;
-  const GrowablePage(this.childPage, this.child);
+abstract class GrowablePage<T> {
+  final PageManager manager;
+  final String type;
+  const GrowablePage(this.manager, this.type);
 
   void addToGrowableList(T item);
 }

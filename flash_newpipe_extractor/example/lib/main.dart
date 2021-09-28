@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'test.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(Test());
 }
 
 // ignore: must_be_immutable

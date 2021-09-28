@@ -1,10 +1,9 @@
 import 'package:flash_newpipe_extractor/src/models/page/growable_page_list.dart';
-import 'package:flash_newpipe_extractor/src/models/page/page.dart' as p;
 import 'package:flash_newpipe_extractor/src/models/page/page_manager.dart';
 import 'package:flash_newpipe_extractor/src/models/video/video.dart';
 
 class ChannelInfo extends PageManager<YoutubeVideo, ChannelInfo>
-    implements GrowablePage<YoutubeVideo, ChannelInfo> {
+    implements GrowablePage<YoutubeVideo> {
   final String name;
   final String? description;
   final String id;
@@ -23,7 +22,7 @@ class ChannelInfo extends PageManager<YoutubeVideo, ChannelInfo>
     this.feedUrl,
     this.subscriberCount,
     required this.url,
-  }) {
+  }) : super(channelUrl: url) {
     super.child = this;
   }
 
@@ -50,8 +49,8 @@ class ChannelInfo extends PageManager<YoutubeVideo, ChannelInfo>
   }
 
   @override
-  p.Page? get childPage => super.page;
+  PageManager get manager => this;
 
   @override
-  ChannelInfo? get child => this;
+  String get type => "channels";
 }

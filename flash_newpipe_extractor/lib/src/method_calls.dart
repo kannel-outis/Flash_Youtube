@@ -109,36 +109,27 @@ class FlashMethodCalls {
 
   // next page
 
-  static Future<void> getItemsNextPage(GrowablePage manager) async {
-    final _manager = manager;
+  static Future<void> getItemsNextPage(GrowablePage growablePage) async {
+    final _growable = growablePage;
     final result = await _channel.invokeMethod(
       "getChannelNextPageItems",
       {
-        "Type": () {
-          if (manager is Search) {
-            return "searches";
-          } else if (manager is ChannelInfo) {
-            return "channels";
-          }
-          return "comments";
-        }(),
-        "videoUrl": manager is Comments ? _manager.child.url : null,
-        "query": manager is Search
-            ? manager.child!.searchSuggestion ?? manager.child!.searchString
-            : null,
-        "channelUrl": manager is ChannelInfo ? manager.child!.url : null,
-        "pageInfo": _manager.childPage!.toMap(),
+        "Type": _growable.type,
+        "videoUrl": _growable.manager.videoUrl,
+        "query": _growable.manager.query,
+        "channelUrl": _growable.manager.channelUrl,
+        "pageInfo": _growable.manager.page!.toMap(),
       },
     );
     final Map<String, Map<int, Map<String, dynamic>>> _resultMap =
         Utils.convertToType(result);
     final _page = Page.fromMap(Map.from(_resultMap["page"]![0]!["newPageInfo"]))
-        .copyWith(pageNumber: _manager.child.page.pageNumber);
-    _manager.child.setPage = _page;
+        .copyWith(pageNumber: _growable.manager.page!.pageNumber);
+    _growable.manager.setPage = _page;
     _resultMap["items"]!.forEach(
       (key, value) {
-        _manager.addToGrowableList(
-          manager is Comments
+        _growable.addToGrowableList(
+          _growable.type == "comments"
               ? CommentInfo.fromMap(value)
               : YoutubeVideo.fromMap(value),
         );
@@ -146,12 +137,12 @@ class FlashMethodCalls {
     );
     if (_resultMap.containsKey("playList")) {
       _resultMap["playList"]!.forEach((key, value) {
-        _manager.addToGrowableList(Playlist.fromMap(value));
+        _growable.addToGrowableList(Playlist.fromMap(value));
       });
     }
     if (_resultMap.containsKey("channel")) {
       _resultMap["channel"]!.forEach((key, value) {
-        _manager.addToGrowableList(Channel.fromMap(value));
+        _growable.addToGrowableList(Channel.fromMap(value));
       });
     }
   }
