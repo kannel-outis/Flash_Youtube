@@ -1,10 +1,13 @@
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/providers/home/current_video_state_provider.dart';
+import 'package:flash_youtube_downloader/providers/home/home_provider.dart';
 import 'package:flash_youtube_downloader/providers/home/youtube_controller_state.dart';
 import 'package:flash_youtube_downloader/ui/screens/mini_player/mini_player.dart';
+import 'package:flash_youtube_downloader/ui/screens/search/search_page.dart';
 import 'package:flash_youtube_downloader/ui/widgets/custom_will_scope.dart';
 import 'package:flash_youtube_downloader/ui/widgets/grid_view_widget.dart';
 import 'package:flash_youtube_downloader/ui/widgets/mini_player/mini_player_draggable.dart';
+import 'package:flash_youtube_downloader/ui/widgets/search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -41,47 +44,65 @@ class HomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
     final _miniPlayerController = watch(miniPlayerC);
+    final homeStates = watch(homeProvider);
     return Scaffold(
       body: CustomWillScope(
+        isSearch: homeStates.isSearch,
+        callBack: (search) {
+          homeStates.clear();
+        },
         controller: _miniPlayerController,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: theme.scaffoldBackgroundColor,
             toolbarHeight: 70,
             elevation: 0.0,
-            title: Row(
-              children: [
-                SizedBox(
-                  child: Image.asset(
-                    "assets/icons/youtube.png",
-                    scale: 18.0,
-                  ),
-                ),
-                const Text("Trending"),
-              ],
+            title: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              reverseDuration: const Duration(milliseconds: 300),
+              child: homeStates.isSearch
+                  ? SearchBar(
+                      provider: homeStates,
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        SizedBox(
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                child: Image.asset(
+                                  "assets/icons/youtube.png",
+                                  scale: 18.0,
+                                ),
+                              ),
+                              const Text("Trending"),
+                            ],
+                          ),
+                        ),
+                        Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.search),
+                              onPressed: () {
+                                homeStates.isSearch = true;
+                              },
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
             ),
-            actions: const [
-              Icon(Icons.search),
-              SizedBox(
-                width: 20,
-              ),
-            ],
           ),
-          body: _Trending(_miniPlayerController),
+          body: AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            reverseDuration: const Duration(milliseconds: 300),
+            child: homeStates.isSearch
+                ? SearchPage()
+                : _Trending(_miniPlayerController),
+          ),
         ),
       ),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: const [
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.local_fire_department),
-      //       label: "",
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.trending_down),
-      //       label: "",
-      //     ),
-      //   ],
-      // ),
     );
   }
 }

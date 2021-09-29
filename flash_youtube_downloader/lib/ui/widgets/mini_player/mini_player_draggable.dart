@@ -82,7 +82,8 @@ class _MiniPlayerState extends State<MiniPlayer>
                 _calCulateSizeWithController(
                     (MediaQuery.of(context).size.width / 100) * 50,
                     MediaQuery.of(context).size.width,
-                    valueMultiplier: 6.5),
+                    // 6.5
+                    valueMultiplier: 4.5),
                 0),
             // color: Colors.white,
             color: Theme.of(context).scaffoldBackgroundColor,

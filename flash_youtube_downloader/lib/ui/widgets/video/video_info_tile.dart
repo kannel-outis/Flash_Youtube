@@ -129,6 +129,7 @@ class VideoInfoTile extends ConsumerWidget {
                                       image: CachedNetworkImageProvider(
                                           data != null
                                               ? data.avatarUrl
+                                                  .replaceAll("=s48", "=s40")
                                               : Utils.dummyPictureUrl),
                                     ),
                                   ),

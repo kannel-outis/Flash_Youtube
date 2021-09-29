@@ -28,7 +28,7 @@ class Utils {
     final theme = Theme.of(context);
     return ThemeData(
       scaffoldBackgroundColor:
-          isDarkTheme ? const Color(0xFF292929) : theme.backgroundColor,
+          isDarkTheme ? const Color(0xFF292929) : theme.scaffoldBackgroundColor,
       brightness: brightness,
       fontFamily: "TT Firs Neue Regular",
       textTheme: TextTheme(

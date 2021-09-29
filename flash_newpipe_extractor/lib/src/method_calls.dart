@@ -186,8 +186,6 @@ class FlashMethodCalls {
       search.addToGrowableList(_playList);
     });
     search.setPage = _page;
-    print(search.searchResults.length);
-    log(result.toString());
     return search;
   }
 }

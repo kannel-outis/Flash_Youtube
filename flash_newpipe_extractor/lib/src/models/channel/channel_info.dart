@@ -28,7 +28,9 @@ class ChannelInfo extends PageManager<YoutubeVideo, ChannelInfo>
 
   String get hdAvatarUrl => avatarUrl.replaceAll("=s48", "=s150");
   final List<YoutubeVideo> _listOfVideo = [];
-  List<YoutubeVideo> get videoUploads => _listOfVideo;
+
+  @override
+  List<YoutubeVideo> get growableListItems => _listOfVideo;
 
   @override
   void addToGrowableList(YoutubeVideo video) {

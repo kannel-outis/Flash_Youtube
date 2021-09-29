@@ -15,7 +15,9 @@ class Comments extends PageManager<CommentInfo, Comments>
     super.child = this;
   }
   List<CommentInfo> _commentsInfo = [];
-  List<CommentInfo> get commentsInfo => _commentsInfo;
+
+  @override
+  List<CommentInfo> get growableListItems => _commentsInfo;
 
   @override
   void addToGrowableList(CommentInfo item) {

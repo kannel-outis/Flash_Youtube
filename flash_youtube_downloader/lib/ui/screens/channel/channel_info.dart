@@ -3,6 +3,7 @@ library channel_info;
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/providers/channel/channel_video_provider.dart';
+import 'package:flash_youtube_downloader/ui/widgets/custom_pagenation_widget.dart';
 import 'package:flash_youtube_downloader/ui/widgets/error_widget.dart';
 import 'package:flash_youtube_downloader/ui/widgets/grid_view_widget.dart';
 import 'package:flash_youtube_downloader/ui/widgets/mini_player/mini_player_draggable.dart';

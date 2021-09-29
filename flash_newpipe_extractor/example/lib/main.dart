@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
           // });
           if (_video!.uploaderChannelInfo!.page!.hasNextPage) {
             await _video!.uploaderChannelInfo!.nextpageItems();
-            print(_video!.uploaderChannelInfo!.videoUploads.length);
+            print(_video!.uploaderChannelInfo!.growableListItems.length);
             print(_video!.uploaderChannelInfo!.page!.pageNumber);
           } else {
             print("no next page");

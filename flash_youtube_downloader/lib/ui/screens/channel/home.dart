@@ -149,7 +149,7 @@ class _Home extends StatelessWidget {
             showUploaderPic: false,
             gridCount: gridCount,
             itemsCount: 20,
-            data: data.videoUploads,
+            data: data.growableListItems,
             maxWidth: maxWidth,
             heightWithMaxHeight: heightWithMaxHeight,
             miniPlayerController: controller,

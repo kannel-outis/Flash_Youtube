@@ -69,7 +69,7 @@ class GridViewWidget extends ConsumerWidget {
     }
     return GridView.builder(
       shrinkWrap: true,
-      addAutomaticKeepAlives: false,
+      // addAutomaticKeepAlives: true,
       cacheExtent: data.length.toDouble() * 3,
       physics: physics,
       itemCount: _calculate(data.length),

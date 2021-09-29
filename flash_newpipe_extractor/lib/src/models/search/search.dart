@@ -17,7 +17,9 @@ class Search extends PageManager<InfoItem, Search>
   }) : super(query: searchSuggestion ?? searchString) {
     super.child = this;
   }
-  List<InfoItem> get searchResults => _searchResults;
+
+  @override
+  List<InfoItem> get growableListItems => _searchResults;
   List<InfoItem> _searchResults = [];
 
   @override

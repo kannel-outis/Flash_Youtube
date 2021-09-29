@@ -14,3 +14,5 @@ export 'src/models/comment/comment_info.dart';
 export 'src/models/search/search.dart';
 export 'src/models/playlist/playlist.dart';
 export 'src/models/playlist/playlist_info.dart';
+export 'src/models/info_item.dart';
+export 'src/models/page/growable_page_list.dart';

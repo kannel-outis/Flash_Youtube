@@ -2,31 +2,26 @@ import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 final channelVideoProvider = StateNotifierProvider.autoDispose
-    .family<ChannelVideoProvider, bool, ChannelInfo>((ref, channel) {
-  print(channel.name);
-  return ChannelVideoProvider(channel);
+    .family<ChannelVideoProvider, bool, GrowablePage>((ref, growablePage) {
+  return ChannelVideoProvider(growablePage);
 });
 
 class ChannelVideoProvider extends StateNotifier<bool> {
-  ChannelVideoProvider(ChannelInfo channel)
-      : _channel = channel,
+  ChannelVideoProvider(GrowablePage growablePage)
+      : _growablePage = growablePage,
         super(false);
 
-  late final ChannelInfo _channel;
+  late final GrowablePage _growablePage;
 
-  bool _hasReachedEnd = false;
-
-  bool get hasReachedLastPage => _channel.page!.hasNextPage == false;
-
-  // ignore: avoid_setters_without_getters
-  set hasReachedEnd(bool reachedEnd) {
-    _hasReachedEnd = reachedEnd;
-  }
+  bool get hasReachedLastPage =>
+      _growablePage.manager.page!.hasNextPage == false;
 
   Future<void> fetchNextItems() async {
-    if (_hasReachedEnd && !state && _channel.page!.hasNextPage) {
+    if (!state && _growablePage.manager.page!.hasNextPage) {
       state = true;
-      await _channel.nextpageItems().then((value) => state = false);
+      await _growablePage.manager
+          .nextpageItems()
+          .then((value) => state = false);
     }
   }
 }
