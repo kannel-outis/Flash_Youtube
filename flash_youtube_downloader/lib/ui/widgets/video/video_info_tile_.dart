@@ -18,8 +18,10 @@ class VideoInfoTile extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 20),
         padding: const EdgeInsets.only(left: 10),
         width: double.infinity,
-        height: 165,
+        // height: 165,
+        height: Utils.blockHeight * 12.22,
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Expanded(
               child: Container(
@@ -29,7 +31,8 @@ class VideoInfoTile extends StatelessWidget {
                     Align(
                       child: CachedNetworkImage(
                         width: double.infinity,
-                        imageUrl: video.hqdefault,
+                        imageUrl: video.thumbnailUrl!,
+                        // height: Utils.blockHeight * 12.5,
                         fit: BoxFit.cover,
                         errorWidget: (context, s, d) => CachedNetworkImage(
                           imageUrl: video.mqdefault,
@@ -62,13 +65,25 @@ class VideoInfoTile extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 7.0),
                 child: Column(
                   children: [
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        video.videoName!,
-                        style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                              fontWeight: FontWeight.normal,
+                    SizedBox(
+                      // height: Utils.blockWidth * 10,
+                      child: Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              video.videoName!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1!
+                                  .copyWith(
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: Utils.blockWidth),
@@ -137,16 +152,30 @@ class VideoInfoTile extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 7.0),
               child: Column(
                 children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      video.videoName!,
-                      style: Theme.of(context).textTheme.bodyText1!.copyWith(
-                            fontWeight: FontWeight.normal,
+                  SizedBox(
+                    height: Utils.blockWidth * 10,
+                    child: Column(
+                      children: [
+                        Flexible(
+                          child: Container(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              video.videoName!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1!
+                                  .copyWith(
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
                           ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: Utils.blockWidth),
+                  // SizedBox(height: Utils.blockWidth),
                   Container(
                     alignment: Alignment.topLeft,
                     child: Text(

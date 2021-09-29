@@ -46,12 +46,15 @@ class SearchPage extends ConsumerWidget {
                                 child: Center(
                                   child: Row(
                                     children: [
-                                      Text(
-                                        e,
-                                        textAlign: TextAlign.left,
-                                        style: theme.textTheme.bodyText1!
-                                            .copyWith(
-                                                fontWeight: FontWeight.normal),
+                                      Flexible(
+                                        child: Text(
+                                          e,
+                                          textAlign: TextAlign.left,
+                                          style: theme.textTheme.bodyText1!
+                                              .copyWith(
+                                                  fontWeight:
+                                                      FontWeight.normal),
+                                        ),
                                       ),
                                     ],
                                   ),

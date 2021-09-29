@@ -9,12 +9,14 @@ class PlayListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // print(Utils.blockHeight * 12.22);
     return Container(
       // color: Colors.black,
       margin: const EdgeInsets.only(bottom: 20),
       padding: const EdgeInsets.only(left: 10),
       width: double.infinity,
-      height: 165,
+      // height: 165,
+      height: Utils.blockHeight * 12.22,
       child: Row(
         children: [
           Expanded(

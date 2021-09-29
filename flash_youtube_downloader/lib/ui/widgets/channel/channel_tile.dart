@@ -32,16 +32,16 @@ class ChannelTile extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.only(bottom: 20),
         // color: Colors.black,
-        height: 140,
+        height: Utils.blockHeight * 12,
         width: double.infinity,
         child: Row(
           children: [
-            SizedBox(
-              width: Utils.blockWidth * 40,
+            Expanded(
+              // width: Utils.blockWidth * 40,
               child: Center(
                 child: Container(
-                  height: 130,
-                  width: 130,
+                  height: Utils.blockWidth * 20,
+                  width: Utils.blockWidth * 20,
                   decoration: BoxDecoration(
                     color: Colors.yellow,
                     borderRadius: BorderRadius.circular(100),
@@ -72,7 +72,7 @@ class ChannelTile extends StatelessWidget {
                           const SizedBox(height: 7),
                           Text(
                             "${channel.subscriberCount.toString().convertToViews(true, false)} subscribers  •   ${channel.streamCount.toString().convertToViews()} videos",
-                            style: theme.textTheme.bodyText1!.copyWith(
+                            style: theme.textTheme.bodyText2!.copyWith(
                               color: Colors.grey,
                               fontWeight: FontWeight.normal,
                             ),
