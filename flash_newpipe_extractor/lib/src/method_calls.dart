@@ -1,13 +1,14 @@
 import 'dart:async';
-import 'dart:developer';
+
 import 'package:flash_newpipe_extractor/src/error/error.dart';
 import 'package:flash_newpipe_extractor/src/models/channel/channel.dart';
 import 'package:flash_newpipe_extractor/src/models/channel/channel_info.dart';
-import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comment_info.dart';
+import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 import 'package:flash_newpipe_extractor/src/models/page/growable_page_list.dart';
 import 'package:flash_newpipe_extractor/src/models/page/page.dart';
 import 'package:flash_newpipe_extractor/src/models/playlist/playlist.dart';
+import 'package:flash_newpipe_extractor/src/models/playlist/playlist_info.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/audioOnlyStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoAudioStream.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/videoOnlyStream.dart';
@@ -115,9 +116,7 @@ class FlashMethodCalls {
       "getChannelNextPageItems",
       {
         "Type": _growable.type,
-        "videoUrl": _growable.manager.videoUrl,
-        "query": _growable.manager.query,
-        "channelUrl": _growable.manager.channelUrl,
+        "value": _growable.manager.value,
         "pageInfo": _growable.manager.page!.toMap(),
       },
     );
@@ -157,12 +156,8 @@ class FlashMethodCalls {
   }
 
   static Future<Search> getSearchResults(String query) async {
-    final result = await _channel.invokeMethod(
-      "getSearchResults",
-      {
-        "query": query,
-      },
-    );
+    final result =
+        await _channel.invokeMethod("getSearchResults", {"query": query});
     final _resultMap = Map<String, dynamic>.from(result);
     final search = Search.fromMap(_resultMap);
     final _page =
@@ -187,5 +182,23 @@ class FlashMethodCalls {
     });
     search.setPage = _page;
     return search;
+  }
+
+  //playlist info
+  static Future<PlaylistInfo> getPlaylistInfo(String url) async {
+    final result = await _channel.invokeMethod("getPlaylistInfo", {"url": url});
+    if (result["playlistInfo"] == null) {
+      throw FlashException("Content Not Available");
+    }
+    final Map<String, Map<int, Map<String, dynamic>>> _resultMap =
+        Utils.convertToType(result);
+
+    final playlistInfo = PlaylistInfo.fromMap(_resultMap["playlistInfo"]![0]!);
+    playlistInfo.setPage =
+        Page.fromMap(Map.from(_resultMap["playlistInfo"]![0]!["nextPageInfo"]));
+    _resultMap["videoItems"]!.forEach((key, value) {
+      playlistInfo.addToGrowableList(YoutubeVideo.fromMap(value));
+    });
+    return playlistInfo;
   }
 }

@@ -63,7 +63,7 @@ class YoutubeExtractors{
                             "url" to channelExtractor.initialPage.nextPage.url,
                             "ids" to channelExtractor.initialPage.nextPage.ids,
                             "body" to channelExtractor.initialPage.nextPage.body,
-                            "channelHasNextPage" to channelExtractor.initialPage.hasNextPage()
+                            "hasNextPage" to channelExtractor.initialPage.hasNextPage()
                     )
 //                    channelExtractor.getPage().
                 }else{
@@ -72,7 +72,7 @@ class YoutubeExtractors{
                             "url" to null,
                             "body" to null,
                             "ids" to null,
-                            "channelHasNextPage" to channelExtractor.initialPage.hasNextPage()
+                            "hasNextPage" to channelExtractor.initialPage.hasNextPage()
                     )
                 }
                val items = channelExtractor.initialPage.items
@@ -93,11 +93,11 @@ class YoutubeExtractors{
            }
         }
 
-        fun getNextPageItems(page: Page, channelUrl: String?, type: String, videoUrl:String?, query: String?): Map<String, Map<Int, Map<String, Any?>>?>{
+        fun getNextPageItems(page: Page, type: String, value: String): Map<String, Map<Int, Map<String, Any?>>?>{
             val returnMap: MutableMap<String, Map<Int, Map<String, Any?>>?> = mutableMapOf()
-            val extractor = if(type == "comments")  YouTube.getCommentsExtractor(videoUrl)  else if (type == "searches")  YouTube.getSearchExtractor(query) else YouTube.getChannelExtractor(channelUrl) as YoutubeChannelExtractor
+            val extractor = if(type == "comments")  YouTube.getCommentsExtractor(value)  else if (type == "searches")  YouTube.getSearchExtractor(value) else if(type == "playlist")  YouTube.getPlaylistExtractor(value)  else YouTube.getChannelExtractor(value) as YoutubeChannelExtractor
             extractor.fetchPage()
-            val newPage = if(type == "comments") extractor.getPage(Page(videoUrl, page.id))  else extractor.getPage(page)
+            val newPage = if(type == "comments") extractor.getPage(Page(value, page.id))  else extractor.getPage(page)
             val pageMap:MutableMap<String, Any?> = mutableMapOf()
             if(newPage.hasNextPage()){
                 pageMap["newPageInfo"] = mutableMapOf(
@@ -105,7 +105,7 @@ class YoutubeExtractors{
                         "url" to newPage.nextPage.url,
                         "ids" to newPage.nextPage.ids,
                         "body" to newPage.nextPage.body,
-                        "channelHasNextPage" to newPage.hasNextPage()
+                        "hasNextPage" to newPage.hasNextPage()
                 )
             }else{
                 pageMap["newPageInfo"] = mutableMapOf(
@@ -113,7 +113,7 @@ class YoutubeExtractors{
                         "url" to null,
                         "body" to null,
                         "ids" to null,
-                        "channelHasNextPage" to newPage.hasNextPage()
+                        "hasNextPage" to newPage.hasNextPage()
                 )
             }
             returnMap["page"] = mapOf(0 to pageMap)
@@ -127,10 +127,7 @@ class YoutubeExtractors{
                     "comments" -> {
                         itemsMap[i] =  InfoDecoder.decodeCommentsToMap(item as CommentsInfoItem)
                     }
-                    "channels" -> {
-                        itemsMap[i] =  InfoDecoder.toMap(item as StreamInfoItem)
-                    }
-                    else ->{
+                    "searches" ->{
                         when (item.infoType) {
                             InfoItem.InfoType.STREAM -> {
                                 item as StreamInfoItem
@@ -145,6 +142,10 @@ class YoutubeExtractors{
                         }
                             else -> {}
                         }
+                    }
+
+                    else -> {
+                        itemsMap[i] =  InfoDecoder.toMap(item as StreamInfoItem)
                     }
                 }
             }
@@ -204,7 +205,7 @@ class YoutubeExtractors{
                                 "url" to extractor.initialPage.nextPage.url,
                                 "ids" to extractor.initialPage.nextPage.ids,
                                 "body" to extractor.initialPage.nextPage.body,
-                                "channelHasNextPage" to extractor.initialPage.hasNextPage()
+                                "hasNextPage" to extractor.initialPage.hasNextPage()
                         )
                     else
                          mutableMapOf(
@@ -212,7 +213,7 @@ class YoutubeExtractors{
                                 "url" to null,
                                 "body" to null,
                                 "ids" to null,
-                                "channelHasNextPage" to extractor.initialPage.hasNextPage()
+                                "hasNextPage" to extractor.initialPage.hasNextPage()
                         )
             )
         }
@@ -220,6 +221,51 @@ class YoutubeExtractors{
 
         fun getQuerySuggestions(query: String): List<String>{
             return YouTube.suggestionExtractor.suggestionList(query)
+        }
+
+        fun getPlaylistInfo(url: String): Map<String, Map<Int, Map<String, Any?>>?>{
+            val extractor = YouTube.getPlaylistExtractor(url)
+            extractor.fetchPage()
+            val items = extractor.initialPage.items
+            val playlistMap:MutableMap<String, Any?> = mutableMapOf()
+            playlistMap["bannerUrl"] = extractor.bannerUrl
+            playlistMap["isUploaderVerified"] = extractor.isUploaderVerified
+            playlistMap["streamCount"] = extractor.streamCount
+            playlistMap["subChannelAvatarUrl"] = extractor.subChannelAvatarUrl
+            playlistMap["subChannelName"] = extractor.subChannelName
+            playlistMap["subChannelUrl"] = extractor.subChannelUrl
+            playlistMap["thumbnailUrl"] = extractor.thumbnailUrl
+            playlistMap["uploaderAvatarUrl"] = extractor.uploaderAvatarUrl
+            playlistMap["uploaderName"] = extractor.uploaderName
+            playlistMap["uploaderUrl"] = extractor.uploaderUrl
+            playlistMap["url"] = extractor.url
+            playlistMap["name"] = extractor.name
+            playlistMap["originalUrl"] = extractor.originalUrl
+            playlistMap["nextPageInfo"] = if(extractor.initialPage.hasNextPage())
+                mutableMapOf(
+                        "id" to extractor.initialPage.nextPage.id,
+                        "url" to extractor.initialPage.nextPage.url,
+                        "ids" to extractor.initialPage.nextPage.ids,
+                        "body" to extractor.initialPage.nextPage.body,
+                        "hasNextPage" to extractor.initialPage.hasNextPage()
+                )
+            else
+                mutableMapOf(
+                        "id" to null,
+                        "url" to null,
+                        "body" to null,
+                        "ids" to null,
+                        "hasNextPage" to extractor.initialPage.hasNextPage()
+                )
+            val itemsMap: MutableMap<Int, Map<String,Any?>> = mutableMapOf()
+            for (i in 0 until items.size){
+                val streamItem = items[i]
+                itemsMap[i] = InfoDecoder.toMap(streamItem)
+            }
+            return mutableMapOf(
+                    "playlistInfo" to mutableMapOf<Int, Map<String, Any?>>(0 to playlistMap),
+                    "videoItems" to itemsMap
+            )
         }
     }
 }

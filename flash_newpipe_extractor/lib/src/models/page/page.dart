@@ -45,7 +45,7 @@ class Page {
     return Page(
       url: map["url"],
       id: map["id"],
-      hasNextPage: map["channelHasNextPage"],
+      hasNextPage: map["hasNextPage"],
       ids: map["ids"] == null ? null : List.from(map["ids"]),
       body: map["body"] == null ? null : map["body"] as Uint8List?,
     );

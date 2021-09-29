@@ -11,7 +11,7 @@ class Comments extends PageManager<CommentInfo, Comments>
   Comments({
     required this.isDisabled,
     required this.url,
-  }) : super(videoUrl: url) {
+  }) : super(value: url) {
     super.child = this;
   }
   List<CommentInfo> _commentsInfo = [];

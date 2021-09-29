@@ -22,7 +22,7 @@ class ChannelInfo extends PageManager<YoutubeVideo, ChannelInfo>
     this.feedUrl,
     this.subscriberCount,
     required this.url,
-  }) : super(channelUrl: url) {
+  }) : super(value: url) {
     super.child = this;
   }
 

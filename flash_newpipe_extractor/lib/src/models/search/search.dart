@@ -14,7 +14,7 @@ class Search extends PageManager<InfoItem, Search>
     required this.searchString,
     required this.metaInfo,
     this.isCorrectedSearch = false,
-  }) : super(query: searchSuggestion ?? searchString) {
+  }) : super(value: searchSuggestion ?? searchString) {
     super.child = this;
   }
 
