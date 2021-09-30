@@ -52,26 +52,31 @@ class _TestState extends State<Test> {
             // ),
             TextButton(
               onPressed: () async {
-                Extract()
-                    .getPlaylistInfo(_controller.value.text)
-                    .then((value) async {
-                  print(value.growableListItems.length);
-                  if (value.page!.hasNextPage) {
-                    await value.nextpageItems();
-                    print(value.growableListItems.length);
-                  }
-                });
-                // _search =
-                // await Extract().getSearchResults(_controller.value.text);
+                // Extract()
+                //     .getPlaylistInfo(_controller.value.text)
+                //     .then((value) async {
+                //   print(value.growableListItems.length);
+                //   if (value.page!.hasNextPage) {
+                //     await value.nextpageItems();
+                //     print(value.growableListItems.length);
+                //   }
+                // });
+                // _search = await Extract()
+                //     .getSearchResults(_controller.value.text)
+                //     .then((value) {
+                //   print(value.growableListItems
+                //       .firstWhere((element) => element is Channel)
+                //       .name);
+                // });
                 // print(_search!.metaInfo);
-                // if (_search!.page!.hasNextPage)
-                //   await _search!.nextpageItems().then(
-                //       (value) => print(_search!.growableListItems.length));
-                // else
-                //   print("done");
-                // for (var item in _search!.growableListItems) {
-                //   print(item.name);
-                // }
+                if (_search!.page!.hasNextPage)
+                  await _search!.nextpageItems().then(
+                      (value) => print(_search!.growableListItems.length));
+                else
+                  print("done");
+                for (var item in _search!.growableListItems) {
+                  print(item.name);
+                }
               },
               child: const Center(
                 child: Text("testing"),

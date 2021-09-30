@@ -1,10 +1,12 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flash_newpipe_extractor/src/error/error.dart';
 import 'package:flash_newpipe_extractor/src/models/channel/channel.dart';
 import 'package:flash_newpipe_extractor/src/models/channel/channel_info.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comment_info.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
+import 'package:flash_newpipe_extractor/src/models/info_item.dart';
 import 'package:flash_newpipe_extractor/src/models/page/growable_page_list.dart';
 import 'package:flash_newpipe_extractor/src/models/page/page.dart';
 import 'package:flash_newpipe_extractor/src/models/playlist/playlist.dart';
@@ -127,23 +129,32 @@ class FlashMethodCalls {
     _growable.manager.setPage = _page;
     _resultMap["items"]!.forEach(
       (key, value) {
+        InfoItem _item;
+        if (_growable.type == "searches") {
+          if (value.containsKey("channelUrl")) {
+            _item = Channel.fromMap(value);
+          } else if (value.containsKey("playListUrl")) {
+            _item = Playlist.fromMap(value);
+          } else {
+            _item = YoutubeVideo.fromMap(value);
+          }
+        } else {
+          _item = YoutubeVideo.fromMap(value);
+        }
         _growable.addToGrowableList(
-          _growable.type == "comments"
-              ? CommentInfo.fromMap(value)
-              : YoutubeVideo.fromMap(value),
-        );
+            _growable.type == "comments" ? CommentInfo.fromMap(value) : _item);
       },
     );
-    if (_resultMap.containsKey("playList")) {
-      _resultMap["playList"]!.forEach((key, value) {
-        _growable.addToGrowableList(Playlist.fromMap(value));
-      });
-    }
-    if (_resultMap.containsKey("channel")) {
-      _resultMap["channel"]!.forEach((key, value) {
-        _growable.addToGrowableList(Channel.fromMap(value));
-      });
-    }
+    // if (_resultMap.containsKey("playList")) {
+    //   _resultMap["playList"]!.forEach((key, value) {
+    //     _growable.addToGrowableList(Playlist.fromMap(value));
+    //   });
+    // }
+    // if (_resultMap.containsKey("channel")) {
+    //   _resultMap["channel"]!.forEach((key, value) {
+    //     _growable.addToGrowableList(Channel.fromMap(value));
+    //   });
+    // }
   }
 
   // search
@@ -162,24 +173,32 @@ class FlashMethodCalls {
     final search = Search.fromMap(_resultMap);
     final _page =
         Page.fromMap(Map<String, dynamic>.from(_resultMap["nextPageInfo"]));
-    final Map<int, dynamic> _videoMap =
-        Map<int, dynamic>.from(_resultMap["videos"]);
-    final Map<int, dynamic> _channelMap =
-        Map<int, dynamic>.from(_resultMap["channels"]);
-    final Map<int, dynamic> _playlistMap =
-        Map<int, dynamic>.from(_resultMap["playLists"]);
+    final _videoMap = Map<int, dynamic>.from(_resultMap["results"])
+        .map((key, value) => MapEntry(key, Map<String, dynamic>.from(value)));
+    // final Map<int, dynamic> _channelMap =
+    //     Map<int, dynamic>.from(_resultMap["channels"]);
+    // final Map<int, dynamic> _playlistMap =
+    //     Map<int, dynamic>.from(_resultMap["playLists"]);
     _videoMap.forEach((key, value) {
-      final _video = YoutubeVideo.fromMap(Map<String, dynamic>.from(value));
-      search.addToGrowableList(_video);
+      // final _video = YoutubeVideo.fromMap(Map<String, dynamic>.from(value));
+      InfoItem _item;
+      if (value.containsKey("channelUrl")) {
+        _item = Channel.fromMap(value);
+      } else if (value.containsKey("playListUrl")) {
+        _item = Playlist.fromMap(value);
+      } else {
+        _item = YoutubeVideo.fromMap(value);
+      }
+      search.addToGrowableList(_item);
     });
-    _channelMap.forEach((key, value) {
-      final _channel = Channel.fromMap(Map<String, dynamic>.from(value));
-      search.addToGrowableList(_channel);
-    });
-    _playlistMap.forEach((key, value) {
-      final _playList = Playlist.fromMap(Map<String, dynamic>.from(value));
-      search.addToGrowableList(_playList);
-    });
+    // _channelMap.forEach((key, value) {
+    //   final _channel = Channel.fromMap(Map<String, dynamic>.from(value));
+    //   search.addToGrowableList(_channel);
+    // });
+    // _playlistMap.forEach((key, value) {
+    //   final _playList = Playlist.fromMap(Map<String, dynamic>.from(value));
+    //   search.addToGrowableList(_playList);
+    // });
     search.setPage = _page;
     return search;
   }

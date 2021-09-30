@@ -118,9 +118,6 @@ class YoutubeExtractors{
             }
             returnMap["page"] = mapOf(0 to pageMap)
             val itemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
-//            val searchVideosItemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
-            val playlistItemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
-            val channelItemsMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
             for (i in 0 until newPage.items.size){
                 val item = newPage.items[i]
                 when (type) {
@@ -135,10 +132,10 @@ class YoutubeExtractors{
                             }
                             InfoItem.InfoType.CHANNEL ->{
                                 item as ChannelInfoItem
-                                channelItemsMap[i] = InfoDecoder.decodeChannelsToMap(item)
+                                itemsMap[i] = InfoDecoder.decodeChannelsToMap(item)
                             }InfoItem.InfoType.PLAYLIST -> {
                             item as PlaylistInfoItem
-                            playlistItemsMap[i] = InfoDecoder.decodePlayListToMap(item)
+                            itemsMap[i] = InfoDecoder.decodePlayListToMap(item)
                         }
                             else -> {}
                         }
@@ -149,14 +146,6 @@ class YoutubeExtractors{
                     }
                 }
             }
-            if(playlistItemsMap.isNotEmpty()){
-                returnMap["playList"] = playlistItemsMap
-            }
-            if(channelItemsMap.isNotEmpty()){
-                returnMap["channel"] = channelItemsMap
-            }
-
-
             returnMap["items"] = itemsMap
             return returnMap
 
@@ -168,9 +157,8 @@ class YoutubeExtractors{
             extractor.fetchPage()
             val searchItems = extractor.initialPage.items
 
-            val streamInfoMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
-            val channelInfoMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
-            val playListInfoMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
+
+            val resultMap: MutableMap<Int, Map<String, Any?>> = mutableMapOf()
 
 
 
@@ -179,14 +167,14 @@ class YoutubeExtractors{
                 when (item.infoType) {
                     InfoItem.InfoType.STREAM -> {
                         item as StreamInfoItem
-                        streamInfoMap[i] = InfoDecoder.toMap(item)
+                        resultMap[i] = InfoDecoder.toMap(item)
                     }
                     InfoItem.InfoType.CHANNEL ->{
                         item as ChannelInfoItem
-                        channelInfoMap[i] = InfoDecoder.decodeChannelsToMap(item)
+                        resultMap[i] = InfoDecoder.decodeChannelsToMap(item)
                     }InfoItem.InfoType.PLAYLIST -> {
                         item as PlaylistInfoItem
-                        playListInfoMap[i] = InfoDecoder.decodePlayListToMap(item)
+                    resultMap[i] = InfoDecoder.decodePlayListToMap(item)
                     }
                     else -> {}
                 }
@@ -196,9 +184,7 @@ class YoutubeExtractors{
                     "searchString" to extractor.searchString,
                     "metaInfo" to extractor.metaInfo,
                     "isCorrectedSearch" to extractor.isCorrectedSearch,
-                    "videos" to streamInfoMap,
-                    "channels" to channelInfoMap,
-                    "playLists" to playListInfoMap,
+                    "results" to resultMap,
                     "nextPageInfo" to if(extractor.initialPage.hasNextPage())
                          mutableMapOf(
                                 "id" to extractor.initialPage.nextPage.id,
