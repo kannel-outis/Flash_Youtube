@@ -14,7 +14,7 @@ class HomeProvider extends ChangeNotifier {
   HomeProvider(this._extract);
   bool _isSearch = false;
   bool _searching = false;
-  bool _textFieldFocus = false;
+  // bool _textFieldFocus = false;
   String? _searchQuery;
   List<String> _suggestions = [];
 
@@ -36,10 +36,10 @@ class HomeProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  set textFieldFocus(bool focus) {
-    _textFieldFocus = focus;
-    notifyListeners();
-  }
+  // set textFieldFocus(bool focus) {
+  //   _textFieldFocus = focus;
+  //   notifyListeners();
+  // }
 
   Future<void> getSuggestions(String query) async {
     _suggestions = await _extract.getSearchSuggestions(query);
@@ -56,7 +56,7 @@ class HomeProvider extends ChangeNotifier {
 
   bool get isSearch => _isSearch;
   bool get searching => _searching;
-  bool get textFieldFocus => _textFieldFocus;
+  // bool get textFieldFocus => _textFieldFocus;
   String? get searchQuery => _searchQuery;
   List<String> get suggestions => _suggestions;
 }

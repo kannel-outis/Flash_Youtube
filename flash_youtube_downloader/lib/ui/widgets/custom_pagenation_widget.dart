@@ -56,7 +56,11 @@ class CustomPagnationListview extends HookWidget {
                 final video =
                     growablePage.growableListItems[index] as YoutubeVideo;
                 _child = VideoInfoTile(
-                    video: video, isSearch: growablePage is Search);
+                  video: video,
+                  isSearch: growablePage is Search,
+                  isPlayListInfo: growablePage is PlaylistInfo,
+                  index: index,
+                );
               }
 
               return Column(

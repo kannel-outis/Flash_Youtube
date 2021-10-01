@@ -15,10 +15,11 @@ class SearchPage extends ConsumerWidget {
     const containerHeight = 60.0;
     final homeStates = watch(homeProvider);
     final searchController = watch(sb.searchController);
+    final searchTextfieldFocusNode = watch(sb.focusNode);
     final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(color: theme.scaffoldBackgroundColor),
-      child: !homeStates.searching || homeStates.textFieldFocus
+      child: !homeStates.searching || searchTextfieldFocusNode.hasFocus
           ? SingleChildScrollView(
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(
@@ -37,8 +38,15 @@ class SearchPage extends ConsumerWidget {
                             child: InkWell(
                               onTap: () {
                                 homeStates.searchQuery = e;
-                                homeStates.textFieldFocus = false;
+                                searchTextfieldFocusNode.unfocus();
                                 homeStates.searching = true;
+                                searchController.value =
+                                    searchController.value.copyWith(
+                                  text: e,
+                                  selection: TextSelection.fromPosition(
+                                    TextPosition(offset: e.length),
+                                  ),
+                                );
                               },
                               child: SizedBox(
                                 height: double.infinity,

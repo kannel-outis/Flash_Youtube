@@ -7,6 +7,10 @@ final searchController =
   return TextEditingController();
 });
 
+final focusNode = Provider.autoDispose<FocusNode>((ref) {
+  return FocusNode();
+});
+
 class SearchBar extends ConsumerWidget {
   final HomeProvider? provider;
 
@@ -14,6 +18,7 @@ class SearchBar extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final controller = watch(searchController);
+    final _focusNode = watch(focusNode);
     final theme = Theme.of(context);
     return SizedBox(
       child: Row(
@@ -34,6 +39,7 @@ class SearchBar extends ConsumerWidget {
               ),
               child: Center(
                 child: TextFormField(
+                  focusNode: _focusNode,
                   textInputAction: TextInputAction.search,
                   autocorrect: false,
                   controller: controller,
@@ -52,13 +58,9 @@ class SearchBar extends ConsumerWidget {
                     provider?.getSuggestions(value);
                   },
                   onFieldSubmitted: (value) {
-                    provider?.textFieldFocus = false;
+                    _focusNode.unfocus();
                     provider?.searchQuery = value;
                     provider?.searching = true;
-                  },
-
-                  onTap: () {
-                    provider?.textFieldFocus = true;
                   },
                 ),
               ),

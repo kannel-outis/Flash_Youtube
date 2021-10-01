@@ -63,8 +63,9 @@ class VideoInfoTile extends ConsumerWidget {
                 // .toString()
                 children: [
                   _FadeInImageWidget(
-                    url: video.hqdefault,
-                    altImageUrl: video.mqdefault,
+                    // url: video.hqdefault,
+                    url: video.mqdefault,
+                    altImageUrl: video.thumbnailUrl,
                   ),
                   Positioned(
                     bottom: 10,

@@ -18,7 +18,6 @@ class ResultPage extends ConsumerWidget {
     final futureResult = watch(searchResultsProvider);
     return futureResult.when(
       data: (data) {
-        print(data.growableListItems.length);
         return CustomPagnationListview(growablePage: data);
       },
       loading: () => const Center(
