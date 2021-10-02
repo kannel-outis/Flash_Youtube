@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'providers/home/current_video_state_provider.dart';
-import 'ui/screens/home/home_screen.dart';
-import 'ui/screens/mini_player/mini_player.dart';
+import 'screens/home/home_screen.dart';
+import 'screens/home/providers/home_providers.dart';
+import 'screens/mini_player/mini_player.dart';
+import 'screens/mini_player/providers/miniplayer_providers.dart';
+import 'utils/scroll_behaviour.dart';
 import 'utils/utils.dart';
 
 void main() {
@@ -25,11 +27,16 @@ class MyApp extends StatelessWidget {
           builder: (context, child) {
             return Consumer(
               builder: (context, watch, child) {
-                final currentVideoState = watch(currentVideoStateProvider);
-                final _miniPlayerController = watch(miniPlayerC);
+                final currentVideoState =
+                    watch(HomeProviders.currentVideoStateProvider);
+                final _miniPlayerController =
+                    watch(MiniPlayerProviders.miniPlayerC);
                 return Stack(
                   children: [
-                    child!,
+                    ScrollConfiguration(
+                      behavior: NoEffectScrollConfig(),
+                      child: child!,
+                    ),
                     if (currentVideoState != null)
                       GestureDetector(
                         onHorizontalDragUpdate: (e) {
