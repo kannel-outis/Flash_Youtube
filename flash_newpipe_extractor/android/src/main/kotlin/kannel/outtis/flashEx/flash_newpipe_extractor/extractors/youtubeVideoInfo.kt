@@ -48,7 +48,7 @@ class YoutubeVideoInfoExtractor{
                       "url" to extractor.initialPage.nextPage.url,
                       "ids" to extractor.initialPage.nextPage.ids,
                       "body" to extractor.initialPage.nextPage.body,
-                      "channelHasNextPage" to extractor.initialPage.hasNextPage()
+                      "hasNextPage" to extractor.initialPage.hasNextPage()
 
               )
           }else{
@@ -57,7 +57,7 @@ class YoutubeVideoInfoExtractor{
                       "url" to null,
                       "body" to null,
                       "ids" to null,
-                      "channelHasNextPage" to extractor.initialPage.hasNextPage()
+                      "hasNextPage" to extractor.initialPage.hasNextPage()
               )
           }
 
