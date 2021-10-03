@@ -61,22 +61,30 @@ class _TestState extends State<Test> {
                 //     print(value.growableListItems.length);
                 //   }
                 // });
-                // _search = await Extract()
-                //     .getSearchResults(_controller.value.text)
+
+                // _search =
+                //     await Extract().getSearchResults(_controller.value.text);
+                // print(_search!.type);
                 //     .then((value) {
                 //   print(value.growableListItems
                 //       .firstWhere((element) => element is Channel)
                 //       .name);
                 // });
                 // print(_search!.metaInfo);
-                if (_search!.page!.hasNextPage)
-                  await _search!.nextpageItems().then(
-                      (value) => print(_search!.growableListItems.length));
-                else
-                  print("done");
-                for (var item in _search!.growableListItems) {
-                  print(item.name);
-                }
+                // if (_search!.page!.hasNextPage)
+                //   await _search!.nextpageItems().then(
+                //       (value) => print(_search!.growableListItems.length));
+                // else
+                //   print("done");
+                // for (var item in _search!.growableListItems) {
+                //   print(item.name);
+                // }
+                await (_search!.growableListItems[12] as YoutubeVideo)
+                    .getFullInformation
+                    .then((value) async => print(await value
+                        .getStreamOfQuality<AudioOnlyStream>(Quality.hd1080)
+                        .streams!
+                        .streamSize));
               },
               child: const Center(
                 child: Text("testing"),

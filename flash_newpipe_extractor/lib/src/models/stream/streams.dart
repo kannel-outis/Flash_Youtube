@@ -1,3 +1,4 @@
+import 'package:flash_newpipe_extractor/src/utils/content_length.dart';
 import 'package:flash_newpipe_extractor/src/utils/enums.dart';
 
 abstract class Streams {
@@ -9,7 +10,7 @@ abstract class Streams {
   final String format;
   final Quality quality;
 
-  const Streams({
+  Streams({
     required this.url,
     this.codec,
     this.torrentUrl,
@@ -18,4 +19,12 @@ abstract class Streams {
     required this.format,
     required this.quality,
   });
+
+  String? _size;
+
+  String? get downloadSize => _size;
+
+  Future<String> get streamSize async {
+    return _size = _size ?? await ContentLength.getStreamSize(this);
+  }
 }

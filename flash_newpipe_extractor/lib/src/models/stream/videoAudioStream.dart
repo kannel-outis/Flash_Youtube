@@ -17,7 +17,7 @@ class VideoAudioStream extends Streams {
   final double width;
   final bool isVideoOnly;
 
-  const VideoAudioStream(
+  VideoAudioStream(
     this.url,
     this.codec,
     this.torrentUrl,

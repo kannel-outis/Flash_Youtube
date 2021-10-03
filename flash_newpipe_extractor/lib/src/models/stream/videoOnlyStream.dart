@@ -17,7 +17,7 @@ class VideoOnlyStream extends Streams {
   final double width;
   final bool isVideoOnly;
 
-  const VideoOnlyStream(
+  VideoOnlyStream(
     this.url,
     this.codec,
     this.torrentUrl,
