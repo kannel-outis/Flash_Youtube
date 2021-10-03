@@ -22,13 +22,15 @@ class Utils {
     }
   }
 
+  static Color placeHolderColor = const Color(0xFF181818);
+
   static ThemeData themeData(BuildContext context, Brightness brightness) {
     getBlockWidthAndHeight(context);
     final isDarkTheme = brightness == Brightness.dark;
     final theme = Theme.of(context);
     return ThemeData(
       scaffoldBackgroundColor:
-          isDarkTheme ? const Color(0xFF292929) : theme.scaffoldBackgroundColor,
+          isDarkTheme ? const Color(0xFF212121) : theme.scaffoldBackgroundColor,
       brightness: brightness,
       fontFamily: "TT Firs Neue Regular",
       textTheme: TextTheme(

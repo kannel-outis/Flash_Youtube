@@ -80,10 +80,12 @@ class _MiniPlayerState extends State<MiniPlayer>
                 widget.miniPlayerController.maxHeight),
             width: max(
                 _calCulateSizeWithController(
-                    (MediaQuery.of(context).size.width / 100) * 50,
-                    MediaQuery.of(context).size.width,
-                    // 6.5
-                    valueMultiplier: 4.5),
+                  (MediaQuery.of(context).size.width / 100) * 50,
+                  MediaQuery.of(context).size.width,
+                  // 6.5
+                  // valueMultiplier: 4.5,
+                  valueMultiplier: 2.0,
+                ),
                 0),
             // color: Colors.white,
             color: Theme.of(context).scaffoldBackgroundColor,
@@ -183,37 +185,37 @@ class MiniPlayerController extends ChangeNotifier {
   bool get isClosed => _isClosed ?? true;
 
   void closeMiniPlayer() {
-    _playerState!._controller.reverse();
+    _playerState?._controller.reverse();
     _isClosed = true;
     notifyListeners();
   }
 
   void openMiniPlayer() {
-    _playerState!._controller.forward();
+    _playerState?._controller.forward();
     _isClosed = false;
     notifyListeners();
   }
 
   void _handleDragUpdate(DragUpdateDetails details) {
-    _playerState!._controller.value -= details.primaryDelta! / maxHeight;
+    _playerState?._controller.value -= details.primaryDelta! / maxHeight;
     // notifyListeners();
     // print(_playerState!._calCulateSizeWithController(minHeight, maxHeight));
   }
 
   void _handleDragEnd(DragEndDetails details) {
     if (_playerState!._controller.isAnimating ||
-        _playerState!._controller.status == AnimationStatus.completed) return;
+        _playerState?._controller.status == AnimationStatus.completed) return;
 
     final double flingVelocity =
         details.velocity.pixelsPerSecond.dy / maxHeight;
     if (flingVelocity < 0.0) {
-      _playerState!._controller.fling(velocity: max(1.0, -flingVelocity));
+      _playerState?._controller.fling(velocity: max(1.0, -flingVelocity));
       _isClosed = false;
     } else if (flingVelocity > 0.0) {
-      _playerState!._controller.fling(velocity: min(-1.0, -flingVelocity));
+      _playerState?._controller.fling(velocity: min(-1.0, -flingVelocity));
       _isClosed = true;
     } else {
-      _playerState!._controller
+      _playerState?._controller
           .fling(velocity: _playerState!._controller.value < 0.5 ? -1.0 : 1.0);
       if (_playerState!._controller.value < 0.5) {
         _isClosed = true;

@@ -44,7 +44,7 @@ class ChannelTile extends StatelessWidget {
                   height: Utils.blockWidth * 20,
                   width: Utils.blockWidth * 20,
                   decoration: BoxDecoration(
-                    color: Colors.yellow,
+                    color: Utils.placeHolderColor,
                     borderRadius: BorderRadius.circular(100),
                     image: DecorationImage(
                       fit: BoxFit.cover,

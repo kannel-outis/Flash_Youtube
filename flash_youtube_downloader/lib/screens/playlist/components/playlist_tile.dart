@@ -30,7 +30,7 @@ class PlayListTile extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                color: Colors.red,
+                color: Utils.placeHolderColor,
                 child: Stack(
                   children: [
                     Align(

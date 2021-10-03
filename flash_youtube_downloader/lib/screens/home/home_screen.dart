@@ -1,5 +1,6 @@
 library home;
 
+import 'package:flash_youtube_downloader/components/circular_progress_indicator.dart';
 import 'package:flash_youtube_downloader/components/custom_will_scope.dart';
 import 'package:flash_youtube_downloader/components/grid_view_widget.dart';
 import 'package:flash_youtube_downloader/screens/mini_player/components/mini_player_draggable.dart';

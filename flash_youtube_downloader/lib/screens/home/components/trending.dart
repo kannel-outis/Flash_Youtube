@@ -62,7 +62,7 @@ class _Trending extends ConsumerWidget {
       },
       loading: () {
         return const Center(
-          child: CircularProgressIndicator(),
+          child: CustomCircularProgressIndicator(),
         );
       },
       error: (obj, stackTrace) {

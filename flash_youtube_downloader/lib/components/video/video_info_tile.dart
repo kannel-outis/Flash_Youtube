@@ -87,7 +87,9 @@ class VideoInfoTile extends ConsumerWidget {
                       height: Utils.blockWidth * 7,
                       width: Utils.blockWidth * 7,
                       decoration: BoxDecoration(
-                        color: Colors.yellow,
+                        // color: Colors.yellow,
+                        color: Utils.placeHolderColor,
+
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: video.uploaderChannelInfo == null
@@ -103,7 +105,9 @@ class VideoInfoTile extends ConsumerWidget {
                                   height: Utils.blockWidth * 7,
                                   width: Utils.blockWidth * 7,
                                   decoration: BoxDecoration(
-                                    color: Colors.yellow,
+                                    // color: Colors.yellow,
+                                    color: Utils.placeHolderColor,
+
                                     borderRadius: BorderRadius.circular(50),
                                     image: DecorationImage(
                                       image: CachedNetworkImageProvider(
@@ -115,7 +119,11 @@ class VideoInfoTile extends ConsumerWidget {
                                   ),
                                 );
                               },
-                              loading: () => const CircularProgressIndicator(),
+                              loading: () => const CircularProgressIndicator(
+                                strokeWidth: .5,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
                               error: (obj, stk) => const SizedBox(),
                             )
                           : Container(
@@ -126,7 +134,8 @@ class VideoInfoTile extends ConsumerWidget {
                               height: Utils.blockWidth * 7,
                               width: Utils.blockWidth * 7,
                               decoration: BoxDecoration(
-                                color: Colors.yellow,
+                                // color: Colors.yellow,
+                                color: Utils.placeHolderColor,
                                 borderRadius: BorderRadius.circular(50),
                                 image: DecorationImage(
                                   image: CachedNetworkImageProvider(
@@ -207,6 +216,13 @@ class _FadeInImageWidget extends StatelessWidget {
       width: double.infinity,
       imageUrl: url,
       fit: BoxFit.cover,
+      placeholder: (context, value) {
+        return Container(
+          height: double.infinity,
+          width: double.infinity,
+          color: Utils.placeHolderColor,
+        );
+      },
       errorWidget: (context, s, d) => CachedNetworkImage(
         imageUrl: altImageUrl!,
         fit: BoxFit.cover,

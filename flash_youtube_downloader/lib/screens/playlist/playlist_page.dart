@@ -1,7 +1,9 @@
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_youtube_downloader/components/circular_progress_indicator.dart';
 import 'package:flash_youtube_downloader/components/custom_pagenation_widget.dart';
 import 'package:flash_youtube_downloader/components/custom_will_scope.dart';
 import 'package:flash_youtube_downloader/components/error_widget.dart';
+import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -35,6 +37,7 @@ class PlaylistPage extends ConsumerWidget {
                   SliverAppBar(
                     toolbarHeight: 100,
                     automaticallyImplyLeading: false,
+                    backgroundColor: Utils.placeHolderColor,
                     bottom: PreferredSize(
                       preferredSize: const Size(double.infinity, 50),
                       child: SizedBox(
@@ -100,7 +103,7 @@ class PlaylistPage extends ConsumerWidget {
             );
           },
           loading: () => const Center(
-            child: CircularProgressIndicator(),
+            child: CustomCircularProgressIndicator(),
           ),
           error: (obj, stk) => CustomErrorWidget(
             autoDisposeFutureProvider:

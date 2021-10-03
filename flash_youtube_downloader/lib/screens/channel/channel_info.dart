@@ -2,6 +2,7 @@ library channel_info;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_youtube_downloader/components/circular_progress_indicator.dart';
 import 'package:flash_youtube_downloader/components/custom_pagenation_widget.dart';
 import 'package:flash_youtube_downloader/components/custom_will_scope.dart';
 import 'package:flash_youtube_downloader/components/error_widget.dart';
@@ -55,7 +56,7 @@ class ChannelInfoPage extends HookWidget {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: CustomCircularProgressIndicator(),
                   );
                 }
                 return Scaffold(
@@ -122,7 +123,7 @@ class ChannelInfoPage extends HookWidget {
             );
           },
           loading: () => const Center(
-            child: CircularProgressIndicator(),
+            child: CustomCircularProgressIndicator(),
           ),
           error: (o, s) => CustomErrorWidget<ChannelInfo?>(
             future: uploaderUrl == null

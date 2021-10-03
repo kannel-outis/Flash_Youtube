@@ -57,7 +57,7 @@ class VideoInfoTile extends ConsumerWidget {
           children: [
             Container(
               width: 180,
-              color: Colors.red,
+              color: Utils.placeHolderColor,
               child: Stack(
                 children: [
                   CachedNetworkImage(
@@ -169,7 +169,7 @@ class _IsPlaylistInfo extends StatelessWidget {
           ),
           Container(
             width: 180,
-            color: Colors.red,
+            color: Utils.placeHolderColor,
             child: Stack(
               children: [
                 CachedNetworkImage(
@@ -266,7 +266,7 @@ class _IsSearchTile extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              color: Colors.red,
+              color: Utils.placeHolderColor,
               child: Stack(
                 children: [
                   Align(

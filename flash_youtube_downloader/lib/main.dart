@@ -17,45 +17,48 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
-        // showPerformanceOverlay: true,
         builder: (context, child) => MaterialApp(
-          navigatorKey: Utils.navigationKey,
-          title: 'Flutter Demo',
-          theme: Utils.themeData(context, Brightness.light),
           darkTheme: Utils.themeData(context, Brightness.dark),
-          home: const HomeScreen(),
-          builder: (context, child) {
-            return Consumer(
+          theme: Utils.themeData(context, Brightness.light),
+          home: child,
+        ),
+        home: Stack(
+          children: [
+            MaterialApp(
+              builder: (context, child) {
+                return MaterialApp(
+                  navigatorKey: Utils.navigationKey,
+                  darkTheme: Utils.themeData(context, Brightness.dark),
+                  theme: Utils.themeData(context, Brightness.light),
+                  home: ScrollConfiguration(
+                    behavior: NoEffectScrollConfig(),
+                    child: const HomeScreen(),
+                  ),
+                );
+              },
+            ),
+            Consumer(
               builder: (context, watch, child) {
                 final currentVideoState =
                     watch(HomeProviders.currentVideoStateProvider);
                 final _miniPlayerController =
                     watch(MiniPlayerProviders.miniPlayerC);
-                return Stack(
-                  children: [
-                    ScrollConfiguration(
-                      behavior: NoEffectScrollConfig(),
-                      child: child!,
-                    ),
-                    if (currentVideoState != null)
-                      GestureDetector(
-                        onHorizontalDragUpdate: (e) {
-                          // for dismissing mini player
-                          if (_miniPlayerController.isClosed) {
-                            print(e.globalPosition);
-                          }
-                        },
-                        child:
-                            MiniPlayerWidget(controller: _miniPlayerController),
-                      )
-                    else
-                      const SizedBox(),
-                  ],
-                );
+                if (currentVideoState != null) {
+                  return GestureDetector(
+                    onHorizontalDragUpdate: (e) {
+                      // for dismissing mini player
+                      if (_miniPlayerController.isClosed) {
+                        print(e.globalPosition);
+                      }
+                    },
+                    child: MiniPlayerWidget(controller: _miniPlayerController),
+                  );
+                } else {
+                  return const SizedBox();
+                }
               },
-              child: child,
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
