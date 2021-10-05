@@ -51,7 +51,11 @@ class MyApp extends StatelessWidget {
                         print(e.globalPosition);
                       }
                     },
-                    child: MiniPlayerWidget(controller: _miniPlayerController),
+                    child: ScrollConfiguration(
+                      behavior: NoEffectScrollConfig(),
+                      child:
+                          MiniPlayerWidget(controller: _miniPlayerController),
+                    ),
                   );
                 } else {
                   return const SizedBox();

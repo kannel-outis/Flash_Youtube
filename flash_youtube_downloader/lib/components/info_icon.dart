@@ -12,22 +12,25 @@ class InfoIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onPressed,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            textDirection: TextDirection.rtl,
-            size: 23,
-          ),
-          const SizedBox(height: 7),
-          Text(
-            capitalize(label),
-            style: Theme.of(context).textTheme.button!.copyWith(
-                  fontWeight: FontWeight.normal,
-                ),
-          ),
-        ],
+      child: Container(
+        color: Colors.transparent,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              textDirection: TextDirection.rtl,
+              size: 23,
+            ),
+            const SizedBox(height: 7),
+            Text(
+              capitalize(label),
+              style: Theme.of(context).textTheme.button!.copyWith(
+                    fontWeight: FontWeight.normal,
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }

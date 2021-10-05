@@ -132,7 +132,7 @@ class MiniPlayerWidget extends HookWidget {
                       children: [
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
-                          height: (Utils.blockHeight * 13.5) +
+                          height: (Utils.blockHeight * 14.5) +
                               containerHeight.value,
                           decoration: const BoxDecoration(
                               // color: Colors.black,
@@ -252,8 +252,10 @@ class MiniPlayerWidget extends HookWidget {
                                           onPressed: () {
                                             showModalBottomSheet(
                                               context: context,
-                                              builder: (context) =>
-                                                  const ModalSheet(),
+                                              builder: (context) => ModalSheet(
+                                                videoInfo: currentVideoState
+                                                    .videoInfo!,
+                                              ),
                                             );
                                           },
                                           icon: Icons
@@ -272,18 +274,24 @@ class MiniPlayerWidget extends HookWidget {
                                 ),
                                 Container(
                                   margin: const EdgeInsets.only(top: 5),
-                                  decoration: const BoxDecoration(
+                                  decoration: BoxDecoration(
                                     border: Border(
                                       top: BorderSide(
-                                          width: .5, color: Colors.grey),
+                                        width: .5,
+                                        color: Colors.white.withOpacity(.5),
+                                      ),
                                       bottom: BorderSide(
-                                          width: .5, color: Colors.grey),
+                                        width: .5,
+                                        color: Colors.white.withOpacity(.5),
+                                      ),
                                     ),
                                     // color: Colors.white,
                                   ),
-                                  height: Utils.blockHeight * 3.5,
+                                  height: Utils.blockHeight * 4.5,
                                   padding: const EdgeInsets.symmetric(
-                                      horizontal: 17),
+                                    horizontal: 17,
+                                    vertical: 10,
+                                  ),
                                   child: Row(
                                     children: [
                                       GestureDetector(

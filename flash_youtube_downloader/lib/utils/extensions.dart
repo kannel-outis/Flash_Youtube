@@ -1,6 +1,7 @@
 extension ConvertView on String {
   // ignore: avoid_positional_boolean_parameters
-  String convertToViews([bool shorten = true, bool rawThousands = true]) {
+  String convertToViews(
+      [bool shorten = true, bool rawThousands = true, String? surffix]) {
     if (!contains(".")) {
       if (this == "-1") {
         return "0";
@@ -17,13 +18,14 @@ extension ConvertView on String {
           characters.reversed.join().substring(0, characters.length - 1);
       final list = newConvert.split(",");
       if (list.length >= 3) {
-        newConvert = "${list.first}.${list[1].substring(0, 1)}M";
+        newConvert =
+            "${list.first}.${list[1].substring(0, 1)}${surffix ?? "M"}";
       }
       if (!shorten) {
         return characters.reversed.join().substring(0, characters.length - 1);
       }
       if (!rawThousands && list.length == 2) {
-        newConvert = "${list.first}K";
+        newConvert = "${list.first}${surffix ?? "K"}";
       }
       return newConvert;
     } else {

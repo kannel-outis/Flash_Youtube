@@ -8,6 +8,7 @@ class Utils {
   static late double blockHeight;
   static late double blockWidth;
   static late Orientation orientation;
+  static late bool isDarkTheme;
 
   static final navigationKey = GlobalKey<NavigatorState>();
 
@@ -23,10 +24,12 @@ class Utils {
   }
 
   static Color placeHolderColor = const Color(0xFF181818);
+  static Color containerLabelColor = const Color(0xFF3d3d3d);
+  static Color containerLabelColorLight = const Color(0xFFaaaaaa);
 
   static ThemeData themeData(BuildContext context, Brightness brightness) {
     getBlockWidthAndHeight(context);
-    final isDarkTheme = brightness == Brightness.dark;
+    isDarkTheme = brightness == Brightness.dark;
     final theme = Theme.of(context);
     return ThemeData(
       scaffoldBackgroundColor:
@@ -53,6 +56,9 @@ class Utils {
         ),
       ),
       primaryIconTheme: IconThemeData(size: blockWidth * 3),
+      iconTheme: IconThemeData(
+        color: isDarkTheme ? Colors.white : Colors.black,
+      ),
     );
   }
 
