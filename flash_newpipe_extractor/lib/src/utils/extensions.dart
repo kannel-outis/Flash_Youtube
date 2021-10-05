@@ -20,3 +20,24 @@ extension ToQualityExt on String {
     }
   }
 }
+
+extension QualityToString on Quality {
+  String get qualityToString {
+    switch (this) {
+      case Quality.hd1080:
+        return "1080p";
+      case Quality.hd720:
+        return "720p";
+      case Quality.large:
+        return "480p";
+      case Quality.medium:
+        return "360p";
+      case Quality.small:
+        return "240p";
+      case Quality.tiny:
+        return "144p";
+      default:
+        return "2K";
+    }
+  }
+}

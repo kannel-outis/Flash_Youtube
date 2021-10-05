@@ -2,7 +2,7 @@ import 'package:flash_newpipe_extractor/src/models/stream/streams.dart';
 import 'package:http/http.dart';
 
 class ContentLength {
-  static Future<String> getStreamSize(Streams stream) async {
+  static Future<ContentSize> getStreamSize(Streams stream) async {
     final response = await head(
       Uri.parse(stream.url),
       headers: {
@@ -16,11 +16,34 @@ class ContentLength {
     final mb = kb / 1024;
     final gb = mb / 1024;
 
-    if (gb >= 1) {
-      return "${gb.roundToDouble()} GB";
-    } else if (mb >= 1) {
-      return "${mb.roundToDouble()} MB";
+    return ContentSize(
+      bytes: totalBytes,
+      kiloBytes: kb,
+      megaBytes: mb,
+      gigaBytes: gb,
+    );
+  }
+}
+
+class ContentSize {
+  final int bytes;
+  final double kiloBytes;
+  final double megaBytes;
+  final double gigaBytes;
+
+  const ContentSize({
+    required this.bytes,
+    required this.kiloBytes,
+    required this.megaBytes,
+    required this.gigaBytes,
+  });
+
+  String get sizeToString {
+    if (gigaBytes >= 1) {
+      return "${gigaBytes.toStringAsFixed(1)} GB";
+    } else if (megaBytes >= 1) {
+      return "${megaBytes.toStringAsFixed(1)} MB";
     } else
-      return "${kb.roundToDouble()} KB";
+      return "${kiloBytes.toStringAsFixed(1)} KB";
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flash_newpipe_extractor/src/models/channel/channel_info.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
+import 'package:flash_newpipe_extractor/src/models/stream/streams.dart';
+import 'package:flash_newpipe_extractor/src/utils/content_length.dart';
 
 import 'method_calls.dart';
 import 'models/playlist/playlist_info.dart';
@@ -34,5 +36,9 @@ class Extract {
 
   Future<PlaylistInfo> getPlaylistInfo(String url) async {
     return await FlashMethodCalls.getPlaylistInfo(url);
+  }
+
+  Future<ContentSize> getStreamSize(Streams stream) {
+    return ContentLength.getStreamSize(stream);
   }
 }

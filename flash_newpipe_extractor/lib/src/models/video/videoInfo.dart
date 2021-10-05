@@ -106,6 +106,30 @@ class YoutubeVideoInfo {
     }
   }
 
+  List<Streams> allStreamsOfQuality(Quality quality) {
+    final allAudioOnlyStreamsOfQuality =
+        _audioOnlyStreams.where((element) => element.quality == quality);
+    final allVideoOnlyStreamsOfQuality =
+        _videoOnlyStreams.where((element) => element.quality == quality);
+    final allVideoAudioOnlyStreamsOfQuality =
+        _videoAudioStreams.where((element) => element.quality == quality);
+    return <Streams>[
+      ...allAudioOnlyStreamsOfQuality,
+      ...allVideoAudioOnlyStreamsOfQuality,
+      ...allVideoOnlyStreamsOfQuality
+    ];
+  }
+
+  List<Quality> get availableQualities {
+    final audioQualities = _audioOnlyStreams.map((e) => e.quality);
+    final videoQualities = _videoOnlyStreams.map((e) => e.quality);
+    final videoAudioQuality = _videoAudioStreams.map((e) => e.quality);
+
+    return <Quality>[...audioQualities, ...videoQualities, ...videoAudioQuality]
+        .toSet()
+        .toList();
+  }
+
   static List<String> _getListFromString(String list) {
     final splitList = list.split(",");
     final splitListCount = splitList.length;

@@ -20,11 +20,24 @@ abstract class Streams {
     required this.quality,
   });
 
-  String? _size;
+  ContentSize? _size;
 
-  String? get downloadSize => _size;
+  ContentSize? get contentSize => _size;
 
-  Future<String> get streamSize async {
+  ContentSize combineSizes(ContentSize sizeOne, ContentSize sizeTwo) {
+    final totalBytes = sizeOne.bytes + sizeTwo.bytes;
+    final kb = totalBytes / 1024;
+    final mb = kb / 1024;
+    final gb = mb / 1024;
+    return ContentSize(
+      bytes: totalBytes,
+      kiloBytes: kb,
+      megaBytes: mb,
+      gigaBytes: gb,
+    );
+  }
+
+  Future<ContentSize> get streamSize async {
     return _size = _size ?? await ContentLength.getStreamSize(this);
   }
 }
