@@ -1,9 +1,10 @@
 import 'package:flash_newpipe_extractor/src/models/channel/channel_info.dart';
 import 'package:flash_newpipe_extractor/src/models/comment/comments.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/streams.dart';
-import 'package:flash_newpipe_extractor/src/utils/content_length.dart';
+import 'package:flash_newpipe_extractor/src/services/extractor.dart';
 
 import 'method_calls.dart';
+import 'models/content_size.dart';
 import 'models/playlist/playlist_info.dart';
 import 'models/search/search.dart';
 import 'models/video/video.dart';
@@ -39,6 +40,6 @@ class Extract {
   }
 
   Future<ContentSize> getStreamSize(Streams stream) {
-    return ContentLength.getStreamSize(stream);
+    return Extractor.getStreamSize(stream);
   }
 }

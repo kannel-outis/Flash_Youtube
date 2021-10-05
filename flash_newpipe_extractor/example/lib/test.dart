@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class Test extends StatefulWidget {
   const Test({Key? key}) : super(key: key);
@@ -52,39 +56,40 @@ class _TestState extends State<Test> {
             // ),
             TextButton(
               onPressed: () async {
-                // Extract()
-                //     .getPlaylistInfo(_controller.value.text)
-                //     .then((value) async {
-                //   print(value.growableListItems.length);
-                //   if (value.page!.hasNextPage) {
-                //     await value.nextpageItems();
-                //     print(value.growableListItems.length);
-                //   }
-                // });
+                _search =
+                    await Extract().getSearchResults(_controller.value.text);
 
-                // _search =
-                //     await Extract().getSearchResults(_controller.value.text);
-                // print(_search!.type);
-                //     .then((value) {
-                //   print(value.growableListItems
-                //       .firstWhere((element) => element is Channel)
-                //       .name);
-                // });
-                // print(_search!.metaInfo);
-                // if (_search!.page!.hasNextPage)
-                //   await _search!.nextpageItems().then(
-                //       (value) => print(_search!.growableListItems.length));
-                // else
-                //   print("done");
-                // for (var item in _search!.growableListItems) {
-                //   print(item.name);
-                // }
                 await (_search!.growableListItems[12] as YoutubeVideo)
                     .getFullInformation
                     .then((value) async => print(await value
-                        .getStreamOfQuality<AudioOnlyStream>(Quality.hd1080)
+                        .getStreamOfQuality<AudioOnlyStream>(Quality.tiny)
                         .streams!
                         .streamSize));
+
+                final status = await Permission.storage.request();
+                final s = (_search!.growableListItems[12] as YoutubeVideo)
+                    .videoInfo!
+                    .getStreamOfQuality<AudioOnlyStream>(Quality.tiny)
+                    .streams!;
+                print(s.contentSize!.bytes);
+
+                if (status.isGranted) {
+                  final dir = await getExternalStorageDirectory();
+                  var knockDir = await Directory('${dir!.path}/downloader')
+                      .create(recursive: true);
+                  final file = File(knockDir.path + "testing.${s.format}");
+
+                  s.downloadStream(
+                    file,
+                    onCompleted: (value, size) {
+                      print(size.bytes);
+                      print(value.path);
+                    },
+                    progressCallBack: (progress) {
+                      print(progress);
+                    },
+                  );
+                }
               },
               child: const Center(
                 child: Text("testing"),
