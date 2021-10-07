@@ -23,7 +23,7 @@ class Utils {
     }
   }
 
-  static Color placeHolderColor = const Color(0xFF181818);
+  static Color placeHolderColor = const Color(0xFF212121);
   static Color containerLabelColor = const Color(0xFF3d3d3d);
   static Color containerLabelColorLight = const Color(0xFFaaaaaa);
 
@@ -33,7 +33,7 @@ class Utils {
     final theme = Theme.of(context);
     return ThemeData(
       scaffoldBackgroundColor:
-          isDarkTheme ? const Color(0xFF212121) : theme.scaffoldBackgroundColor,
+          isDarkTheme ? const Color(0xFF181818) : theme.scaffoldBackgroundColor,
       brightness: brightness,
       fontFamily: "TT Firs Neue Regular",
       textTheme: TextTheme(

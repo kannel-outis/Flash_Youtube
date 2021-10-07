@@ -1,15 +1,21 @@
 part of home;
 
 // ignore: must_be_immutable
-class _Trending extends ConsumerWidget {
+class _Trending extends StatefulWidget {
   final MiniPlayerController _miniPlayerController;
-  _Trending(this._miniPlayerController);
+  const _Trending(this._miniPlayerController);
+
+  @override
+  __TrendingState createState() => __TrendingState();
+}
+
+class __TrendingState extends State<_Trending>
+    with AutomaticKeepAliveClientMixin<_Trending> {
   int gridCount = 0;
 
   @override
-  Widget build(BuildContext context, ScopedReader watch) {
-    final futureTrendingVideos = watch(HomeProviders.trendingVideos);
-
+  Widget build(BuildContext context) {
+    super.build(context);
     final maxWidth = () {
       double screenWidth = 0.0;
       if (MediaQuery.of(context).orientation == Orientation.portrait) {
@@ -48,28 +54,42 @@ class _Trending extends ConsumerWidget {
       }
       return Utils.blockHeight * 18;
     }();
-    return futureTrendingVideos.when(
-      data: (data) {
-        return Padding(
-          padding: EdgeInsets.all(Utils.blockWidth * 2.0),
-          child: GridViewWidget(
-              gridCount: gridCount,
-              maxWidth: maxWidth,
-              data: data!,
-              heightWithMaxHeight: heightWithMaxHeight,
-              miniPlayerController: _miniPlayerController),
-        );
-      },
-      loading: () {
-        return const Center(
-          child: CustomCircularProgressIndicator(),
-        );
-      },
-      error: (obj, stackTrace) {
-        return const Center(
-          child: Text("Something Went Wrong....."),
+    return Consumer(
+      builder: (context, watch, child) {
+        final futureTrendingVideos = watch(HomeProviders.trendingVideos);
+
+        return futureTrendingVideos.when(
+          data: (data) {
+            return Padding(
+              padding: EdgeInsets.only(
+                top: Utils.blockWidth * 2.0,
+                left: Utils.blockWidth * 2.0,
+                right: Utils.blockWidth * 2.0,
+              ),
+              child: GridViewWidget(
+                  gridCount: gridCount,
+                  maxWidth: maxWidth,
+                  data: data!,
+                  heightWithMaxHeight: heightWithMaxHeight,
+                  miniPlayerController: widget._miniPlayerController),
+            );
+          },
+          loading: () {
+            return const Center(
+              child: CustomCircularProgressIndicator(),
+            );
+          },
+          error: (obj, stackTrace) {
+            return const Center(
+              child: Text("Something Went Wrong....."),
+            );
+          },
         );
       },
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
