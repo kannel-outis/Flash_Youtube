@@ -1,3 +1,4 @@
+import 'package:flash_youtube_downloader/services/online/hive/init.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/home/home_screen.dart';
@@ -7,7 +8,9 @@ import 'screens/mini_player/providers/miniplayer_providers.dart';
 import 'utils/scroll_behaviour.dart';
 import 'utils/utils.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await HiveInit.init();
   runApp(const MyApp());
 }
 
