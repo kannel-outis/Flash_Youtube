@@ -1,6 +1,7 @@
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/components/circular_progress_indicator.dart';
 import 'package:flash_youtube_downloader/components/error_widget.dart';
+import 'package:flash_youtube_downloader/screens/home/providers/home_providers.dart';
 import 'package:flash_youtube_downloader/utils/scroll_behaviour.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flash_youtube_downloader/utils/extensions.dart';
@@ -8,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class ModalSheet extends ConsumerWidget {
-  final YoutubeVideoInfo videoInfo;
-  const ModalSheet({Key? key, required this.videoInfo}) : super(key: key);
+  final YoutubeVideo video;
+  const ModalSheet({Key? key, required this.video}) : super(key: key);
 
   static final getContentLengthFutureProvider = FutureProvider.autoDispose
       .family<bool, YoutubeVideoInfo>((ref, video) async {
@@ -26,8 +27,33 @@ class ModalSheet extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
-    final getSizeFuture = watch(getContentLengthFutureProvider(videoInfo));
-    return Container(
+
+    if (video.videoInfo == null) {
+      final videoInfo = watch(HomeProviders.videoStateFullInfo(video));
+      return videoInfo.when(
+        data: (data) {
+          return const SizedBox();
+        },
+        loading: () {
+          return Container(
+            color: theme.scaffoldBackgroundColor,
+            height: 70,
+            child: const Center(
+              child: CustomCircularProgressIndicator(),
+            ),
+          );
+        },
+        error: (obj, stk) {
+          return CustomErrorWidget(
+            future: HomeProviders.videoStateFullInfo(video),
+          );
+        },
+      );
+    }
+    final getSizeFuture =
+        watch(getContentLengthFutureProvider(video.videoInfo!));
+    return AnimatedContainer(
+      duration: const Duration(seconds: 5),
       height: Utils.blockHeight * 50,
       color: theme.scaffoldBackgroundColor,
       child: getSizeFuture.when(
@@ -66,7 +92,8 @@ class ModalSheet extends ConsumerWidget {
                       child: ListView(
                         children: [
                           for (var item in Quality.values)
-                            QualityStreams(videoInfo: videoInfo, item: item)
+                            QualityStreams(
+                                videoInfo: video.videoInfo!, item: item)
                         ],
                       ),
                     ),
@@ -80,7 +107,8 @@ class ModalSheet extends ConsumerWidget {
           child: CustomCircularProgressIndicator(),
         ),
         error: (obj, stack) => CustomErrorWidget(
-          autoDisposeFutureProvider: getContentLengthFutureProvider(videoInfo),
+          autoDisposeFutureProvider:
+              getContentLengthFutureProvider(video.videoInfo!),
         ),
       ),
     );

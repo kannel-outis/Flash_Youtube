@@ -1,12 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_youtube_downloader/components/video/pop_menu.dart';
 import 'package:flash_youtube_downloader/providers/change_current_playing.dart';
 import 'package:flash_youtube_downloader/screens/channel/channel_info.dart';
 import 'package:flash_youtube_downloader/screens/channel/providers/channel_providers.dart';
 import 'package:flash_youtube_downloader/screens/mini_player/components/mini_player_draggable.dart';
+import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../modal_sheet.dart';
 import '/utils/extensions.dart';
 
 class VideoInfoTile extends ConsumerWidget {
@@ -87,27 +90,17 @@ class VideoInfoTile extends ConsumerWidget {
                       height: Utils.blockWidth * 7,
                       width: Utils.blockWidth * 7,
                       decoration: BoxDecoration(
-                        // color: Colors.yellow,
                         color: Utils.placeHolderColor,
-
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: video.uploaderChannelInfo == null
                           ? channelFuture.when(
                               data: (data) {
                                 return Container(
-                                  // borderRadius: BorderRadius.circular(50),
-                                  // child: _FadeInImageWidget(
-                                  //   url: data != null
-                                  //       ? data.avatarUrl
-                                  //       : Utils.dummyPictureUrl,
-                                  // ),
                                   height: Utils.blockWidth * 7,
                                   width: Utils.blockWidth * 7,
                                   decoration: BoxDecoration(
-                                    // color: Colors.yellow,
                                     color: Utils.placeHolderColor,
-
                                     borderRadius: BorderRadius.circular(50),
                                     image: DecorationImage(
                                       image: CachedNetworkImageProvider(
@@ -127,14 +120,9 @@ class VideoInfoTile extends ConsumerWidget {
                               error: (obj, stk) => const SizedBox(),
                             )
                           : Container(
-                              // borderRadius: BorderRadius.circular(50),
-                              // child: _FadeInImageWidget(
-                              //   url: video.uploaderChannelInfo!.avatarUrl,
-                              // ),
                               height: Utils.blockWidth * 7,
                               width: Utils.blockWidth * 7,
                               decoration: BoxDecoration(
-                                // color: Colors.yellow,
                                 color: Utils.placeHolderColor,
                                 borderRadius: BorderRadius.circular(50),
                                 image: DecorationImage(
@@ -191,7 +179,21 @@ class VideoInfoTile extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const Icon(Icons.more_vert)
+                // InkWell(
+                //   onTap: () {
+                //     print("object");
+                //   },
+                //   borderRadius: BorderRadius.circular(50),
+                //   child: const SizedBox(
+                //     height: 30,
+                //     width: 30,
+                //     child: Icon(
+                //       Icons.more_vert,
+                //       size: 18,
+                //     ),
+                //   ),
+                // ),
+                CustomPopMenu(video: video),
               ],
             ),
           ),

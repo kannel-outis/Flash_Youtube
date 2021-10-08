@@ -9,7 +9,7 @@ class HiveYoutubeVideo extends YoutubeVideo {
   final String? uploadername;
   final String? uploaderurl;
   final String? thumbnailurl;
-  final Duration? videoDuration;
+  final int? videoDuration;
   final DateTime? uploaddate;
 
   HiveYoutubeVideo({
@@ -24,7 +24,7 @@ class HiveYoutubeVideo extends YoutubeVideo {
     this.views,
   }) : super(
           url: videoUrl,
-          duration: videoDuration,
+          duration: Duration(milliseconds: videoDuration!),
           textualUploadDate: uploadDateText,
           thumbnailUrl: thumbnailurl,
           uploaderName: uploadername,
@@ -52,7 +52,7 @@ class HiveYoutubeVideoAdapter extends TypeAdapter<HiveYoutubeVideo> {
       uploaddate: fields[3] as DateTime?,
       uploadDateText: fields[4] as String?,
       uploaderurl: fields[5] as String?,
-      videoDuration: fields[6] as Duration?,
+      videoDuration: fields[6] as int?,
       thumbnailurl: fields[7] as String?,
       views: fields[8] as int?,
     );

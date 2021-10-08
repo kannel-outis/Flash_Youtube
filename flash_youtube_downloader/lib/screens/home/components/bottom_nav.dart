@@ -16,6 +16,7 @@ class _BottomNavState extends State<BottomNav> {
     return SizedBox(
       height: 50,
       child: BottomNavigationBar(
+        elevation: 50,
         backgroundColor: theme.scaffoldBackgroundColor,
         onTap: (index) {
           setState(() {

@@ -11,8 +11,9 @@ class HomeProviders {
     return Extract().getTrendingVideos();
   });
 
-  static final videoStateFullInfo = FutureProvider<YoutubeVideoInfo>((ref) {
-    final videoState = ref.watch(currentVideoStateProvider);
+  static final videoStateFullInfo =
+      FutureProvider.family<YoutubeVideoInfo, YoutubeVideo?>((ref, video) {
+    final videoState = video ?? ref.watch(currentVideoStateProvider);
     return videoState!.getFullInformation;
   });
   static final youtubePlayerController =

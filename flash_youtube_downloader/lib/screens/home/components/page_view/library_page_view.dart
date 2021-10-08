@@ -1,3 +1,4 @@
+import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:flutter/material.dart';
 import '../../widgets/library_item_tile.dart';
 
@@ -26,6 +27,7 @@ class _LibraryPageViewState extends State<LibraryPageView>
           ),
           LibraryItemTile(
             leadingIcon: Icons.watch_later_outlined,
+            menuType: MenuType.watchlater,
             title: "Watch Later",
           ),
         ],

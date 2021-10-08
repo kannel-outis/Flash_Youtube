@@ -1,10 +1,10 @@
-import 'package:flash_youtube_downloader/services/online/hive/init.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/home/home_screen.dart';
 import 'screens/home/providers/home_providers.dart';
 import 'screens/mini_player/mini_player.dart';
 import 'screens/mini_player/providers/miniplayer_providers.dart';
+import 'services/offline/hive/init.dart';
 import 'utils/scroll_behaviour.dart';
 import 'utils/utils.dart';
 
@@ -40,30 +40,33 @@ class MyApp extends StatelessWidget {
                 );
               },
             ),
-            Consumer(
-              builder: (context, watch, child) {
-                final currentVideoState =
-                    watch(HomeProviders.currentVideoStateProvider);
-                final _miniPlayerController =
-                    watch(MiniPlayerProviders.miniPlayerC);
-                if (currentVideoState != null) {
-                  return GestureDetector(
-                    onHorizontalDragUpdate: (e) {
-                      // for dismissing mini player
-                      if (_miniPlayerController.isClosed) {
-                        print(e.globalPosition);
-                      }
-                    },
-                    child: ScrollConfiguration(
-                      behavior: NoEffectScrollConfig(),
-                      child:
-                          MiniPlayerWidget(controller: _miniPlayerController),
-                    ),
-                  );
-                } else {
-                  return const SizedBox();
-                }
-              },
+            Positioned.fill(
+              bottom: 50,
+              child: Consumer(
+                builder: (context, watch, child) {
+                  final currentVideoState =
+                      watch(HomeProviders.currentVideoStateProvider);
+                  final _miniPlayerController =
+                      watch(MiniPlayerProviders.miniPlayerC);
+                  if (currentVideoState != null) {
+                    return GestureDetector(
+                      onHorizontalDragUpdate: (e) {
+                        // for dismissing mini player
+                        if (_miniPlayerController.isClosed) {
+                          print(e.globalPosition);
+                        }
+                      },
+                      child: ScrollConfiguration(
+                        behavior: NoEffectScrollConfig(),
+                        child:
+                            MiniPlayerWidget(controller: _miniPlayerController),
+                      ),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
             ),
           ],
         ),

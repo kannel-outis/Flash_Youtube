@@ -45,7 +45,7 @@ class MiniPlayerWidget extends HookWidget {
     final currentVideoState =
         useProvider(HomeProviders.currentVideoStateProvider);
     final controller = useProvider(HomeProviders.youtubePlayerController);
-    final fullVideoInfo = useProvider(HomeProviders.videoStateFullInfo);
+    final fullVideoInfo = useProvider(HomeProviders.videoStateFullInfo(null));
     final channelFuture =
         useProvider(ChannelProviders.channelInfoProvider(currentVideoState!));
 
@@ -100,6 +100,8 @@ class MiniPlayerWidget extends HookWidget {
         playerChild: Material(
           child: Container(
             color: theme.scaffoldBackgroundColor,
+
+            ///TODO: add to watch later on ready
             child: YoutubePlayer(
               loadingWidth: 8,
               controller: controller!,
@@ -123,7 +125,7 @@ class MiniPlayerWidget extends HookWidget {
                         child: CustomCircularProgressIndicator(),
                       ),
                       error: (o, s) => CustomErrorWidget<YoutubeVideoInfo>(
-                        future: HomeProviders.videoStateFullInfo,
+                        future: HomeProviders.videoStateFullInfo(null),
                       ),
                     ),
                   )
@@ -253,8 +255,7 @@ class MiniPlayerWidget extends HookWidget {
                                             showModalBottomSheet(
                                               context: context,
                                               builder: (context) => ModalSheet(
-                                                videoInfo: currentVideoState
-                                                    .videoInfo!,
+                                                video: currentVideoState,
                                               ),
                                             );
                                           },

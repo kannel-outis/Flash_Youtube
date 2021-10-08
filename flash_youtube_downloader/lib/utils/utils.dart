@@ -32,6 +32,13 @@ class Utils {
     isDarkTheme = brightness == Brightness.dark;
     final theme = Theme.of(context);
     return ThemeData(
+      popupMenuTheme: PopupMenuThemeData(
+        color: isDarkTheme
+            ? const Color(0xFF181818)
+            : theme.scaffoldBackgroundColor,
+      ),
+      dialogBackgroundColor:
+          isDarkTheme ? const Color(0xFF181818) : theme.scaffoldBackgroundColor,
       scaffoldBackgroundColor:
           isDarkTheme ? const Color(0xFF181818) : theme.scaffoldBackgroundColor,
       brightness: brightness,
@@ -58,6 +65,16 @@ class Utils {
       primaryIconTheme: IconThemeData(size: blockWidth * 3),
       iconTheme: IconThemeData(
         color: isDarkTheme ? Colors.white : Colors.black,
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: isDarkTheme
+            ? const Color(0xFF181818)
+            : theme.scaffoldBackgroundColor,
+      ),
+      dialogTheme: DialogTheme(
+        backgroundColor: isDarkTheme
+            ? const Color(0xFF181818)
+            : theme.scaffoldBackgroundColor,
       ),
     );
   }

@@ -1,9 +1,9 @@
-import 'package:flash_youtube_downloader/services/online/hive/models/playlist.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'models/history.dart';
 import 'models/hive_youtube_video.dart';
+import 'models/playlist.dart';
 import 'models/watch_later.dart';
 
 // ignore: avoid_classes_with_only_static_members
