@@ -12,13 +12,16 @@ class CustomNestedView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return NestedScrollView(
       headerSliverBuilder: (context, hasSlivers) {
         return [
           SliverAppBar(
             toolbarHeight: 100,
             automaticallyImplyLeading: false,
-            backgroundColor: Utils.placeHolderColor,
+            backgroundColor: isDarkMode
+                ? Utils.placeHolderColor
+                : Utils.placeHolderColor.withOpacity(.1),
             bottom: PreferredSize(
               preferredSize: const Size(double.infinity, 50),
               child: SizedBox(
@@ -33,26 +36,26 @@ class CustomNestedView extends StatelessWidget {
                       width: 150,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: const [
+                        children: [
                           Icon(
                             Icons.play_circle_rounded,
-                            color: Colors.white,
+                            color: isDarkMode ? Colors.white : Colors.black,
                             size: 20,
                           ),
                           Icon(
                             Icons.library_add_check,
-                            color: Colors.white,
+                            color: isDarkMode ? Colors.white : Colors.black,
                             size: 20,
                           ),
                           Icon(
                             Icons.vertical_align_bottom_outlined,
-                            color: Colors.white,
+                            color: isDarkMode ? Colors.white : Colors.black,
                             size: 20,
                           ),
                           Icon(
                             Icons.reply_sharp,
                             textDirection: TextDirection.rtl,
-                            color: Colors.white,
+                            color: isDarkMode ? Colors.white : Colors.black,
                             size: 20,
                           ),
                         ],

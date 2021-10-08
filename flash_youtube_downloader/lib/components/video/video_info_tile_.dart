@@ -11,11 +11,13 @@ class VideoInfoTile extends ConsumerWidget {
   final bool isSearch;
   final bool isPlayListInfo;
   final int index;
+  final Widget? leadingChild;
   const VideoInfoTile(
       {Key? key,
       required this.video,
       this.isSearch = false,
       this.index = 0,
+      this.leadingChild,
       this.isPlayListInfo = false})
       : super(key: key);
 
@@ -39,7 +41,13 @@ class VideoInfoTile extends ConsumerWidget {
         },
         child: _IsPlaylistInfo(
           video: video,
-          index: index,
+          child: leadingChild ??
+              Text(
+                (index + 1).toString(),
+                style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                      color: Colors.grey,
+                    ),
+              ),
         ),
       );
     }
@@ -139,8 +147,8 @@ class VideoInfoTile extends ConsumerWidget {
 
 class _IsPlaylistInfo extends StatelessWidget {
   final YoutubeVideo video;
-  final int index;
-  const _IsPlaylistInfo({Key? key, required this.video, required this.index})
+  final Widget child;
+  const _IsPlaylistInfo({Key? key, required this.video, required this.child})
       : super(key: key);
 
   @override
@@ -159,12 +167,7 @@ class _IsPlaylistInfo extends StatelessWidget {
             width: 70,
             color: Colors.transparent,
             child: Center(
-              child: Text(
-                (index + 1).toString(),
-                style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                      color: Colors.grey,
-                    ),
-              ),
+              child: child,
             ),
           ),
           Container(

@@ -1,3 +1,4 @@
+import 'package:flash_youtube_downloader/screens/playlist/components/add_playlist_dialog.dart';
 import 'package:flash_youtube_downloader/screens/watchLater/watch_later.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
@@ -9,10 +10,12 @@ class LibraryItemTile extends StatelessWidget {
   final IconData leadingIcon;
   final IconData? trailingIcon;
   final MenuType? menuType;
+  final Color? color;
   const LibraryItemTile({
     Key? key,
     required this.leadingIcon,
     this.subTitle,
+    this.color,
     required this.title,
     this.trailingIcon,
     this.menuType,
@@ -35,6 +38,15 @@ class LibraryItemTile extends StatelessWidget {
               ),
             );
             break;
+          case MenuType.playlist:
+            showDialog(
+              context: context,
+              useSafeArea: true,
+              builder: (context) => const AddPlaylistDialog(
+                video: null,
+              ),
+            );
+            break;
           default:
         }
       },
@@ -47,7 +59,11 @@ class LibraryItemTile extends StatelessWidget {
               height: double.infinity,
               width: 80,
               child: Center(
-                child: Icon(leadingIcon, size: 23),
+                child: Icon(
+                  leadingIcon,
+                  size: 23,
+                  color: color ?? theme.textTheme.bodyText1!.color,
+                ),
               ),
             ),
             Expanded(
@@ -57,8 +73,10 @@ class LibraryItemTile extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: theme.textTheme.bodyText1!
-                        .copyWith(fontWeight: FontWeight.normal),
+                    style: theme.textTheme.bodyText1!.copyWith(
+                      fontWeight: FontWeight.normal,
+                      color: color ?? theme.textTheme.bodyText1!.color,
+                    ),
                   ),
                   if (subTitle != null)
                     Text(

@@ -6,7 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class AddPlaylistDialog extends HookWidget {
-  final YoutubeVideo video;
+  final YoutubeVideo? video;
   const AddPlaylistDialog({Key? key, required this.video}) : super(key: key);
 
   @override
@@ -51,7 +51,8 @@ class AddPlaylistDialog extends HookWidget {
                       EdgeInsets.only(left: 12, right: 12, bottom: 8),
                 ),
                 onFieldSubmitted: (value) {
-                  final hiveYoutubeVideo = Helper.youtubeVideoHelper(video);
+                  final hiveYoutubeVideo =
+                      video == null ? null : Helper.youtubeVideoHelper(video!);
                   playlistProvider.createPlaylist(hiveYoutubeVideo, value);
                 },
               ),

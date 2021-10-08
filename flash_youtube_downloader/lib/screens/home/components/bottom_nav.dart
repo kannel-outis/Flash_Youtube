@@ -13,11 +13,13 @@ class _BottomNavState extends State<BottomNav> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return SizedBox(
       height: 50,
       child: BottomNavigationBar(
         elevation: 50,
         backgroundColor: theme.scaffoldBackgroundColor,
+        selectedItemColor: isDarkMode ? Colors.white : Colors.black,
         onTap: (index) {
           setState(() {
             this.index = index;

@@ -97,9 +97,9 @@ class HomeScreen extends HookWidget {
               ],
             ),
           ),
-          bottomNavigationBar: BottomNav(pageController: pageController),
         ),
       ),
+      bottomNavigationBar: BottomNav(pageController: pageController),
     );
   }
 }

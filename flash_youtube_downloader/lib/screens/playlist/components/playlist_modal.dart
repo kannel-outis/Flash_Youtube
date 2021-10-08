@@ -47,12 +47,12 @@ class PlayListModal extends StatelessWidget {
                     for (var item in playlists)
                       PlayListModalTile(
                           leadingIcon: Icons.playlist_add_rounded,
+                          subTitle: "${item.videos.length.toString()} videos",
                           onPressed: () async {
                             final video = Helper.youtubeVideoHelper(this.video);
                             item.videos.add(video);
                             await item.save().then(
-                                  (value) =>
-                                      Utils.navigationKey.currentState!.pop(),
+                                  (value) => Navigator.of(context).pop(),
                                 );
                           },
                           title: item.playlistName),

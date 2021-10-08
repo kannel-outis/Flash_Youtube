@@ -7,11 +7,13 @@ class PlaylistState extends ChangeNotifier {
   final hiveHandler = HiveHandler();
 
   Future<void> createPlaylist(
-      HiveYoutubeVideo video, String playlistName) async {
+      HiveYoutubeVideo? video, String playlistName) async {
     final playlist = HivePlaylist(
-      videos: [
-        video,
-      ],
+      videos: video == null
+          ? []
+          : [
+              video,
+            ],
       playlistName: playlistName,
     );
     await hiveHandler.createPlaylist(playlist);

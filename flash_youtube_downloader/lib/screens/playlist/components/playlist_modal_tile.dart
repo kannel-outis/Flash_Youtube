@@ -4,12 +4,14 @@ class PlayListModalTile extends StatelessWidget {
   final String title;
   final IconData leadingIcon;
   final VoidCallback? onPressed;
-  const PlayListModalTile(
-      {Key? key,
-      required this.leadingIcon,
-      this.onPressed,
-      required this.title})
-      : super(key: key);
+  final String? subTitle;
+  const PlayListModalTile({
+    Key? key,
+    required this.leadingIcon,
+    this.onPressed,
+    this.subTitle,
+    required this.title,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +31,25 @@ class PlayListModalTile extends StatelessWidget {
               Icon(leadingIcon, size: 30),
               Padding(
                 padding: const EdgeInsets.only(left: 15.0),
-                child: Text(
-                  title,
-                  style: theme.textTheme.bodyText1!.copyWith(
-                    fontWeight: FontWeight.normal,
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.bodyText1!.copyWith(
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                    if (subTitle != null)
+                      Text(
+                        subTitle!,
+                        style: theme.textTheme.bodyText2!.copyWith(
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey,
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],
