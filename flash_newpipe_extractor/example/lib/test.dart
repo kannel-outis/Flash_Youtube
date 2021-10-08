@@ -17,6 +17,7 @@ class _TestState extends State<Test> {
   late final TextEditingController _controller;
   List<String> _suggestions = [];
   Search? _search;
+  int downloaded = 0;
 
   @override
   void initState() {
@@ -56,40 +57,45 @@ class _TestState extends State<Test> {
             // ),
             TextButton(
               onPressed: () async {
-                _search =
-                    await Extract().getSearchResults(_controller.value.text);
+                // _search =
+                //     await Extract().getSearchResults(_controller.value.text);
 
-                await (_search!.growableListItems[12] as YoutubeVideo)
-                    .getFullInformation
-                    .then((value) async => print(await value
-                        .getStreamOfQuality<AudioOnlyStream>(Quality.tiny)
-                        .streams!
-                        .streamSize));
+                // await (_search!.growableListItems[12] as YoutubeVideo)
+                //     .getFullInformation
+                //     .then((value) async => print(await value
+                //         .getStreamOfQuality<AudioOnlyStream>(Quality.tiny)
+                //         .streams!
+                //         .streamSize));
 
-                final status = await Permission.storage.request();
-                final s = (_search!.growableListItems[12] as YoutubeVideo)
-                    .videoInfo!
-                    .getStreamOfQuality<AudioOnlyStream>(Quality.tiny)
-                    .streams!;
-                print(s.contentSize!.bytes);
+                // final status = await Permission.storage.request();
+                // final s = (_search!.growableListItems[12] as YoutubeVideo)
+                //     .videoInfo!
+                //     .getStreamOfQuality<AudioOnlyStream>(Quality.tiny)
+                //     .streams!;
+                // print(s.contentSize!.bytes);
 
-                if (status.isGranted) {
-                  final dir = await getExternalStorageDirectory();
-                  var knockDir = await Directory('${dir!.path}/downloader')
-                      .create(recursive: true);
-                  final file = File(knockDir.path + "testing.${s.format}");
+                // if (status.isGranted) {
+                //   final dir = await getExternalStorageDirectory();
+                //   var knockDir = await Directory('${dir!.path}/downloader')
+                //       .create(recursive: true);
+                //   final file = File(knockDir.path + "testing.${s.format}");
 
-                  s.downloadStream(
-                    file,
-                    onCompleted: (value, size) {
-                      print(size.bytes);
-                      print(value.path);
-                    },
-                    progressCallBack: (progress) {
-                      print(progress);
-                    },
-                  );
-                }
+                //   s.downloadStream(
+                //     file,
+                //     start: downloaded,
+                //     onCompleted: (value, size) {
+                //       print(size.bytes);
+                //       downloaded = size.bytes;
+                //       print(value.path);
+                //     },
+                //     progressCallBack: (progress) {
+                //       print(progress);
+                //     },
+                //   );
+                // }
+
+                // Future.delayed(const Duration(seconds: 1), () {
+                // });
               },
               child: const Center(
                 child: Text("testing"),

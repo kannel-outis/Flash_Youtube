@@ -18,15 +18,9 @@ class Extractor {
     );
     final totalBytes =
         int.tryParse(response.headers["content-length"] ?? "0") ?? 0;
-    final kb = totalBytes / 1024;
-    final mb = kb / 1024;
-    final gb = mb / 1024;
 
     return ContentSize(
       bytes: totalBytes,
-      kiloBytes: kb,
-      megaBytes: mb,
-      gigaBytes: gb,
     );
   }
 

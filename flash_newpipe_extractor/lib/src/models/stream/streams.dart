@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flash_newpipe_extractor/src/services/extractor.dart';
 import 'package:flash_newpipe_extractor/src/utils/enums.dart';
-import 'package:flash_newpipe_extractor/src/utils/typedef.dart';
 
 import '../content_size.dart';
 
@@ -31,14 +30,8 @@ abstract class Streams {
 
   ContentSize combineSizes(ContentSize sizeOne, ContentSize sizeTwo) {
     final totalBytes = sizeOne.bytes + sizeTwo.bytes;
-    final kb = totalBytes / 1024;
-    final mb = kb / 1024;
-    final gb = mb / 1024;
     return ContentSize(
       bytes: totalBytes,
-      kiloBytes: kb,
-      megaBytes: mb,
-      gigaBytes: gb,
     );
   }
 
@@ -47,8 +40,8 @@ abstract class Streams {
   }
 
   Future<bool> downloadStream(File file,
-      {DownloadCompletedCallBack? onCompleted,
-      DownloadProgressCallBack? progressCallBack,
+      {Function(File, ContentSize)? onCompleted,
+      Function(String)? progressCallBack,
       int start = 0}) async {
     try {
       int downloadedBytes = start;
@@ -68,14 +61,8 @@ abstract class Streams {
             (value) => output.close().then(
               (value) {
                 final totalBytes = downloadedBytes;
-                final kb = totalBytes / 1024;
-                final mb = kb / 1024;
-                final gb = mb / 1024;
                 final contentSize = ContentSize(
                   bytes: totalBytes,
-                  kiloBytes: kb,
-                  megaBytes: mb,
-                  gigaBytes: gb,
                 );
 
                 onCompleted?.call(file, contentSize);

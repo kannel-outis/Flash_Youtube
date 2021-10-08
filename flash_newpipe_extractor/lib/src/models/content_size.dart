@@ -1,15 +1,13 @@
 class ContentSize {
   final int bytes;
-  final double kiloBytes;
-  final double megaBytes;
-  final double gigaBytes;
 
-  const ContentSize({
+  ContentSize({
     required this.bytes,
-    required this.kiloBytes,
-    required this.megaBytes,
-    required this.gigaBytes,
   });
+
+  double get kiloBytes => bytes / 1024;
+  double get megaBytes => kiloBytes / 1024;
+  double get gigaBytes => megaBytes / 1024;
 
   String get sizeToString {
     if (gigaBytes >= 1) {
