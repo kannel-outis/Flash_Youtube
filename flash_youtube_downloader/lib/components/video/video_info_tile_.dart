@@ -25,6 +25,7 @@ class VideoInfoTile extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     final currentPlaying =
         watch(ChangeCurrentPlaying.changeCurrentPlayingProvider);
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     if (isSearch) {
       return GestureDetector(
         onTap: () {
@@ -65,7 +66,9 @@ class VideoInfoTile extends ConsumerWidget {
           children: [
             Container(
               width: 180,
-              color: Utils.placeHolderColor,
+              color: isDarkTheme
+                  ? Utils.placeHolderColor
+                  : Utils.placeHolderColor.withOpacity(.1),
               child: Stack(
                 children: [
                   CachedNetworkImage(
@@ -153,6 +156,7 @@ class _IsPlaylistInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Container(
       // color: Colors.black,
       color: Colors.transparent,
@@ -172,7 +176,9 @@ class _IsPlaylistInfo extends StatelessWidget {
           ),
           Container(
             width: 180,
-            color: Utils.placeHolderColor,
+            color: isDarkTheme
+                ? Utils.placeHolderColor
+                : Utils.placeHolderColor.withOpacity(.1),
             child: Stack(
               children: [
                 CachedNetworkImage(
@@ -255,6 +261,7 @@ class _IsSearchTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return Container(
       // color: Colors.black,
       color: Colors.transparent,
@@ -269,7 +276,9 @@ class _IsSearchTile extends StatelessWidget {
         children: [
           Expanded(
             child: Container(
-              color: Utils.placeHolderColor,
+              color: isDarkTheme
+                  ? Utils.placeHolderColor
+                  : Utils.placeHolderColor.withOpacity(.1),
               child: Stack(
                 children: [
                   Align(

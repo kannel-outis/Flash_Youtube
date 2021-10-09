@@ -56,7 +56,10 @@ class HomeScreen extends HookWidget {
                                   scale: 18.0,
                                 ),
                               ),
-                              const Text("Trending"),
+                              Text(
+                                "Trending",
+                                style: theme.textTheme.headline6,
+                              ),
                             ],
                           ),
                         ),

@@ -3,8 +3,9 @@ import 'package:flash_youtube_downloader/services/offline/hive/models/hive_youtu
 import 'package:flash_youtube_downloader/services/offline/hive/models/watch_later.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/playlist.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/history.dart';
-import 'package:flash_youtube_downloader/services/offline/managers/manager.dart';
 import 'package:hive/hive.dart';
+
+import 'manager.dart';
 
 class HiveManager implements IHiveManager {
   HiveManager._();

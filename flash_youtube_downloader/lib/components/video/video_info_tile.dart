@@ -5,11 +5,9 @@ import 'package:flash_youtube_downloader/providers/change_current_playing.dart';
 import 'package:flash_youtube_downloader/screens/channel/channel_info.dart';
 import 'package:flash_youtube_downloader/screens/channel/providers/channel_providers.dart';
 import 'package:flash_youtube_downloader/screens/mini_player/components/mini_player_draggable.dart';
-import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../modal_sheet.dart';
 import '/utils/extensions.dart';
 
 class VideoInfoTile extends ConsumerWidget {
@@ -30,6 +28,7 @@ class VideoInfoTile extends ConsumerWidget {
     final channelFuture = reader(ChannelProviders.channelInfoProvider(video));
     final currentPlaying =
         reader(ChangeCurrentPlaying.changeCurrentPlayingProvider);
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Column(
@@ -53,13 +52,18 @@ class VideoInfoTile extends ConsumerWidget {
                     bottom: 10,
                     right: 20,
                     child: Container(
-                      color: Colors.black.withOpacity(.7),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(.9),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
                       child: Center(
                         child: Text(
                           Utils.trimTime(video.duration.toString()),
-                          style: Theme.of(context).textTheme.subtitle1,
+                          style:
+                              Theme.of(context).textTheme.subtitle1!.copyWith(
+                                    color: Colors.white,
+                                  ),
                         ),
                       ),
                     ),
@@ -90,7 +94,9 @@ class VideoInfoTile extends ConsumerWidget {
                       height: Utils.blockWidth * 7,
                       width: Utils.blockWidth * 7,
                       decoration: BoxDecoration(
-                        color: Utils.placeHolderColor,
+                        color: isDarkTheme
+                            ? Utils.placeHolderColor
+                            : Utils.placeHolderColor.withOpacity(.1),
                         borderRadius: BorderRadius.circular(50),
                       ),
                       child: video.uploaderChannelInfo == null
@@ -100,7 +106,10 @@ class VideoInfoTile extends ConsumerWidget {
                                   height: Utils.blockWidth * 7,
                                   width: Utils.blockWidth * 7,
                                   decoration: BoxDecoration(
-                                    color: Utils.placeHolderColor,
+                                    color: isDarkTheme
+                                        ? Utils.placeHolderColor
+                                        : Utils.placeHolderColor
+                                            .withOpacity(.1),
                                     borderRadius: BorderRadius.circular(50),
                                     image: DecorationImage(
                                       image: CachedNetworkImageProvider(
@@ -123,7 +132,9 @@ class VideoInfoTile extends ConsumerWidget {
                               height: Utils.blockWidth * 7,
                               width: Utils.blockWidth * 7,
                               decoration: BoxDecoration(
-                                color: Utils.placeHolderColor,
+                                color: isDarkTheme
+                                    ? Utils.placeHolderColor
+                                    : Utils.placeHolderColor.withOpacity(.1),
                                 borderRadius: BorderRadius.circular(50),
                                 image: DecorationImage(
                                   image: CachedNetworkImageProvider(
@@ -214,6 +225,7 @@ class _FadeInImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     return CachedNetworkImage(
       width: double.infinity,
       imageUrl: url,
@@ -222,7 +234,9 @@ class _FadeInImageWidget extends StatelessWidget {
         return Container(
           height: double.infinity,
           width: double.infinity,
-          color: Utils.placeHolderColor,
+          color: isDarkTheme
+              ? Utils.placeHolderColor
+              : Utils.placeHolderColor.withOpacity(.1),
         );
       },
       errorWidget: (context, s, d) => CachedNetworkImage(

@@ -19,6 +19,8 @@ class SearchBar extends ConsumerWidget {
     final controller = watch(searchController);
     final _focusNode = watch(focusNode);
     final theme = Theme.of(context);
+
+    final isDarkTheme = theme.brightness == Brightness.dark;
     return SizedBox(
       child: Row(
         children: [
@@ -33,7 +35,9 @@ class SearchBar extends ConsumerWidget {
             child: Container(
               height: 40,
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.1),
+                color: isDarkTheme
+                    ? Colors.white.withOpacity(0.1)
+                    : Colors.black.withOpacity(.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Center(

@@ -86,7 +86,8 @@ class _LibraryPageViewState extends State<LibraryPageView>
                             ),
                           );
                         },
-                        child: SizedBox(
+                        child: Container(
+                          margin: const EdgeInsets.only(bottom: 20),
                           height: 50,
                           width: double.infinity,
                           child: Row(

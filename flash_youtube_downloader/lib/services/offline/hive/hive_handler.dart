@@ -1,5 +1,5 @@
-import 'package:flash_youtube_downloader/services/offline/managers/hive_manager.dart';
-import 'package:flash_youtube_downloader/services/offline/managers/manager.dart';
+import 'package:flash_youtube_downloader/services/managers/hive_manager.dart';
+import 'package:flash_youtube_downloader/services/managers/manager.dart';
 
 import 'models/playlist.dart';
 import 'models/watch_later.dart';

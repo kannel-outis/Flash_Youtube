@@ -70,7 +70,7 @@ class _MiniPlayerState extends State<MiniPlayer>
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: const Alignment(1.0, .85),
+      alignment: const Alignment(.85, .85),
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
