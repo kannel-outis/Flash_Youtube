@@ -40,33 +40,30 @@ class MyApp extends StatelessWidget {
                 );
               },
             ),
-            Positioned.fill(
-              bottom: 50,
-              child: Consumer(
-                builder: (context, watch, child) {
-                  final currentVideoState =
-                      watch(HomeProviders.currentVideoStateProvider);
-                  final _miniPlayerController =
-                      watch(MiniPlayerProviders.miniPlayerC);
-                  if (currentVideoState != null) {
-                    return GestureDetector(
-                      onHorizontalDragUpdate: (e) {
-                        // for dismissing mini player
-                        if (_miniPlayerController.isClosed) {
-                          print(e.globalPosition);
-                        }
-                      },
-                      child: ScrollConfiguration(
-                        behavior: NoEffectScrollConfig(),
-                        child:
-                            MiniPlayerWidget(controller: _miniPlayerController),
-                      ),
-                    );
-                  } else {
-                    return const SizedBox();
-                  }
-                },
-              ),
+            Consumer(
+              builder: (context, watch, child) {
+                final currentVideoState =
+                    watch(HomeProviders.currentVideoStateProvider);
+                final _miniPlayerController =
+                    watch(MiniPlayerProviders.miniPlayerC);
+                if (currentVideoState != null) {
+                  return GestureDetector(
+                    onHorizontalDragUpdate: (e) {
+                      // for dismissing mini player
+                      if (_miniPlayerController.isClosed) {
+                        print(e.globalPosition);
+                      }
+                    },
+                    child: ScrollConfiguration(
+                      behavior: NoEffectScrollConfig(),
+                      child:
+                          MiniPlayerWidget(controller: _miniPlayerController),
+                    ),
+                  );
+                } else {
+                  return const SizedBox();
+                }
+              },
             ),
           ],
         ),

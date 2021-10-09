@@ -69,12 +69,16 @@ class _MiniPlayerState extends State<MiniPlayer>
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.bottomRight,
+    return Container(
+      alignment: const Alignment(1.0, .85),
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
           return Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).scaffoldBackgroundColor,
+              border: Border.all(color: Colors.white, width: 1.5),
+            ),
             height: _calCulateSizeWithController(
                 widget.miniPlayerController.minHeight,
                 widget.miniPlayerController.maxHeight),
@@ -88,7 +92,6 @@ class _MiniPlayerState extends State<MiniPlayer>
                 ),
                 0),
             // color: Colors.white,
-            color: Theme.of(context).scaffoldBackgroundColor,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -99,8 +102,9 @@ class _MiniPlayerState extends State<MiniPlayer>
                         children: [
                           Container(
                               constraints: BoxConstraints(
-                                  minHeight:
-                                      widget.miniPlayerController.minHeight),
+                                minHeight:
+                                    widget.miniPlayerController.minHeight - 3.0,
+                              ),
                               child: widget.playerChild ?? const SizedBox()),
                           GestureDetector(
                             behavior: HitTestBehavior.translucent,

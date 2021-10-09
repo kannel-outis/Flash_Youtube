@@ -1,3 +1,4 @@
+import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
@@ -16,6 +17,7 @@ class _BottomNavState extends State<BottomNav> {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
     return SizedBox(
       height: 50,
+      width: Utils.blockWidth * 100,
       child: BottomNavigationBar(
         elevation: 50,
         backgroundColor: theme.scaffoldBackgroundColor,
