@@ -1,12 +1,17 @@
+import 'dart:io';
+
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/components/circular_progress_indicator.dart';
 import 'package:flash_youtube_downloader/components/error_widget.dart';
 import 'package:flash_youtube_downloader/screens/home/providers/home_providers.dart';
+import 'package:flash_youtube_downloader/services/online/download_handler.dart';
+import 'package:flash_youtube_downloader/utils/permission.dart';
 import 'package:flash_youtube_downloader/utils/scroll_behaviour.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flash_youtube_downloader/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ModalSheet extends ConsumerWidget {
   final YoutubeVideo video;
@@ -148,6 +153,8 @@ class QualityStreams extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDarkTheme = theme.brightness == Brightness.dark;
+    int bb = 0;
+
     return Column(
       children: [
         if (videoInfo.availableQualities.contains(item))
@@ -179,47 +186,91 @@ class QualityStreams extends StatelessWidget {
         else
           const SizedBox(),
         for (var item in videoInfo.allStreamsOfQuality(item))
-          Container(
-            height: Utils.blockHeight * 5.5,
-            width: double.infinity,
-            alignment: Alignment.center,
-            padding: const EdgeInsets.only(left: 10, right: 10),
-            decoration: BoxDecoration(
-              border: item.bitrate == getPerfectAudio.bitrate
-                  ? Border.all(color: Utils.containerLabelColorLight, width: 2)
-                  : Border.all(width: 0.0, color: Colors.transparent),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Row(
-              children: [
-                Icon(
-                  item is AudioOnlyStream
-                      ? Icons.audiotrack_outlined
-                      : Icons.videocam_outlined,
-                ),
-                Expanded(
-                  child: Center(
-                    child: (item is! AudioOnlyStream)
-                        ? Text(
-                            item is VideoOnlyStream
-                                ? "${item.format} (${videoOnlyDownloadSizeAsString(item)})"
-                                : "${item.format} (${item.contentSize!.sizeToString})",
-                            style: theme.textTheme.bodyText1!
-                                .copyWith(fontWeight: FontWeight.normal),
-                          )
-                        : Text(
-                            "${item.format} (${item.contentSize!.sizeToString}) - ${item.bitrate.toString().convertToViews(true, false, "kbps")}",
-                            style: theme.textTheme.bodyText1!
-                                .copyWith(fontWeight: FontWeight.normal),
-                          ),
+          GestureDetector(
+            // onTap: () async {
+            //   print(item.contentSize!.sizeToString);
+            //   final permission = await PermissionHandler.requestPermission();
+            //   if (permission == true) {
+            //     final dir = await getExternalStorageDirectory();
+            //     final knockDir = await Directory('${dir!.path}/downloader/')
+            //         .create(recursive: true);
+            //     final file =
+            //         File("${knockDir.path}${item.bitrate}.${item.format}");
+            //     final audioFile = File(
+            //         "${knockDir.path}${getPerfectAudio.bitrate}.${getPerfectAudio.format}");
+            //     final downloader = Downloader(
+            //         file: file,
+            //         stream: item,
+            //         // start: item.contentSize!.bytes,
+            //         start: bb,
+            //         audioFile: audioFile,
+            //         audioStream: getPerfectAudio,
+            //         downloadProgressCallback: (c, state) {
+            //           print(c);
+            //         },
+            //         onFailedCallback: (e, state) {
+            //           print(e + "6");
+            //         },
+            //         onCanceledCallback: (d, state) {
+            //           bb = d.bytes;
+            //           print(state);
+            //         },
+            //         onCompleted: (e, r, t, state) {
+            //           print(e.path);
+            //           print(r?.path);
+            //           print(t.sizeToString);
+            //         });
+            //     downloader.downloadStream();
+            //     // Future.delayed(const Duration(seconds: 3), () {
+            //     //   downloader.cancelDownload();
+            //     // });
+            //   } else {
+            //     print("give permission");
+            //   }
+            // },
+            child: Container(
+              height: Utils.blockHeight * 5.5,
+              width: double.infinity,
+              alignment: Alignment.center,
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              decoration: BoxDecoration(
+                border: item.bitrate == getPerfectAudio.bitrate
+                    ? Border.all(
+                        color: Utils.containerLabelColorLight, width: 2)
+                    : Border.all(width: 0.0, color: Colors.transparent),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    item is AudioOnlyStream
+                        ? Icons.audiotrack_outlined
+                        : Icons.videocam_outlined,
                   ),
-                ),
-                Icon(
-                  item is AudioOnlyStream
-                      ? Icons.audiotrack_outlined
-                      : Icons.videocam_outlined,
-                ),
-              ],
+                  Expanded(
+                    child: Center(
+                      child: (item is! AudioOnlyStream)
+                          ? Text(
+                              item is VideoOnlyStream
+                                  ? "${item.format} (${videoOnlyDownloadSizeAsString(item)})"
+                                  : "${item.format} (${item.contentSize!.sizeToString})",
+                              style: theme.textTheme.bodyText1!
+                                  .copyWith(fontWeight: FontWeight.normal),
+                            )
+                          : Text(
+                              "${item.format} (${item.contentSize!.sizeToString}) - ${item.bitrate.toString().convertToViews(true, false, "kbps")}",
+                              style: theme.textTheme.bodyText1!
+                                  .copyWith(fontWeight: FontWeight.normal),
+                            ),
+                    ),
+                  ),
+                  Icon(
+                    item is AudioOnlyStream
+                        ? Icons.audiotrack_outlined
+                        : Icons.videocam_outlined,
+                  ),
+                ],
+              ),
             ),
           ),
       ],

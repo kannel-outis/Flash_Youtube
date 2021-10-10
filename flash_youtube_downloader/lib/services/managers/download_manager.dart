@@ -36,6 +36,7 @@ class DownloadManager implements IDownloadManager {
   bool _downloadCanceled = false;
   bool _downloadCompleted = false;
   bool _downloadFailed = false;
+  bool _downloading = false;
 
   late final IOSink _output;
   late final IOSink? _audioOutput;
@@ -67,14 +68,15 @@ class DownloadManager implements IDownloadManager {
         _audioOutput?.close();
       }),
     ]).then((value) {
+      _downloading = false;
       final totalBytes = downloadedBytes;
       final contentSize = ContentSize(
         bytes: totalBytes,
       );
       if (_downloadCanceled) {
-        onCanceledCallback?.call(contentSize);
+        onCanceledCallback?.call(contentSize, downloadState);
       } else {
-        onCompleted?.call(file, audioFile, contentSize);
+        onCompleted?.call(file, audioFile, contentSize, downloadState);
       }
     });
   }
@@ -93,22 +95,16 @@ class DownloadManager implements IDownloadManager {
   @override
   Future<bool> downloadStream() async {
     try {
-      downloadedBytes = start + audioStart;
-      final bytesStream = Extractor.getStream(stream, start: start);
+      downloadedBytes = start;
+      final bytesStream = Extractor.getStream(stream, start: downloadedBytes);
+      _downloading = true;
 
-      await for (final data in bytesStream) {
-        downloadedBytes += data.length;
-        final progress = _progress;
-        if (_downloadCanceled) {
-          return false;
-        }
-        downloadProgressCallback?.call("$progress%");
-        _output.add(data);
-      }
-
-      if (audioStream != null) {
-        final bytesStream =
-            Extractor.getStream(audioStream!, start: audioStart);
+      /// if downloadedBytes is greater tham or equals to the video bytes
+      /// that means that only the audio needs downloading
+      /// this is needed for resuming a download either from a failed state or a paused state
+      if (downloadedBytes >= stream.contentSize!.bytes) {
+        final bytesStream = Extractor.getStream(audioStream!,
+            start: downloadedBytes - stream.contentSize!.bytes);
 
         await for (final data in bytesStream) {
           downloadedBytes += data.length;
@@ -117,16 +113,43 @@ class DownloadManager implements IDownloadManager {
             return false;
           }
 
-          downloadProgressCallback?.call("$progress%");
+          downloadProgressCallback?.call("$progress%", downloadState);
           _audioOutput?.add(data);
         }
+      } else {
+        await for (final data in bytesStream) {
+          downloadedBytes += data.length;
+          final progress = _progress;
+          if (_downloadCanceled) {
+            return false;
+          }
+          downloadProgressCallback?.call("$progress%", downloadState);
+          _output.add(data);
+        }
+
+        if (audioStream != null) {
+          final bytesStream = Extractor.getStream(audioStream!);
+
+          await for (final data in bytesStream) {
+            downloadedBytes += data.length;
+            final progress = _progress;
+            if (_downloadCanceled) {
+              return false;
+            }
+
+            downloadProgressCallback?.call("$progress%", downloadState);
+            _audioOutput?.add(data);
+          }
+        }
       }
+
       await _closeOutputStreams(true);
       return true;
     } catch (e) {
       print(e.toString());
+      _downloading = false;
       _downloadFailed = true;
-      onFailedCallback?.call(e.toString());
+      onFailedCallback?.call(e.toString(), downloadState);
       return false;
     }
   }
@@ -154,6 +177,7 @@ class DownloadManager implements IDownloadManager {
     if (_downloadCanceled) return DownloadState.canceled;
     if (_downloadCompleted) return DownloadState.completed;
     if (_downloadFailed) return DownloadState.failed;
+    if (_downloading) return DownloadState.downloading;
     return DownloadState.notStarted;
   }
 }

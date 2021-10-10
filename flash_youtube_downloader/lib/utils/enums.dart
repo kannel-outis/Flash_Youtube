@@ -8,6 +8,7 @@ enum MenuType {
 enum DownloadState {
   canceled,
   completed,
+  downloading,
   paused,
   failed,
   notStarted,

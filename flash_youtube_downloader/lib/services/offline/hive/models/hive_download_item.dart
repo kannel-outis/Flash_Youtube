@@ -77,8 +77,10 @@ class DownloadStateAdapter extends TypeAdapter<DownloadState> {
         return DownloadState.paused;
       case 3:
         return DownloadState.notStarted;
-      default:
+      case 4:
         return DownloadState.failed;
+      default:
+        return DownloadState.downloading;
     }
   }
 
@@ -99,6 +101,9 @@ class DownloadStateAdapter extends TypeAdapter<DownloadState> {
         break;
       case DownloadState.failed:
         writer.writeByte(4);
+        break;
+      case DownloadState.downloading:
+        writer.writeByte(5);
         break;
     }
   }
