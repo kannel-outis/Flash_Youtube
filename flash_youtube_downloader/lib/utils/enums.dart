@@ -4,3 +4,11 @@ enum MenuType {
   playlist,
   addPlaylist,
 }
+
+enum DownloadState {
+  canceled,
+  completed,
+  paused,
+  failed,
+  notStarted,
+}

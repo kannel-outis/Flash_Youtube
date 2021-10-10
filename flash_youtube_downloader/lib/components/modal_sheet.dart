@@ -73,9 +73,10 @@ class ModalSheet extends ConsumerWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                // const SizedBox(height: 10),
                 Container(
                   height: 60,
+                  padding: const EdgeInsets.only(left: 10),
                   alignment: Alignment.centerLeft,
                   child: Text(
                     "Available Formats",
@@ -140,21 +141,22 @@ class QualityStreams extends StatelessWidget {
   }
 
   String videoOnlyDownloadSizeAsString(Streams item) {
-    return item
-        .combineSizes(item.contentSize!, getPerfectAudio.contentSize!)
-        .sizeToString;
+    return item.combineWithSize(getPerfectAudio.contentSize!).sizeToString;
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDarkTheme = theme.brightness == Brightness.dark;
     return Column(
       children: [
         if (videoInfo.availableQualities.contains(item))
           Container(
             height: Utils.blockHeight * 3,
             width: double.infinity,
-            color: Utils.containerLabelColor,
+            color: isDarkTheme
+                ? Utils.containerLabelColor
+                : Utils.containerLabelColorLight,
             padding: const EdgeInsets.only(left: 10),
             child: Row(
               children: [
