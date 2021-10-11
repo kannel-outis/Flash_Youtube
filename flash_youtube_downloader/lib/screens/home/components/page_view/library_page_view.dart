@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_youtube_downloader/screens/playlist/hive_playlist_page.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/init.dart';
+import 'package:flash_youtube_downloader/services/offline/hive/models/hive_download_item.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/playlist.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
@@ -28,10 +29,29 @@ class _LibraryPageViewState extends State<LibraryPageView>
             leadingIcon: Icons.history,
             title: "History",
           ),
-          const LibraryItemTile(
+          LibraryItemTile(
             leadingIcon: Icons.vertical_align_bottom_outlined,
             menuType: MenuType.download,
             title: "Downloads",
+            subTitle: ValueListenableBuilder<Box<HiveDownloadItem>>(
+                valueListenable:
+                    Hive.box<HiveDownloadItem>(HiveInit.hiveDownloadItems)
+                        .listenable(),
+                builder: (context, box, child) {
+                  final downloads = box.values
+                      .where((element) =>
+                          element.downloadState == DownloadState.downloading ||
+                          element.downloadState == DownloadState.paused)
+                      .toList();
+                  if (downloads.isEmpty) {
+                    return const SizedBox();
+                  }
+                  return Text(
+                    "${downloads.length} downloading",
+                    style: theme.textTheme.bodyText2!.copyWith(
+                        fontWeight: FontWeight.normal, color: Colors.grey),
+                  );
+                }),
           ),
           const LibraryItemTile(
             leadingIcon: Icons.watch_later_outlined,

@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class LibraryItemTile extends StatelessWidget {
   final String title;
-  final String? subTitle;
+  final Widget? subTitle;
   final IconData leadingIcon;
   final IconData? trailingIcon;
   final MenuType? menuType;
@@ -86,12 +86,7 @@ class LibraryItemTile extends StatelessWidget {
                       color: color ?? theme.textTheme.bodyText1!.color,
                     ),
                   ),
-                  if (subTitle != null)
-                    Text(
-                      subTitle!,
-                      style: theme.textTheme.bodyText2!.copyWith(
-                          fontWeight: FontWeight.normal, color: Colors.grey),
-                    ),
+                  if (subTitle != null) subTitle!
                 ],
               ),
             ),

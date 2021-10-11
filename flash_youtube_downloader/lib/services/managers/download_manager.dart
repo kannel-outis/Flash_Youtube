@@ -29,7 +29,7 @@ class DownloadManager implements IDownloadManager {
     this.downloadProgressCallback,
     this.onFailedCallback,
   }) {
-    _cleanPath();
+    // _cleanPath();
     _output = file.openWrite(mode: FileMode.writeOnlyAppend);
     _audioOutput = audioFile?.openWrite(mode: FileMode.writeOnlyAppend);
   }
@@ -57,6 +57,7 @@ class DownloadManager implements IDownloadManager {
   Future<void> _closeOutputStreams([bool complete = false]) async {
     if (complete) {
       _downloadCompleted = complete;
+    } else if (_downloadPaused) {
     } else {
       _downloadCanceled = true;
     }
@@ -100,18 +101,21 @@ class DownloadManager implements IDownloadManager {
       downloadedBytes = start;
       final bytesStream = Extractor.getStream(stream, start: downloadedBytes);
       _downloading = true;
+      final streamSize = stream.contentSize == null
+          ? await stream.streamSize
+          : stream.contentSize!;
 
       /// if downloadedBytes is greater tham or equals to the video bytes
       /// that means that only the audio needs downloading
       /// this is needed for resuming a download either from a failed state or a paused state
-      if (downloadedBytes >= stream.contentSize!.bytes) {
+      if (downloadedBytes >= streamSize.bytes) {
         final bytesStream = Extractor.getStream(audioStream!,
             start: downloadedBytes - stream.contentSize!.bytes);
 
         await for (final data in bytesStream) {
           downloadedBytes += data.length;
           final progress = _progress;
-          if (_downloadCanceled) {
+          if (_downloadCanceled || _downloadPaused) {
             return false;
           }
 
@@ -122,7 +126,7 @@ class DownloadManager implements IDownloadManager {
         await for (final data in bytesStream) {
           downloadedBytes += data.length;
           final progress = _progress;
-          if (_downloadCanceled) {
+          if (_downloadCanceled || _downloadPaused) {
             return false;
           }
           downloadProgressCallback?.call("$progress%", downloadState);
@@ -135,7 +139,7 @@ class DownloadManager implements IDownloadManager {
           await for (final data in bytesStream) {
             downloadedBytes += data.length;
             final progress = _progress;
-            if (_downloadCanceled) {
+            if (_downloadCanceled || _downloadPaused) {
               return false;
             }
 
@@ -147,8 +151,8 @@ class DownloadManager implements IDownloadManager {
 
       await _closeOutputStreams(true);
       return true;
-    } catch (e) {
-      print(e.toString());
+    } catch (e, s) {
+      print(s.toString());
       _downloading = false;
       _downloadFailed = true;
       onFailedCallback?.call(e.toString(), downloadState);

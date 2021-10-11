@@ -197,14 +197,18 @@ class QualityStreams extends ConsumerWidget {
               // } else {
               //   print("give permission");
               // }
-              if (item is VideoAudioStream || item is AudioOnlyStream) {
+
+              // return;
+              if (item is VideoAudioStream) {
                 final HiveDownloadItem downloadItem = HiveDownloadItem(
                   video: Helper.youtubeVideoHelper(video),
                   streamLinks: [item.url],
                   downloaderId: const Uuid().v4(),
+                  videoAudioStream: item,
+                  audioOnlyStream: null,
+                  videoOnlyStream: null,
                 );
                 downloadsProvider.downloadStream(
-                  item,
                   video,
                   downloadItem,
                 );
@@ -213,14 +217,30 @@ class QualityStreams extends ConsumerWidget {
                   video: Helper.youtubeVideoHelper(video),
                   streamLinks: [item.url, getPerfectAudio.url],
                   downloaderId: const Uuid().v4(),
+                  videoOnlyStream: item,
+                  audioOnlyStream: getPerfectAudio,
+                  videoAudioStream: null,
                 );
                 downloadsProvider.downloadStream(
-                  item,
                   video,
                   downloadItem,
                   audioStream: getPerfectAudio,
                 );
+              } else if (item is AudioOnlyStream) {
+                final HiveDownloadItem downloadItem = HiveDownloadItem(
+                  video: Helper.youtubeVideoHelper(video),
+                  streamLinks: [item.url, getPerfectAudio.url],
+                  downloaderId: const Uuid().v4(),
+                  videoOnlyStream: null,
+                  audioOnlyStream: item,
+                  videoAudioStream: null,
+                );
+                downloadsProvider.downloadStream(
+                  video,
+                  downloadItem,
+                );
               }
+              Navigator.pop(context);
             },
             child: Container(
               height: Utils.blockHeight * 5.5,
@@ -247,7 +267,7 @@ class QualityStreams extends ConsumerWidget {
                           ? Text(
                               item is VideoOnlyStream
                                   ? "${item.format} (${videoOnlyDownloadSizeAsString(item)})"
-                                  : "${item.format} (${item.contentSize!.sizeToString})",
+                                  : "${item.format} (${item.contentSize!.sizeToString}) B",
                               style: theme.textTheme.bodyText1!
                                   .copyWith(fontWeight: FontWeight.normal),
                             )

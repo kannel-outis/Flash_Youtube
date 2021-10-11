@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flutter/material.dart';
 
 // ignore_for_file: avoid_classes_with_only_static_members
@@ -161,4 +162,8 @@ class Utils {
     0x44,
     0xAE,
   ]);
+
+  static ContentSize bytesToContentSize(int bytes) {
+    return ContentSize(bytes: bytes);
+  }
 }

@@ -36,29 +36,41 @@ class DownloadChangeNotifier extends ChangeNotifier {
     _listOfCurrentDownloaders.remove(downloader);
   }
 
-  Future<void> downloadStream(
-      Streams videoStream, YoutubeVideo video, HiveDownloadItem downloadItem,
-      {AudioOnlyStream? audioStream}) async {
-    await hiveHandler.saveNewDownloadItem(downloadItem);
+  Future<void> downloadStream(YoutubeVideo video, HiveDownloadItem downloadItem,
+      {AudioOnlyStream? audioStream, bool continueDownload = false}) async {
+    if (!continueDownload) await hiveHandler.saveNewDownloadItem(downloadItem);
+    final whichStream = _whichMainStreamToDownload(
+        downloadItem.videoAudioStream,
+        downloadItem.audioOnlyStream,
+        downloadItem.videoOnlyStream)!;
     final permission = await PermissionHandler.requestPermission();
+    if (whichStream.contentSize == null) {
+      await Future.value([
+        await whichStream.streamSize,
+        await audioStream?.streamSize,
+      ]);
+    }
     if (permission == true) {
       final dir = await getExternalStorageDirectory();
       final knockDir =
           await Directory('${dir!.path}/downloader/${video.videoName}/')
               .create(recursive: true);
       final file = File(
-          "${knockDir.path}${video.videoName}${videoStream.bitrate}.${videoStream.format}");
-      final audioFile = File(
-          "${knockDir.path}${video.videoName}${audioStream?.bitrate}.${audioStream?.format}");
+          "${knockDir.path}${video.videoName}${whichStream.contentSize!.bytes}.${whichStream.format}");
+      final audioFile = audioStream == null
+          ? null
+          : File(
+              "${knockDir.path}${video.videoName}${audioStream.contentSize!.bytes}.${audioStream.format}");
 
       final downloader = Downloader(
           downloaderId: downloadItem.downloaderId,
           file: file,
-          stream: videoStream,
+          stream: whichStream,
           start: downloadItem.downloadedBytes,
           audioFile: audioFile,
           audioStream: audioStream,
           downloadProgressCallback: (progress, state) {
+            // add downloaded bytes here
             downloadItem.progress = progress;
             downloadItem.downloadState = state;
             downloadItem.save();
@@ -89,6 +101,17 @@ class DownloadChangeNotifier extends ChangeNotifier {
       _listOfCurrentDownloaders = List.from(_listOfCurrentDownloaders)
         ..add(downloader);
       downloader.downloadStream();
+    }
+  }
+
+  Streams? _whichMainStreamToDownload(VideoAudioStream? videoAudioStream,
+      AudioOnlyStream? audioOnlyStream, VideoOnlyStream? videoOnlyStream) {
+    if (audioOnlyStream == null && videoOnlyStream == null) {
+      return videoAudioStream;
+    } else if (videoAudioStream == null && videoOnlyStream != null) {
+      return videoOnlyStream;
+    } else if (videoOnlyStream == null && videoAudioStream == null) {
+      return audioOnlyStream;
     }
   }
 }

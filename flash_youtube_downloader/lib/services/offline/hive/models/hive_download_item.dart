@@ -1,3 +1,4 @@
+import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/hive_youtube_video.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:hive/hive.dart';
@@ -5,6 +6,9 @@ import 'package:hive/hive.dart';
 class HiveDownloadItem extends HiveObject {
   final List<String> streamLinks;
   final HiveYoutubeVideo video;
+  final VideoAudioStream? videoAudioStream;
+  final VideoOnlyStream? videoOnlyStream;
+  final AudioOnlyStream? audioOnlyStream;
   final String downloaderId;
   String? finalProcessedVideoPath;
   List<String?> downloadPaths;
@@ -16,6 +20,9 @@ class HiveDownloadItem extends HiveObject {
     required this.streamLinks,
     required this.video,
     required this.downloaderId,
+    required this.audioOnlyStream,
+    required this.videoAudioStream,
+    required this.videoOnlyStream,
     this.finalProcessedVideoPath,
     this.downloadPaths = const [],
     this.downloadLinks = const [],
@@ -36,22 +43,24 @@ class HiveDownloadItemAdapter extends TypeAdapter<HiveDownloadItem> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HiveDownloadItem(
-      streamLinks: (fields[0] as List).cast<String>(),
-      downloadPaths: (fields[1] as List).cast<String?>(),
-      downloadLinks: (fields[2] as List).cast<String>(),
-      downloadedBytes: fields[3] as int,
-      downloadState: fields[4] as DownloadState,
-      downloaderId: fields[5] as String,
-      progress: fields[6] as String,
-      video: fields[7] as HiveYoutubeVideo,
-      finalProcessedVideoPath: fields[8] as String,
-    );
+        streamLinks: (fields[0] as List).cast<String>(),
+        downloadPaths: (fields[1] as List).cast<String?>(),
+        downloadLinks: (fields[2] as List).cast<String>(),
+        downloadedBytes: fields[3] as int,
+        downloadState: fields[4] as DownloadState,
+        downloaderId: fields[5] as String,
+        progress: fields[6] as String,
+        video: fields[7] as HiveYoutubeVideo,
+        finalProcessedVideoPath: fields[8] as String?,
+        audioOnlyStream: fields[9] as AudioOnlyStream?,
+        videoAudioStream: fields[10] as VideoAudioStream?,
+        videoOnlyStream: fields[11] as VideoOnlyStream?);
   }
 
   @override
   void write(BinaryWriter writer, HiveDownloadItem obj) {
     writer
-      ..writeByte(9)
+      ..writeByte(12)
       ..writeByte(0)
       ..write(obj.streamLinks)
       ..writeByte(1)
@@ -69,7 +78,13 @@ class HiveDownloadItemAdapter extends TypeAdapter<HiveDownloadItem> {
       ..writeByte(7)
       ..write(obj.video)
       ..writeByte(8)
-      ..write(obj.finalProcessedVideoPath);
+      ..write(obj.finalProcessedVideoPath)
+      ..writeByte(9)
+      ..write(obj.audioOnlyStream)
+      ..writeByte(10)
+      ..write(obj.videoAudioStream)
+      ..writeByte(11)
+      ..write(obj.videoOnlyStream);
   }
 
   @override
