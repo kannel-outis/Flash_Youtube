@@ -75,10 +75,10 @@ class _TestState extends State<Test> {
                 // print(s.contentSize!.bytes);
 
                 // if (status.isGranted) {
-                //   final dir = await getExternalStorageDirectory();
-                //   var knockDir = await Directory('${dir!.path}/downloader')
-                //       .create(recursive: true);
-                //   final file = File(knockDir.path + "testing.${s.format}");
+                // final dir = await getExternalStorageDirectory();
+                // var knockDir = await Directory('${dir!.path}/downloader')
+                //     .create(recursive: true);
+                // final file = File(knockDir.path + "testing.${s.format}");
 
                 //   s.downloadStream(
                 //     file,
