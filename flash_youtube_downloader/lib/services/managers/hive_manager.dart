@@ -1,4 +1,5 @@
 import 'package:flash_youtube_downloader/services/offline/hive/init.dart';
+import 'package:flash_youtube_downloader/services/offline/hive/models/hive_download_item.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/hive_youtube_video.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/watch_later.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/playlist.dart';
@@ -17,6 +18,8 @@ class HiveManager implements IHiveManager {
   final watchLaterBox =
       Hive.box<HiveWatchLater>(HiveInit.hiveWatchLaterBoxName);
   final playListBox = Hive.box<HivePlaylist>(HiveInit.hivePlaylistBoxName);
+  final downloadItemBox =
+      Hive.box<HiveDownloadItem>(HiveInit.hiveDownloadItems);
 
   @override
   List<HivePlaylist> getAllSavedPlaylist() {
@@ -77,4 +80,14 @@ class HiveManager implements IHiveManager {
 
   @override
   Future<void> addToPlaylistVideos(HiveYoutubeVideo video) async {}
+
+  @override
+  List<HiveDownloadItem> getAllDownloadItem() {
+    return downloadItemBox.values.toList();
+  }
+
+  @override
+  Future<void> saveNewDownloadItem(HiveDownloadItem downloadItem) async {
+    await downloadItemBox.add(downloadItem);
+  }
 }

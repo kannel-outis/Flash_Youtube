@@ -1,17 +1,18 @@
-import 'dart:io';
-
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/components/circular_progress_indicator.dart';
 import 'package:flash_youtube_downloader/components/error_widget.dart';
+import 'package:flash_youtube_downloader/screens/downloads/provider/downloads_provider.dart';
 import 'package:flash_youtube_downloader/screens/home/providers/home_providers.dart';
-import 'package:flash_youtube_downloader/services/online/download_handler.dart';
-import 'package:flash_youtube_downloader/utils/permission.dart';
+import 'package:flash_youtube_downloader/services/offline/hive/models/hive_download_item.dart';
+import 'package:flash_youtube_downloader/utils/helper.dart';
 import 'package:flash_youtube_downloader/utils/scroll_behaviour.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flash_youtube_downloader/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:uuid/uuid.dart';
+
+// int bb = 0;
 
 class ModalSheet extends ConsumerWidget {
   final YoutubeVideo video;
@@ -98,8 +99,7 @@ class ModalSheet extends ConsumerWidget {
                       child: ListView(
                         children: [
                           for (var item in Quality.values)
-                            QualityStreams(
-                                videoInfo: video.videoInfo!, item: item)
+                            QualityStreams(video: video, item: item)
                         ],
                       ),
                     ),
@@ -121,24 +121,24 @@ class ModalSheet extends ConsumerWidget {
   }
 }
 
-class QualityStreams extends StatelessWidget {
+class QualityStreams extends ConsumerWidget {
   const QualityStreams({
     Key? key,
-    required this.videoInfo,
+    required this.video,
     required this.item,
   }) : super(key: key);
 
-  final YoutubeVideoInfo videoInfo;
+  final YoutubeVideo video;
   final Quality item;
 
   AudioOnlyStream get getPerfectAudio {
     final listofbitrates =
-        videoInfo.audioOnlyStreams.map((e) => e.bitrate).toList();
+        video.videoInfo!.audioOnlyStreams.map((e) => e.bitrate).toList();
     final maxBitrate = listofbitrates.reduce((c, n) => c! > n! ? c : n);
     listofbitrates.remove(maxBitrate);
     final perfectAudioBitrate =
         listofbitrates.reduce((c, n) => c! > n! ? c : n)!;
-    final perfectAudio = videoInfo.audioOnlyStreams
+    final perfectAudio = video.videoInfo!.audioOnlyStreams
         .where((element) => element.bitrate == perfectAudioBitrate)
         .first;
 
@@ -150,14 +150,14 @@ class QualityStreams extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
     final isDarkTheme = theme.brightness == Brightness.dark;
-    int bb = 0;
-
+    final downloadsProvider =
+        watch(DownloadsProvider.downloadChangeNotifierProvider);
     return Column(
       children: [
-        if (videoInfo.availableQualities.contains(item))
+        if (video.videoInfo!.availableQualities.contains(item))
           Container(
             height: Utils.blockHeight * 3,
             width: double.infinity,
@@ -185,49 +185,43 @@ class QualityStreams extends StatelessWidget {
           )
         else
           const SizedBox(),
-        for (var item in videoInfo.allStreamsOfQuality(item))
+        for (var item in video.videoInfo!.allStreamsOfQuality(item))
           GestureDetector(
-            // onTap: () async {
-            //   print(item.contentSize!.sizeToString);
-            //   final permission = await PermissionHandler.requestPermission();
-            //   if (permission == true) {
-            //     final dir = await getExternalStorageDirectory();
-            //     final knockDir = await Directory('${dir!.path}/downloader/')
-            //         .create(recursive: true);
-            //     final file =
-            //         File("${knockDir.path}${item.bitrate}.${item.format}");
-            //     final audioFile = File(
-            //         "${knockDir.path}${getPerfectAudio.bitrate}.${getPerfectAudio.format}");
-            //     final downloader = Downloader(
-            //         file: file,
-            //         stream: item,
-            //         // start: item.contentSize!.bytes,
-            //         start: bb,
-            //         audioFile: audioFile,
-            //         audioStream: getPerfectAudio,
-            //         downloadProgressCallback: (c, state) {
-            //           print(c);
-            //         },
-            //         onFailedCallback: (e, state) {
-            //           print(e + "6");
-            //         },
-            //         onCanceledCallback: (d, state) {
-            //           bb = d.bytes;
-            //           print(state);
-            //         },
-            //         onCompleted: (e, r, t, state) {
-            //           print(e.path);
-            //           print(r?.path);
-            //           print(t.sizeToString);
-            //         });
-            //     downloader.downloadStream();
-            //     // Future.delayed(const Duration(seconds: 3), () {
-            //     //   downloader.cancelDownload();
-            //     // });
-            //   } else {
-            //     print("give permission");
-            //   }
-            // },
+            onTap: () async {
+              // print(bb);
+              // return;
+
+              // Future.delayed(const Duration(seconds: 3), () {
+              //   downloader.pauseDownload();
+              // });
+              // } else {
+              //   print("give permission");
+              // }
+              if (item is VideoAudioStream || item is AudioOnlyStream) {
+                final HiveDownloadItem downloadItem = HiveDownloadItem(
+                  video: Helper.youtubeVideoHelper(video),
+                  streamLinks: [item.url],
+                  downloaderId: const Uuid().v4(),
+                );
+                downloadsProvider.downloadStream(
+                  item,
+                  video,
+                  downloadItem,
+                );
+              } else if (item is VideoOnlyStream) {
+                final HiveDownloadItem downloadItem = HiveDownloadItem(
+                  video: Helper.youtubeVideoHelper(video),
+                  streamLinks: [item.url, getPerfectAudio.url],
+                  downloaderId: const Uuid().v4(),
+                );
+                downloadsProvider.downloadStream(
+                  item,
+                  video,
+                  downloadItem,
+                  audioStream: getPerfectAudio,
+                );
+              }
+            },
             child: Container(
               height: Utils.blockHeight * 5.5,
               width: double.infinity,

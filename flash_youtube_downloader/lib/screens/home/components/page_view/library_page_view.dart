@@ -30,6 +30,7 @@ class _LibraryPageViewState extends State<LibraryPageView>
           ),
           const LibraryItemTile(
             leadingIcon: Icons.vertical_align_bottom_outlined,
+            menuType: MenuType.download,
             title: "Downloads",
           ),
           const LibraryItemTile(

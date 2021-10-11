@@ -1,18 +1,27 @@
+import 'package:flash_youtube_downloader/services/offline/hive/models/hive_youtube_video.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:hive/hive.dart';
 
 class HiveDownloadItem extends HiveObject {
   final List<String> streamLinks;
-  final String downloadPath;
+  final HiveYoutubeVideo video;
+  final String downloaderId;
+  String? finalProcessedVideoPath;
+  List<String?> downloadPaths;
   List<String> downloadLinks;
   int downloadedBytes;
   DownloadState downloadState;
+  String progress;
   HiveDownloadItem({
     required this.streamLinks,
-    required this.downloadPath,
+    required this.video,
+    required this.downloaderId,
+    this.finalProcessedVideoPath,
+    this.downloadPaths = const [],
     this.downloadLinks = const [],
     this.downloadState = DownloadState.notStarted,
     this.downloadedBytes = 0,
+    this.progress = "0%",
   });
 }
 
@@ -28,27 +37,39 @@ class HiveDownloadItemAdapter extends TypeAdapter<HiveDownloadItem> {
     };
     return HiveDownloadItem(
       streamLinks: (fields[0] as List).cast<String>(),
-      downloadPath: fields[1] as String,
+      downloadPaths: (fields[1] as List).cast<String?>(),
       downloadLinks: (fields[2] as List).cast<String>(),
       downloadedBytes: fields[3] as int,
       downloadState: fields[4] as DownloadState,
+      downloaderId: fields[5] as String,
+      progress: fields[6] as String,
+      video: fields[7] as HiveYoutubeVideo,
+      finalProcessedVideoPath: fields[8] as String,
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveDownloadItem obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.streamLinks)
       ..writeByte(1)
-      ..write(obj.downloadPath)
+      ..write(obj.downloadPaths)
       ..writeByte(2)
       ..write(obj.downloadLinks)
       ..writeByte(3)
       ..write(obj.downloadedBytes)
       ..writeByte(4)
-      ..write(obj.downloadState);
+      ..write(obj.downloadState)
+      ..writeByte(5)
+      ..write(obj.downloaderId)
+      ..writeByte(6)
+      ..write(obj.progress)
+      ..writeByte(7)
+      ..write(obj.video)
+      ..writeByte(8)
+      ..write(obj.finalProcessedVideoPath);
   }
 
   @override

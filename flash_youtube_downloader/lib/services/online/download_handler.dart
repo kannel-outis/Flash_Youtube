@@ -7,6 +7,7 @@ import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:flash_youtube_downloader/utils/typedef.dart';
 
 class Downloader extends ManagerHandler<IDownloadManager> {
+  final String downloaderId;
   final File file;
   final File? audioFile;
   final Streams stream;
@@ -14,18 +15,19 @@ class Downloader extends ManagerHandler<IDownloadManager> {
   final DownloadCompletedCallback? onCompleted;
   final DownloadProgressCallback? downloadProgressCallback;
   final int start;
-  final int audioStart;
+  // final int audioStart;
   final DownloadCancelCallback? onCanceledCallback;
   final DownloadFailedCallback? onFailedCallback;
 
   Downloader({
     required this.file,
     required this.stream,
+    required this.downloaderId,
     this.audioFile,
     this.audioStream,
     this.onCanceledCallback,
     this.start = 0,
-    this.audioStart = 0,
+    // this.audioStart = 0,
     this.onCompleted,
     this.downloadProgressCallback,
     this.onFailedCallback,
@@ -34,7 +36,7 @@ class Downloader extends ManagerHandler<IDownloadManager> {
       file: file,
       stream: stream,
       start: start,
-      audioStart: audioStart,
+      // audioStart: audioStart,
       audioFile: audioFile,
       audioStream: audioStream,
       downloadProgressCallback: downloadProgressCallback,
@@ -56,6 +58,10 @@ class Downloader extends ManagerHandler<IDownloadManager> {
 
   Future<void> cancelDownload() async {
     await manager!.cancelDownload();
+  }
+
+  Future<void> pauseDownload() async {
+    await manager!.pauseDownload();
   }
 
   bool get videoDownload => manager!.videoDownload;

@@ -13,7 +13,7 @@ class DownloadManager implements IDownloadManager {
   final DownloadCompletedCallback? onCompleted;
   final DownloadProgressCallback? downloadProgressCallback;
   final int start;
-  final int audioStart;
+  // final int audioStart;
   final DownloadCancelCallback? onCanceledCallback;
   final DownloadFailedCallback? onFailedCallback;
 
@@ -24,7 +24,7 @@ class DownloadManager implements IDownloadManager {
     this.audioStream,
     this.onCanceledCallback,
     this.start = 0,
-    this.audioStart = 0,
+    // this.audioStart = 0,
     this.onCompleted,
     this.downloadProgressCallback,
     this.onFailedCallback,
@@ -37,6 +37,7 @@ class DownloadManager implements IDownloadManager {
   bool _downloadCompleted = false;
   bool _downloadFailed = false;
   bool _downloading = false;
+  bool _downloadPaused = false;
 
   late final IOSink _output;
   late final IOSink? _audioOutput;
@@ -44,7 +45,7 @@ class DownloadManager implements IDownloadManager {
 
   void _cleanPath() {
     if (audioStream != null) {
-      if (audioStart == 0 && audioFile!.existsSync()) {
+      if (start == 0 && audioFile!.existsSync()) {
         audioFile!.deleteSync();
       }
     }
@@ -94,6 +95,7 @@ class DownloadManager implements IDownloadManager {
 
   @override
   Future<bool> downloadStream() async {
+    _downloadPaused = false;
     try {
       downloadedBytes = start;
       final bytesStream = Extractor.getStream(stream, start: downloadedBytes);
@@ -159,7 +161,10 @@ class DownloadManager implements IDownloadManager {
 
   @override
   Future<void> cancelDownload() async {
-    await _closeOutputStreams();
+    await _closeOutputStreams().then((value) {
+      file.deleteSync();
+      audioFile?.deleteSync();
+    });
   }
 
   @override
@@ -178,6 +183,13 @@ class DownloadManager implements IDownloadManager {
     if (_downloadCompleted) return DownloadState.completed;
     if (_downloadFailed) return DownloadState.failed;
     if (_downloading) return DownloadState.downloading;
+    if (_downloadPaused) return DownloadState.paused;
     return DownloadState.notStarted;
+  }
+
+  @override
+  Future<void> pauseDownload() async {
+    _downloadPaused = true;
+    await _closeOutputStreams();
   }
 }

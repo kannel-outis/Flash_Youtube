@@ -13,6 +13,6 @@ class PermissionHandler {
       });
     }
 
-    return true;
+    return false;
   }
 }

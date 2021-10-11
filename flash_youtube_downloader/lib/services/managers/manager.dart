@@ -1,4 +1,5 @@
 import 'package:flash_youtube_downloader/services/offline/hive/models/history.dart';
+import 'package:flash_youtube_downloader/services/offline/hive/models/hive_download_item.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/hive_youtube_video.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/playlist.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/watch_later.dart';
@@ -27,11 +28,16 @@ abstract class IHiveManager extends Manager {
   Future<void> addToPlaylistVideos(HiveYoutubeVideo video);
   HivePlaylist getSinglePlaylist(String playlistName);
   List<HivePlaylist> getAllSavedPlaylist();
+
+  //downloads
+  Future<void> saveNewDownloadItem(HiveDownloadItem downloadItem);
+  List<HiveDownloadItem> getAllDownloadItem();
 }
 
 abstract class IDownloadManager extends Manager {
   Future<bool> downloadStream();
   Future<void> cancelDownload();
+  Future<void> pauseDownload();
   bool get videoDownload;
   bool get audioDownload;
   bool get videoAudioDownload;

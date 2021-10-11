@@ -1,3 +1,4 @@
+import 'package:flash_youtube_downloader/screens/downloads/downloads.dart';
 import 'package:flash_youtube_downloader/screens/playlist/components/add_playlist_dialog.dart';
 import 'package:flash_youtube_downloader/screens/watchLater/watch_later.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
@@ -44,6 +45,13 @@ class LibraryItemTile extends StatelessWidget {
               useSafeArea: true,
               builder: (context) => const AddPlaylistDialog(
                 video: null,
+              ),
+            );
+            break;
+          case MenuType.download:
+            Utils.navigationKey.currentState!.push(
+              MaterialPageRoute(
+                builder: (context) => const DownloadsPage(),
               ),
             );
             break;
