@@ -11,6 +11,7 @@ import 'models/video/video.dart';
 import 'models/video/videoInfo.dart';
 
 class Extract {
+  const Extract();
   Future<List<YoutubeVideo>?> getTrendingVideos() async {
     return FlashMethodCalls.getTrendingVideos();
   }

@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:flash_newpipe_extractor/src/models/content_size.dart';
 import 'package:flash_newpipe_extractor/src/models/stream/streams.dart';
 import 'package:http/http.dart' as http;

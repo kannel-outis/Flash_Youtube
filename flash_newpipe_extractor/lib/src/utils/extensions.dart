@@ -41,3 +41,37 @@ extension QualityToString on Quality {
     }
   }
 }
+
+extension FormatToString on String {
+  StreamFormat get asStreamFormat {
+    switch (this) {
+      case "mp4":
+        return StreamFormat.mp4;
+      case "m4a":
+        return StreamFormat.m4a;
+      case "3gp":
+        return StreamFormat.i3gp;
+      case "webm":
+        return StreamFormat.webm;
+      default:
+        return StreamFormat.mp3;
+    }
+  }
+}
+
+extension StringToFormat on StreamFormat {
+  String get asString {
+    switch (this) {
+      case StreamFormat.mp4:
+        return "mp4";
+      case StreamFormat.m4a:
+        return "m4a";
+      case StreamFormat.i3gp:
+        return "3gp";
+      case StreamFormat.webm:
+        return "webm";
+      default:
+        return "mp3";
+    }
+  }
+}

@@ -1,7 +1,7 @@
 class ContentSize {
   final int bytes;
 
-  ContentSize({
+  const ContentSize({
     required this.bytes,
   });
 

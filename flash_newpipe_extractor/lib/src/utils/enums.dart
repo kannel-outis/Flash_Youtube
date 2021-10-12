@@ -20,3 +20,11 @@ enum Quality {
 }
 
 enum InfoType { PLAYLIST, CHANNEL, VIDEO }
+
+enum StreamFormat {
+  mp4,
+  webm,
+  i3gp,
+  m4a,
+  mp3,
+}

@@ -11,6 +11,7 @@ abstract class Streams {
   final int? iTag;
   final String format;
   final Quality quality;
+  final StreamFormat streamFormat;
 
   Streams({
     required this.url,
@@ -20,6 +21,7 @@ abstract class Streams {
     this.iTag,
     required this.format,
     required this.quality,
+    required this.streamFormat,
   });
 
   ContentSize? _size;

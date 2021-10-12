@@ -38,6 +38,7 @@ class VideoAudioStream extends Streams {
           codec: codec,
           iTag: iTag,
           torrentUrl: torrentUrl,
+          streamFormat: format.asStreamFormat,
         );
 
   Size get size => Size(width, height);

@@ -28,6 +28,7 @@ class AudioOnlyStream extends Streams {
           codec: codec,
           iTag: iTag,
           torrentUrl: torrentUrl,
+          streamFormat: format.asStreamFormat,
         );
 
   factory AudioOnlyStream.fromMap(Map<String, dynamic> map) {
