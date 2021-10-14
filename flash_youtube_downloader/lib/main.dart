@@ -11,6 +11,7 @@ import 'utils/utils.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HiveInit.init();
+  await HiveInit.setAllCurrentDownloadingToPause();
   runApp(const MyApp());
 }
 

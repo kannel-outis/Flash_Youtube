@@ -1,7 +1,11 @@
+import 'package:flash_youtube_downloader/utils/enums.dart';
+
 extension ConvertView on String {
-  // ignore: avoid_positional_boolean_parameters
   String convertToViews(
-      [bool shorten = true, bool rawThousands = true, String? surffix]) {
+      // ignore: avoid_positional_boolean_parameters
+      [bool shorten = true,
+      bool rawThousands = true,
+      String? surffix]) {
     if (!contains(".")) {
       if (this == "-1") {
         return "0";
@@ -42,6 +46,25 @@ extension ConvertView on String {
       }
       return characters.reversed.join().substring(0, characters.length - 1) +
           (".${char[1]}");
+    }
+  }
+}
+
+extension ConvertStateToString on DownloadState {
+  String get convertStateToString {
+    switch (this) {
+      case DownloadState.downloading:
+        return "Downloading...";
+      case DownloadState.canceled:
+        return "Canceled";
+      case DownloadState.completed:
+        return "Completed";
+      case DownloadState.failed:
+        return "Failed";
+      case DownloadState.notStarted:
+        return "Preparing...";
+      case DownloadState.paused:
+        return "Paused";
     }
   }
 }

@@ -27,4 +27,12 @@ class HiveHandler extends ManagerHandler<IHiveManager> {
   Future<void> saveNewDownloadItem(HiveDownloadItem downloadItem) async {
     await manager!.saveNewDownloadItem(downloadItem);
   }
+
+  List<HiveDownloadItem> get hiveDownloadItems {
+    return manager!.getAllDownloadItem();
+  }
+
+  Future<void> deleteAllDownloadsFromHistory() async {
+    await manager!.deleteAllDownloadsFromHistory();
+  }
 }

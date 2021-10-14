@@ -41,4 +41,14 @@ class HiveInit {
     Hive.openBox<HiveYoutubeVideo>(hiveYoutubeVideoBoxName);
     Hive.openBox<HiveDownloadItem>(hiveDownloadItems);
   }
+
+  static Future<void> setAllCurrentDownloadingToPause() async {
+    final box = await Hive.openBox<HiveDownloadItem>(hiveDownloadItems);
+    final listOfOnGoingDownloads = box.values
+        .where((element) => element.downloadState == DownloadState.downloading);
+    for (final item in listOfOnGoingDownloads) {
+      item.downloadState = DownloadState.paused;
+      await item.save();
+    }
+  }
 }

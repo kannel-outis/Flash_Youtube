@@ -32,6 +32,7 @@ abstract class IHiveManager extends Manager {
   //downloads
   Future<void> saveNewDownloadItem(HiveDownloadItem downloadItem);
   List<HiveDownloadItem> getAllDownloadItem();
+  Future<void> deleteAllDownloadsFromHistory();
 }
 
 abstract class IDownloadManager extends Manager {

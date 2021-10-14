@@ -21,13 +21,50 @@ class DownloadChangeNotifier extends ChangeNotifier {
         .first;
   }
 
+  void deleteAllEntries() {
+    hiveHandler.deleteAllDownloadsFromHistory();
+  }
+
+  bool _downloaderListContainsDownloader(String id) {
+    final single = _listOfCurrentDownloaders
+        .where((element) => element.downloaderId == id);
+    if (single.isEmpty) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   Future<void> pauseDownload(HiveDownloadItem downloadItem) async {
     final downloader = _getDownloader(downloadItem.downloaderId);
     await downloader.pauseDownload();
   }
 
-  Future<void> cancelDownload(HiveDownloadItem downloadItem) async {
-    final downloader = _getDownloader(downloadItem.downloaderId);
+  Future<void> cancelDownload(
+    HiveDownloadItem downloadItem,
+  ) async {
+    late final Downloader downloader;
+    if (!_downloaderListContainsDownloader(downloadItem.downloaderId)) {
+      final whichStream = _whichMainStreamToDownload(
+          downloadItem.videoAudioStream,
+          downloadItem.audioOnlyStream,
+          downloadItem.videoOnlyStream)!;
+      downloader = Downloader(
+          downloaderId: downloadItem.downloaderId,
+          file: File(downloadItem.downloadPaths[0]!),
+          stream: whichStream,
+          start: downloadItem.downloadedBytes,
+          audioFile: downloadItem.downloadPaths[1] != null
+              ? File(downloadItem.downloadPaths[1]!)
+              : null,
+          audioStream: downloadItem.audioOnlyStream,
+          onCanceledCallback: (size, state) {
+            downloadItem.downloadState = state;
+            downloadItem.save();
+          });
+    } else {
+      downloader = _getDownloader(downloadItem.downloaderId);
+    }
     await downloader.cancelDownload();
   }
 
@@ -62,6 +99,8 @@ class DownloadChangeNotifier extends ChangeNotifier {
           : File(
               "${knockDir.path}${video.videoName}${audioStream.contentSize!.bytes}.${audioStream.format}");
 
+      downloadItem.downloadPaths = [file.path, audioFile?.path];
+      downloadItem.save();
       final downloader = Downloader(
           downloaderId: downloadItem.downloaderId,
           file: file,
@@ -69,8 +108,9 @@ class DownloadChangeNotifier extends ChangeNotifier {
           start: downloadItem.downloadedBytes,
           audioFile: audioFile,
           audioStream: audioStream,
-          downloadProgressCallback: (progress, state) {
+          downloadProgressCallback: (size, progress, state) {
             // add downloaded bytes here
+            downloadItem.downloadedBytes = size.bytes;
             downloadItem.progress = progress;
             downloadItem.downloadState = state;
             downloadItem.save();

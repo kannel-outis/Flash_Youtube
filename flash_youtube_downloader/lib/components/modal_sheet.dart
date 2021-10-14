@@ -135,18 +135,18 @@ class QualityStreams extends ConsumerWidget {
     final listofbitrates =
         video.videoInfo!.audioOnlyStreams.map((e) => e.bitrate).toList();
     final maxBitrate = listofbitrates.reduce((c, n) => c! > n! ? c : n);
-    listofbitrates.remove(maxBitrate);
-    final perfectAudioBitrate =
-        listofbitrates.reduce((c, n) => c! > n! ? c : n)!;
+    // listofbitrates.remove(maxBitrate);
+    // final perfectAudioBitrate =
+    //     listofbitrates.reduce((c, n) => c! > n! ? c : n)!;
     final perfectAudio = video.videoInfo!.audioOnlyStreams
-        .where((element) => element.bitrate == perfectAudioBitrate)
+        .where((element) => element.bitrate == maxBitrate)
         .first;
 
     return perfectAudio;
   }
 
-  String videoOnlyDownloadSizeAsString(Streams item) {
-    return item.combineWithSize(getPerfectAudio.contentSize!).sizeToString;
+  ContentSize videoOnlyDownloadSizeAsString(Streams item) {
+    return item.combineWithSize(getPerfectAudio.contentSize!);
   }
 
   @override
@@ -201,6 +201,7 @@ class QualityStreams extends ConsumerWidget {
               // return;
               if (item is VideoAudioStream) {
                 final HiveDownloadItem downloadItem = HiveDownloadItem(
+                  totalSize: item.contentSize!.bytes,
                   video: Helper.youtubeVideoHelper(video),
                   streamLinks: [item.url],
                   downloaderId: const Uuid().v4(),
@@ -214,6 +215,7 @@ class QualityStreams extends ConsumerWidget {
                 );
               } else if (item is VideoOnlyStream) {
                 final HiveDownloadItem downloadItem = HiveDownloadItem(
+                  totalSize: videoOnlyDownloadSizeAsString(item).bytes,
                   video: Helper.youtubeVideoHelper(video),
                   streamLinks: [item.url, getPerfectAudio.url],
                   downloaderId: const Uuid().v4(),
@@ -228,6 +230,7 @@ class QualityStreams extends ConsumerWidget {
                 );
               } else if (item is AudioOnlyStream) {
                 final HiveDownloadItem downloadItem = HiveDownloadItem(
+                  totalSize: item.contentSize!.bytes,
                   video: Helper.youtubeVideoHelper(video),
                   streamLinks: [item.url, getPerfectAudio.url],
                   downloaderId: const Uuid().v4(),
@@ -266,7 +269,7 @@ class QualityStreams extends ConsumerWidget {
                       child: (item is! AudioOnlyStream)
                           ? Text(
                               item is VideoOnlyStream
-                                  ? "${item.format} (${videoOnlyDownloadSizeAsString(item)})"
+                                  ? "${item.format} (${videoOnlyDownloadSizeAsString(item).sizeToString})"
                                   : "${item.format} (${item.contentSize!.sizeToString}) B",
                               style: theme.textTheme.bodyText1!
                                   .copyWith(fontWeight: FontWeight.normal),

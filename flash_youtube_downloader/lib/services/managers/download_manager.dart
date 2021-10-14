@@ -29,7 +29,7 @@ class DownloadManager implements IDownloadManager {
     this.downloadProgressCallback,
     this.onFailedCallback,
   }) {
-    // _cleanPath();
+    _cleanPath();
     _output = file.openWrite(mode: FileMode.writeOnlyAppend);
     _audioOutput = audioFile?.openWrite(mode: FileMode.writeOnlyAppend);
   }
@@ -72,9 +72,7 @@ class DownloadManager implements IDownloadManager {
     ]).then((value) {
       _downloading = false;
       final totalBytes = downloadedBytes;
-      final contentSize = ContentSize(
-        bytes: totalBytes,
-      );
+      final contentSize = _contentSize(totalBytes);
       if (_downloadCanceled) {
         onCanceledCallback?.call(contentSize, downloadState);
       } else {
@@ -92,6 +90,12 @@ class DownloadManager implements IDownloadManager {
     }
     return double.tryParse(((downloadedBytes / stream.contentSize!.bytes) * 100)
         .toStringAsFixed(1))!;
+  }
+
+  ContentSize _contentSize(int bytes) {
+    return ContentSize(
+      bytes: bytes,
+    );
   }
 
   @override
@@ -119,7 +123,8 @@ class DownloadManager implements IDownloadManager {
             return false;
           }
 
-          downloadProgressCallback?.call("$progress%", downloadState);
+          downloadProgressCallback?.call(
+              _contentSize(downloadedBytes), "$progress%", downloadState);
           _audioOutput?.add(data);
         }
       } else {
@@ -129,7 +134,8 @@ class DownloadManager implements IDownloadManager {
           if (_downloadCanceled || _downloadPaused) {
             return false;
           }
-          downloadProgressCallback?.call("$progress%", downloadState);
+          downloadProgressCallback?.call(
+              _contentSize(downloadedBytes), "$progress%", downloadState);
           _output.add(data);
         }
 
@@ -143,7 +149,8 @@ class DownloadManager implements IDownloadManager {
               return false;
             }
 
-            downloadProgressCallback?.call("$progress%", downloadState);
+            downloadProgressCallback?.call(
+                _contentSize(downloadedBytes), "$progress%", downloadState);
             _audioOutput?.add(data);
           }
         }
@@ -168,6 +175,7 @@ class DownloadManager implements IDownloadManager {
     await _closeOutputStreams().then((value) {
       file.deleteSync();
       audioFile?.deleteSync();
+      file.parent.deleteSync();
     });
   }
 

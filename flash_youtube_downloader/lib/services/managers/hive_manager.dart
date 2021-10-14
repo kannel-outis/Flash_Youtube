@@ -90,4 +90,9 @@ class HiveManager implements IHiveManager {
   Future<void> saveNewDownloadItem(HiveDownloadItem downloadItem) async {
     await downloadItemBox.add(downloadItem);
   }
+
+  @override
+  Future<void> deleteAllDownloadsFromHistory() async {
+    await downloadItemBox.clear();
+  }
 }

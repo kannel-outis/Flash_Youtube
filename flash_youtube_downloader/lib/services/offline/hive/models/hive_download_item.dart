@@ -10,6 +10,7 @@ class HiveDownloadItem extends HiveObject {
   final VideoOnlyStream? videoOnlyStream;
   final AudioOnlyStream? audioOnlyStream;
   final String downloaderId;
+  final int totalSize;
   String? finalProcessedVideoPath;
   List<String?> downloadPaths;
   List<String> downloadLinks;
@@ -18,6 +19,7 @@ class HiveDownloadItem extends HiveObject {
   String progress;
   HiveDownloadItem({
     required this.streamLinks,
+    required this.totalSize,
     required this.video,
     required this.downloaderId,
     required this.audioOnlyStream,
@@ -43,24 +45,26 @@ class HiveDownloadItemAdapter extends TypeAdapter<HiveDownloadItem> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HiveDownloadItem(
-        streamLinks: (fields[0] as List).cast<String>(),
-        downloadPaths: (fields[1] as List).cast<String?>(),
-        downloadLinks: (fields[2] as List).cast<String>(),
-        downloadedBytes: fields[3] as int,
-        downloadState: fields[4] as DownloadState,
-        downloaderId: fields[5] as String,
-        progress: fields[6] as String,
-        video: fields[7] as HiveYoutubeVideo,
-        finalProcessedVideoPath: fields[8] as String?,
-        audioOnlyStream: fields[9] as AudioOnlyStream?,
-        videoAudioStream: fields[10] as VideoAudioStream?,
-        videoOnlyStream: fields[11] as VideoOnlyStream?);
+      streamLinks: (fields[0] as List).cast<String>(),
+      downloadPaths: (fields[1] as List).cast<String?>(),
+      downloadLinks: (fields[2] as List).cast<String>(),
+      downloadedBytes: fields[3] as int,
+      downloadState: fields[4] as DownloadState,
+      downloaderId: fields[5] as String,
+      progress: fields[6] as String,
+      video: fields[7] as HiveYoutubeVideo,
+      finalProcessedVideoPath: fields[8] as String?,
+      audioOnlyStream: fields[9] as AudioOnlyStream?,
+      videoAudioStream: fields[10] as VideoAudioStream?,
+      videoOnlyStream: fields[11] as VideoOnlyStream?,
+      totalSize: fields[12] as int,
+    );
   }
 
   @override
   void write(BinaryWriter writer, HiveDownloadItem obj) {
     writer
-      ..writeByte(12)
+      ..writeByte(13)
       ..writeByte(0)
       ..write(obj.streamLinks)
       ..writeByte(1)
@@ -84,7 +88,9 @@ class HiveDownloadItemAdapter extends TypeAdapter<HiveDownloadItem> {
       ..writeByte(10)
       ..write(obj.videoAudioStream)
       ..writeByte(11)
-      ..write(obj.videoOnlyStream);
+      ..write(obj.videoOnlyStream)
+      ..writeByte(12)
+      ..write(obj.totalSize);
   }
 
   @override
