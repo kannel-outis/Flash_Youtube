@@ -1,10 +1,11 @@
 import 'dart:io';
 
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
-import 'package:flash_youtube_downloader/services/managers/download_manager.dart';
-import 'package:flash_youtube_downloader/services/managers/manager.dart';
+import 'package:flash_youtube_downloader/services/manager.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:flash_youtube_downloader/utils/typedef.dart';
+
+import '../managers/download_manager.dart';
 
 class Downloader extends ManagerHandler<IDownloadManager> {
   final String downloaderId;

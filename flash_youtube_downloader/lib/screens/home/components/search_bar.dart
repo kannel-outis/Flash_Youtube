@@ -46,11 +46,10 @@ class SearchBar extends ConsumerWidget {
                   textInputAction: TextInputAction.search,
                   autocorrect: false,
                   controller: controller,
-                  // autofocus: true,
+                  autofocus: true,
                   style: theme.textTheme.bodyText1!.copyWith(
                     fontWeight: FontWeight.normal,
                   ),
-                  cursorColor: theme.accentColor,
                   decoration: const InputDecoration(
                     hintText: "Search YouTube",
                     border: InputBorder.none,

@@ -5,6 +5,7 @@ import 'screens/home/providers/home_providers.dart';
 import 'screens/mini_player/mini_player.dart';
 import 'screens/mini_player/providers/miniplayer_providers.dart';
 import 'services/offline/hive/init.dart';
+import 'services/offline/managers/shared_prefs_manager.dart';
 import 'utils/scroll_behaviour.dart';
 import 'utils/utils.dart';
 
@@ -12,6 +13,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await HiveInit.init();
   await HiveInit.setAllCurrentDownloadingToPause();
+  SharedPrefsManager.instance.getInstance();
   runApp(const MyApp());
 }
 

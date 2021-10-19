@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/hive_handler.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/hive_download_item.dart';
-import 'package:flash_youtube_downloader/services/online/download_handler.dart';
+import 'package:flash_youtube_downloader/services/online/handler/download_handler.dart';
 import 'package:flash_youtube_downloader/utils/permission.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';

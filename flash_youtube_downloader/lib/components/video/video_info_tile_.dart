@@ -414,207 +414,190 @@ class _DownloadVideoTile extends ConsumerWidget {
     final downloading = downloadItem.downloadState == DownloadState.downloading;
     final downloadsProvider =
         watch(DownloadsProvider.downloadChangeNotifierProvider);
-    return GestureDetector(
-      onTap: () async {
-        // print(downloadItem.downloadedBytes);
-        return;
-        if (downloadItem.downloadState == DownloadState.paused) {
-          downloadsProvider.downloadStream(video, downloadItem,
-              audioStream: downloadItem.audioOnlyStream,
-              continueDownload: true);
-        }
-        if (downloadItem.downloadState == DownloadState.downloading) {
-          downloadsProvider.pauseDownload(downloadItem);
-          return;
-        }
-      },
-      child: Container(
-        color: Colors.transparent,
-        margin: const EdgeInsets.only(bottom: 20),
-        padding: const EdgeInsets.only(left: 10),
-        width: double.infinity,
-        height: Utils.blockHeight * 7.41,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 180,
-              color: isDarkTheme
-                  ? Utils.placeHolderColor
-                  : Utils.placeHolderColor.withOpacity(.1),
-              child: Stack(
-                children: [
-                  CachedNetworkImage(
-                    width: double.infinity,
-                    imageUrl: video.hqdefault,
+    return Container(
+      color: Colors.transparent,
+      margin: const EdgeInsets.only(bottom: 20),
+      padding: const EdgeInsets.only(left: 10),
+      width: double.infinity,
+      height: Utils.blockHeight * 7.41,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            width: 180,
+            color: isDarkTheme
+                ? Utils.placeHolderColor
+                : Utils.placeHolderColor.withOpacity(.1),
+            child: Stack(
+              children: [
+                CachedNetworkImage(
+                  width: double.infinity,
+                  imageUrl: video.hqdefault,
+                  fit: BoxFit.cover,
+                  errorWidget: (context, s, d) => CachedNetworkImage(
+                    imageUrl: video.mqdefault,
                     fit: BoxFit.cover,
-                    errorWidget: (context, s, d) => CachedNetworkImage(
-                      imageUrl: video.mqdefault,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                    ),
+                    width: double.infinity,
                   ),
-                  Positioned(
-                    bottom: 10,
-                    right: 20,
-                    child: Container(
-                      color: Colors.black.withOpacity(.7),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      child: Center(
-                        child: Text(
-                          Utils.trimTime(video.duration.toString()),
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
+                ),
+                Positioned(
+                  bottom: 10,
+                  right: 20,
+                  child: Container(
+                    color: Colors.black.withOpacity(.7),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: Center(
+                      child: Text(
+                        Utils.trimTime(video.duration.toString()),
+                        style: Theme.of(context).textTheme.subtitle1,
                       ),
                     ),
-                  )
+                  ),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 7.0),
+              child: Column(
+                children: [
+                  SizedBox(
+                    // height: Utils.blockWidth * 10,
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.topLeft,
+                          child: Text(
+                            video.videoName!,
+                            style:
+                                Theme.of(context).textTheme.bodyText1!.copyWith(
+                                      fontWeight: FontWeight.normal,
+                                    ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: Utils.blockWidth),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      "${video.viewCount.toString().convertToViews()} views  •   ${video.textualUploadDate}",
+                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                            color: Colors.grey,
+                          ),
+                      textAlign: TextAlign.left,
+                      // maxLines: 2,
+                    ),
+                  ),
+                  SizedBox(height: Utils.blockWidth),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    padding: const EdgeInsets.only(right: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${downloadItem.progress}  •   ${size.sizeToString} / ${totalSize.sizeToString}",
+                          style:
+                              Theme.of(context).textTheme.bodyText2!.copyWith(
+                                    color: stateTextColor,
+                                  ),
+                          textAlign: TextAlign.left,
+                          // maxLines: 2,
+                        ),
+                        Text(
+                          downloadItem.downloadState.convertStateToString,
+                          style:
+                              Theme.of(context).textTheme.bodyText2!.copyWith(
+                                    color: stateTextColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                          textAlign: TextAlign.left,
+                          // maxLines: 2,
+                        ),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 7.0),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      // height: Utils.blockWidth * 10,
-                      child: Column(
-                        children: [
-                          Container(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              video.videoName!,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyText1!
-                                  .copyWith(
-                                    fontWeight: FontWeight.normal,
-                                  ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: Utils.blockWidth),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "${video.viewCount.toString().convertToViews()} views  •   ${video.textualUploadDate}",
-                        style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                              color: Colors.grey,
-                            ),
-                        textAlign: TextAlign.left,
-                        // maxLines: 2,
-                      ),
-                    ),
-                    SizedBox(height: Utils.blockWidth),
-                    Container(
-                      alignment: Alignment.topLeft,
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "${downloadItem.progress}  •   ${size.sizeToString} / ${totalSize.sizeToString}",
-                            style:
-                                Theme.of(context).textTheme.bodyText2!.copyWith(
-                                      color: stateTextColor,
-                                    ),
-                            textAlign: TextAlign.left,
-                            // maxLines: 2,
-                          ),
-                          Text(
-                            downloadItem.downloadState.convertStateToString,
-                            style:
-                                Theme.of(context).textTheme.bodyText2!.copyWith(
-                                      color: stateTextColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                            textAlign: TextAlign.left,
-                            // maxLines: 2,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+          ),
+          PopupMenuButton<String>(
+            offset: const Offset(50, 40),
+            onSelected: (value) {
+              switch (value) {
+                case "Resume":
+                  downloadsProvider.downloadStream(video, downloadItem,
+                      audioStream: downloadItem.audioOnlyStream,
+                      continueDownload: true);
+                  break;
+                case "pause":
+                  downloadsProvider.pauseDownload(downloadItem);
+                  break;
+                case "cancel":
+                  downloadsProvider.cancelDownload(downloadItem);
+                  break;
+                case "Delete":
+                  downloadItem.delete();
+
+                  ///TODO: implemet
+                  break;
+                case "restart":
+
+                  ///TODO: implemet
+                  break;
+                default:
+              }
+            },
+            itemBuilder: (context) {
+              return [
+                if (!isNotPausedNorDownloading)
+                  PopupMenuItem<String>(
+                    value: downloadPaused
+                        ? "Resume"
+                        : downloading
+                            ? "pause"
+                            : "nil",
+                    child: downloadPaused
+                        ? const Text("Resume")
+                        : downloading
+                            ? const Text("pause")
+                            : const Text("nil"),
+                  ),
+                if (!isNotPausedNorDownloading)
+                  const PopupMenuItem<String>(
+                    value: "cancel",
+                    child: Text("Cancel Download"),
+                  ),
+                if (downloadItem.downloadState == DownloadState.canceled ||
+                    downloadItem.downloadState == DownloadState.failed)
+                  const PopupMenuItem<String>(
+                    value: "restart",
+                    child: Text("Restart Download"),
+                  ),
+                if (downloadItem.downloadState == DownloadState.completed ||
+                    downloadItem.downloadState == DownloadState.canceled ||
+                    downloadItem.downloadState == DownloadState.failed)
+                  const PopupMenuItem<String>(
+                    value: "Delete",
+                    child: Text("Delete from history"),
+                  ),
+              ];
+            },
+            child: const SizedBox(
+              width: 40,
+              height: 30,
+              child: Center(
+                child: Icon(Icons.more_vert, size: 20),
               ),
             ),
-            PopupMenuButton<String>(
-              offset: const Offset(50, 40),
-              onSelected: (value) {
-                switch (value) {
-                  case "Resume":
-                    downloadsProvider.downloadStream(video, downloadItem,
-                        audioStream: downloadItem.audioOnlyStream,
-                        continueDownload: true);
-                    break;
-                  case "pause":
-                    downloadsProvider.pauseDownload(downloadItem);
-                    break;
-                  case "cancel":
-                    downloadsProvider.cancelDownload(downloadItem);
-                    break;
-                  case "Delete":
-                    downloadItem.delete();
-
-                    ///TODO: implemet
-                    break;
-                  case "restart":
-
-                    ///TODO: implemet
-                    break;
-                  default:
-                }
-              },
-              itemBuilder: (context) {
-                return [
-                  if (!isNotPausedNorDownloading)
-                    PopupMenuItem<String>(
-                      value: downloadPaused
-                          ? "Resume"
-                          : downloading
-                              ? "pause"
-                              : "nil",
-                      child: downloadPaused
-                          ? const Text("Resume")
-                          : downloading
-                              ? const Text("pause")
-                              : const Text("nil"),
-                    ),
-                  if (!isNotPausedNorDownloading)
-                    const PopupMenuItem<String>(
-                      value: "cancel",
-                      child: Text("Cancel Download"),
-                    ),
-                  if (downloadItem.downloadState == DownloadState.canceled ||
-                      downloadItem.downloadState == DownloadState.failed)
-                    const PopupMenuItem<String>(
-                      value: "restart",
-                      child: Text("Restart Download"),
-                    ),
-                  if (downloadItem.downloadState == DownloadState.completed ||
-                      downloadItem.downloadState == DownloadState.canceled ||
-                      downloadItem.downloadState == DownloadState.failed)
-                    const PopupMenuItem<String>(
-                      value: "Delete",
-                      child: Text("Delete from history"),
-                    ),
-                ];
-              },
-              child: const SizedBox(
-                width: 40,
-                height: 30,
-                child: Center(
-                  child: Icon(Icons.more_vert, size: 20),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

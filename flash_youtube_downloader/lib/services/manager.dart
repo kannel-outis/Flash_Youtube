@@ -1,3 +1,6 @@
+// ignore_for_file: avoid_positional_boolean_parameters
+
+import 'package:flash_youtube_downloader/models/content_country.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/history.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/hive_download_item.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/hive_youtube_video.dart';
@@ -5,8 +8,6 @@ import 'package:flash_youtube_downloader/services/offline/hive/models/playlist.d
 import 'package:flash_youtube_downloader/services/offline/hive/models/watch_later.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:flutter/foundation.dart';
-
-import 'hive_manager.dart';
 
 abstract class Manager {
   void dispose() {}
@@ -42,10 +43,16 @@ abstract class IDownloadManager extends Manager {
   bool get videoDownload;
   bool get audioDownload;
   bool get videoAudioDownload;
-  // bool get downloadCompleted;
-  // bool get downloadCanceled;
-  // bool get downloadFailded;
   DownloadState get downloadState;
+}
+
+abstract class ISharedProps extends Manager {
+  Future<bool> setPlayerQuality(String value);
+  Future<bool> setDownloaderQuality(String value);
+  Future<bool> setCountryContent(String value);
+  ContentCountry? get contentCountry;
+  String? get downloaderQuality;
+  String? get playerQuality;
 }
 
 abstract class ManagerHandler<T extends Manager?> {
@@ -63,15 +70,5 @@ abstract class ManagerHandler<T extends Manager?> {
   @mustCallSuper
   void dispose() {
     _manager!.dispose();
-  }
-
-  bool get checkIfChatBoxExistAlready {
-    if (_manager is HiveManager) {
-      var _hiveManager = _manager as HiveManager;
-      // return _hiveManager.checkIfChatBoxExistAlready;
-      return true;
-    } else {
-      return false;
-    }
   }
 }

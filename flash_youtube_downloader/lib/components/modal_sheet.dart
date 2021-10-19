@@ -188,17 +188,6 @@ class QualityStreams extends ConsumerWidget {
         for (var item in video.videoInfo!.allStreamsOfQuality(item))
           GestureDetector(
             onTap: () async {
-              // print(bb);
-              // return;
-
-              // Future.delayed(const Duration(seconds: 3), () {
-              //   downloader.pauseDownload();
-              // });
-              // } else {
-              //   print("give permission");
-              // }
-
-              // return;
               if (item is VideoAudioStream) {
                 final HiveDownloadItem downloadItem = HiveDownloadItem(
                   totalSize: item.contentSize!.bytes,

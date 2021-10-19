@@ -8,6 +8,7 @@ import 'package:flash_youtube_downloader/screens/home/components/page_view/libra
 import 'package:flash_youtube_downloader/screens/mini_player/components/mini_player_draggable.dart';
 import 'package:flash_youtube_downloader/screens/mini_player/providers/miniplayer_providers.dart';
 import 'package:flash_youtube_downloader/screens/search/search_page.dart';
+import 'package:flash_youtube_downloader/screens/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,6 +30,8 @@ class HomeScreen extends HookWidget {
     final _miniPlayerController = useProvider(MiniPlayerProviders.miniPlayerC);
     final homeStates = useProvider(HomeProviders.homeProvider);
     final pageController = usePageController();
+    final pageStateProvider =
+        useProvider(HomeProviders.pageStateProvider(pageController));
     return Scaffold(
       body: CustomWillScope(
         isHome: true,
@@ -71,6 +74,20 @@ class HomeScreen extends HookWidget {
                                 homeStates.isSearch = true;
                               },
                             ),
+                            if (pageStateProvider == 1)
+                              IconButton(
+                                icon: const Icon(Icons.settings),
+                                onPressed: () {
+                                  Utils.navigationKey.currentState!.push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SettingsPage(),
+                                    ),
+                                  );
+                                },
+                              )
+                            else
+                              const SizedBox(),
                           ],
                         )
                       ],
@@ -100,7 +117,10 @@ class HomeScreen extends HookWidget {
               ],
             ),
           ),
-          bottomNavigationBar: BottomNav(pageController: pageController),
+          bottomNavigationBar: Offstage(
+            offstage: homeStates.isSearch,
+            child: BottomNav(pageController: pageController),
+          ),
         ),
       ),
     );

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
-import 'package:flash_youtube_downloader/services/managers/manager.dart';
+import 'package:flash_youtube_downloader/services/manager.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:flash_youtube_downloader/utils/typedef.dart';
 
@@ -159,7 +159,6 @@ class DownloadManager implements IDownloadManager {
       await _closeOutputStreams(true);
       return true;
     } catch (e, s) {
-      print(s.toString());
       _downloading = false;
       _downloadFailed = true;
       onFailedCallback?.call(e.toString(), downloadState);

@@ -6,7 +6,7 @@ import 'package:flash_youtube_downloader/services/offline/hive/models/playlist.d
 import 'package:flash_youtube_downloader/services/offline/hive/models/history.dart';
 import 'package:hive/hive.dart';
 
-import 'manager.dart';
+import '../../manager.dart';
 
 class HiveManager implements IHiveManager {
   HiveManager._();
