@@ -34,13 +34,22 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
                 SizedBox(
-                  child: CountryDropDown(
-                    value: ccState,
-                    listOfCodes: Country.countries
-                        .map((e) => ContentCountry.fromJson(e))
-                        .toList(),
-                    onChanged: (value) {
-                      ccStateNotifier.setState(value!);
+                  child: FutureBuilder<List<ContentCountry>>(
+                    future:
+                        Future.delayed(const Duration(milliseconds: 300), () {
+                      return Country.countries
+                          .map((e) => ContentCountry.fromJson(e))
+                          .toList();
+                    }),
+                    initialData: const [],
+                    builder: (context, snapshot) {
+                      return CountryDropDown(
+                        value: ccState,
+                        listOfCodes: snapshot.data,
+                        onChanged: (value) {
+                          ccStateNotifier.setState(value!);
+                        },
+                      );
                     },
                   ),
                 ),

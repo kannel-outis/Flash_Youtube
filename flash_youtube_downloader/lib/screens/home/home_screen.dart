@@ -80,8 +80,7 @@ class HomeScreen extends HookWidget {
                                 onPressed: () {
                                   Utils.navigationKey.currentState!.push(
                                     MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SettingsPage(),
+                                      builder: (context) => SettingsPage(),
                                     ),
                                   );
                                 },

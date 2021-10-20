@@ -1,5 +1,6 @@
 package kannel.outtis.flashEx.flash_newpipe_extractor
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
@@ -14,6 +15,8 @@ import io.flutter.plugin.common.MethodChannel.Result
 import kannel.outtis.flashEx.flash_newpipe_extractor.downloader.FlashDownloader
 import kannel.outtis.flashEx.flash_newpipe_extractor.extractors.YoutubeExtractors
 import kannel.outtis.flashEx.flash_newpipe_extractor.extractors.YoutubeVideoInfoExtractor
+import org.json.JSONArray
+import org.json.JSONObject
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.Page
 import org.schabi.newpipe.extractor.localization.ContentCountry
@@ -24,10 +27,16 @@ import java.util.concurrent.Executors
 class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
   private lateinit var channel : MethodChannel
 
+
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     val context = flutterPluginBinding.applicationContext
+    val contentPref = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+    val sharedString = contentPref.getString("flutter.content_country", null)
+    val jsonMapObj = JSONObject(sharedString)
+    val contentCountryString = jsonMapObj.toMap()["code"]?:"NG"
+    
 //    TODO: always get contentCountry from shared preferences
-    NewPipe.init(FlashDownloader.instance(), Localization.DEFAULT, ContentCountry("NG"))
+    NewPipe.init(FlashDownloader.instance(), Localization.DEFAULT, ContentCountry(contentCountryString))
     val preferences: SharedPreferences = PreferenceManager
             .getDefaultSharedPreferences(context);
     val cookie:String? = preferences.getString("prefs_cookies_key", "");
@@ -120,6 +129,18 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
       }
     })
 
+  }
+
+  private fun JSONObject.toMap(): Map<String, String> {
+    val map = mutableMapOf<String, String>()
+    val keysItr: Iterator<String> = this.keys()
+    while (keysItr.hasNext()) {
+      val key = keysItr.next()
+      val value: String = this.get(key) as String
+      map[key] = value
+    }
+    println(map)
+    return map
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {

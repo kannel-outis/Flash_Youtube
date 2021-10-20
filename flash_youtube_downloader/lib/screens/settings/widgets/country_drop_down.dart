@@ -23,36 +23,37 @@ class CountryDropDown extends StatelessWidget {
           value: value ?? listOfCodes![0],
           underline: const SizedBox(),
           elevation: 0,
-          items: listOfCodes!
-              .map(
-                (e) => DropdownMenuItem<ContentCountry>(
-                  value: e,
-                  child: SizedBox(
-                    width: 250,
-                    child: Flex(
-                      direction: Axis.horizontal,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          height: 18,
-                          child: Text(
-                            e.countryName,
-                            style: theme.textTheme.bodyText1,
-                          ),
+          items: List.generate(
+            listOfCodes!.length,
+            (index) {
+              return DropdownMenuItem<ContentCountry>(
+                value: listOfCodes![index],
+                child: SizedBox(
+                  width: 250,
+                  child: Flex(
+                    direction: Axis.horizontal,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        height: 18,
+                        child: Text(
+                          listOfCodes![index].countryName,
+                          style: theme.textTheme.bodyText1,
                         ),
-                        const SizedBox(width: 5),
-                        SizedBox(
-                          child: Text(
-                            e.countryCode,
-                            style: theme.textTheme.bodyText1,
-                          ),
-                        )
-                      ],
-                    ),
+                      ),
+                      const SizedBox(width: 5),
+                      SizedBox(
+                        child: Text(
+                          listOfCodes![index].countryCode,
+                          style: theme.textTheme.bodyText1,
+                        ),
+                      )
+                    ],
                   ),
                 ),
-              )
-              .toList(),
+              );
+            },
+          ),
           onChanged: onChanged,
         ),
       ),
