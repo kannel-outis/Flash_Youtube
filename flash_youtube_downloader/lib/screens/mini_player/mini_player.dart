@@ -109,6 +109,11 @@ class MiniPlayerWidget extends HookWidget {
               loadingWidth: 8,
               controller: controller!,
               hideProgressThumb: _miniPlayerController.isClosed,
+              onVideoQualityChange: (quality) {
+                if (settingsProvider.allowSetPlayerQualityOnQualityChange) {
+                  settingsProvider.setPlayerQuality(quality.qualityToString);
+                }
+              },
               colors: YoutubePlayerColors.auto(
                 barColor: Colors.white.withOpacity(.4),
                 bufferedColor: Colors.white.withOpacity(.8),

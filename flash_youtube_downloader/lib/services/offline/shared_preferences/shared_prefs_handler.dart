@@ -37,6 +37,13 @@ class SharedPrefHandler extends ManagerHandler<ISharedProps> {
     return manager!.allowPIP(allowPIP);
   }
 
+  Future<bool> setPlayerQualityOnQualityChange(bool playerQuality) async {
+    return manager!.setPlayerQualityOnQualityChange(playerQuality);
+  }
+
+  bool? get allowPlayerQualityOnQualityChange =>
+      manager!.allowPlayerQualityOnQualityChange;
+
   bool? get allowPIPValue => manager!.allowPIPValue;
 
   bool? get showComments => manager!.showComments;

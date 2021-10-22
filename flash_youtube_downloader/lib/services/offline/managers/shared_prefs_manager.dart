@@ -18,6 +18,8 @@ class SharedPrefsManager implements ISharedProps {
   final CONTENT_COUNTRY = "content_country";
   final SHOW_COMMENTS = "show_comments";
   final ALLOW_PIP = "allow_PIP";
+  final SET_PLAYER_QUALITY_ON_QUALITY_CHANGE =
+      "set_player_quality_on_quality_change";
 
   static late SharedPreferences _prefs;
 
@@ -74,5 +76,14 @@ class SharedPrefsManager implements ISharedProps {
   @override
   Future<bool> allowPIP(bool allowPIP) async {
     return _prefs.setBool(ALLOW_PIP, allowPIP);
+  }
+
+  @override
+  bool? get allowPlayerQualityOnQualityChange =>
+      _prefs.getBool(SET_PLAYER_QUALITY_ON_QUALITY_CHANGE);
+
+  @override
+  Future<bool> setPlayerQualityOnQualityChange(bool playerQuality) {
+    return _prefs.setBool(SET_PLAYER_QUALITY_ON_QUALITY_CHANGE, playerQuality);
   }
 }

@@ -4,6 +4,7 @@ import 'package:flash_youtube_downloader/screens/settings/providers/settings_pro
 import 'package:flash_youtube_downloader/utils/countries.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:youtube_player/youtube_player.dart';
 
 import 'widgets/country_drop_down.dart';
 
@@ -15,7 +16,6 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
-
     final settingsProvider =
         watch(SettingsProvider.settingsChangeNotifierProvider);
     return CustomWillScope(
@@ -80,7 +80,7 @@ class SettingsPage extends ConsumerWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      "Show comments",
+                      "Show Comments",
                       style: theme.textTheme.bodyText1!.copyWith(
                         fontWeight: FontWeight.normal,
                       ),
@@ -124,6 +124,96 @@ class SettingsPage extends ConsumerWidget {
                       ),
                     ],
                   ),
+                ),
+              ),
+              const Divider(),
+              InkWell(
+                onTap: () {
+                  settingsProvider.setAllowSetPlayerQualityOnQualityChange(
+                    !settingsProvider.allowSetPlayerQualityOnQualityChange,
+                  );
+                },
+                child: SizedBox(
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Allow Set player quality from miniplayer",
+                            style: theme.textTheme.bodyText1!.copyWith(
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            "Allow to set player quality when user changes the quality from mini player.",
+                            style: theme.textTheme.caption,
+                          ),
+                        ],
+                      ),
+                      Switch(
+                        value: settingsProvider
+                            .allowSetPlayerQualityOnQualityChange,
+                        onChanged: (allowSetPlayerQualityOnQualityChange) {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Divider(),
+              SizedBox(
+                height: 70,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Defualt Player Quality",
+                          style: theme.textTheme.bodyText1!.copyWith(
+                            fontWeight: FontWeight.normal,
+                          ),
+                        ),
+                      ],
+                    ),
+                    DropdownButton<String>(
+                      onChanged: (playerQuality) {
+                        settingsProvider.setPlayerQuality(playerQuality!);
+                      },
+                      underline: const SizedBox(),
+                      dropdownColor: theme.scaffoldBackgroundColor,
+                      value: settingsProvider.playerQuality.qualityToString,
+                      items: YoutubePlayerVideoQuality.values
+                          .map(
+                            (e) => DropdownMenuItem<String>(
+                              value: e.qualityToString,
+                              child: SizedBox(
+                                width: 100,
+                                child: Flex(
+                                  direction: Axis.horizontal,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    SizedBox(
+                                      height: 18,
+                                      child: Text(
+                                        e.qualityToString,
+                                        style: theme.textTheme.bodyText1,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ],
                 ),
               ),
             ],
