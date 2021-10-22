@@ -16,6 +16,8 @@ class SharedPrefsManager implements ISharedProps {
   final DOWNLOADER_QUALITY = "download_quality";
   final PLAYER_QUALITY = "player_qaulity";
   final CONTENT_COUNTRY = "content_country";
+  final SHOW_COMMENTS = "show_comments";
+  final ALLOW_PIP = "allow_PIP";
 
   static late SharedPreferences _prefs;
 
@@ -57,4 +59,20 @@ class SharedPrefsManager implements ISharedProps {
 
   @override
   void dispose() {}
+
+  @override
+  Future<bool> toggleComments(bool showComments) async {
+    return _prefs.setBool(SHOW_COMMENTS, showComments);
+  }
+
+  @override
+  bool? get showComments => _prefs.getBool(SHOW_COMMENTS);
+
+  @override
+  bool? get allowPIPValue => _prefs.getBool(ALLOW_PIP);
+
+  @override
+  Future<bool> allowPIP(bool allowPIP) async {
+    return _prefs.setBool(ALLOW_PIP, allowPIP);
+  }
 }

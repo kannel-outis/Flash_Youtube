@@ -46,22 +46,24 @@ class DownloadChangeNotifier extends ChangeNotifier {
     late final Downloader downloader;
     if (!_downloaderListContainsDownloader(downloadItem.downloaderId)) {
       final whichStream = _whichMainStreamToDownload(
-          downloadItem.videoAudioStream,
-          downloadItem.audioOnlyStream,
-          downloadItem.videoOnlyStream)!;
+        downloadItem.videoAudioStream,
+        downloadItem.audioOnlyStream,
+        downloadItem.videoOnlyStream,
+      )!;
       downloader = Downloader(
-          downloaderId: downloadItem.downloaderId,
-          file: File(downloadItem.downloadPaths[0]!),
-          stream: whichStream,
-          start: downloadItem.downloadedBytes,
-          audioFile: downloadItem.downloadPaths[1] != null
-              ? File(downloadItem.downloadPaths[1]!)
-              : null,
-          audioStream: downloadItem.audioOnlyStream,
-          onCanceledCallback: (size, state) {
-            downloadItem.downloadState = state;
-            downloadItem.save();
-          });
+        downloaderId: downloadItem.downloaderId,
+        file: File(downloadItem.downloadPaths[0]!),
+        stream: whichStream,
+        start: downloadItem.downloadedBytes,
+        audioFile: downloadItem.downloadPaths[1] != null
+            ? File(downloadItem.downloadPaths[1]!)
+            : null,
+        audioStream: downloadItem.audioOnlyStream,
+        onCanceledCallback: (size, state) {
+          downloadItem.downloadState = state;
+          downloadItem.save();
+        },
+      );
     } else {
       downloader = _getDownloader(downloadItem.downloaderId);
     }
@@ -73,13 +75,18 @@ class DownloadChangeNotifier extends ChangeNotifier {
     _listOfCurrentDownloaders.remove(downloader);
   }
 
-  Future<void> downloadStream(YoutubeVideo video, HiveDownloadItem downloadItem,
-      {AudioOnlyStream? audioStream, bool continueDownload = false}) async {
+  Future<void> downloadStream(
+    YoutubeVideo video,
+    HiveDownloadItem downloadItem, {
+    AudioOnlyStream? audioStream,
+    bool continueDownload = false,
+  }) async {
     if (!continueDownload) await hiveHandler.saveNewDownloadItem(downloadItem);
     final whichStream = _whichMainStreamToDownload(
-        downloadItem.videoAudioStream,
-        downloadItem.audioOnlyStream,
-        downloadItem.videoOnlyStream)!;
+      downloadItem.videoAudioStream,
+      downloadItem.audioOnlyStream,
+      downloadItem.videoOnlyStream,
+    )!;
     final permission = await PermissionHandler.requestPermission();
     if (whichStream.contentSize == null) {
       await Future.value([
@@ -93,59 +100,63 @@ class DownloadChangeNotifier extends ChangeNotifier {
           await Directory('${dir!.path}/downloader/${video.videoName}/')
               .create(recursive: true);
       final file = File(
-          "${knockDir.path}${video.videoName}${whichStream.contentSize!.bytes}.${whichStream.format}");
+        "${knockDir.path}${video.videoName}${whichStream.contentSize!.bytes}.${whichStream.format}",
+      );
       final audioFile = audioStream == null
           ? null
           : File(
-              "${knockDir.path}${video.videoName}${audioStream.contentSize!.bytes}.${audioStream.format}");
+              "${knockDir.path}${video.videoName}${audioStream.contentSize!.bytes}.${audioStream.format}",
+            );
 
       downloadItem.downloadPaths = [file.path, audioFile?.path];
       downloadItem.save();
       final downloader = Downloader(
-          downloaderId: downloadItem.downloaderId,
-          file: file,
-          stream: whichStream,
-          start: downloadItem.downloadedBytes,
-          audioFile: audioFile,
-          audioStream: audioStream,
-          downloadProgressCallback: (size, progress, state) {
-            // add downloaded bytes here
-            downloadItem.downloadedBytes = size.bytes;
-            downloadItem.progress = progress;
-            downloadItem.downloadState = state;
-            downloadItem.save();
-            print(progress);
-          },
-          onFailedCallback: (message, state) {
-            print("$message 6");
-            downloadItem.downloadState = state;
-            downloadItem.save();
-          },
-          onCanceledCallback: (size, state) {
-            downloadItem.downloadedBytes = size.bytes;
-            downloadItem.downloadState = state;
-            downloadItem.save();
-            print(size.sizeToString);
-            print(state);
-          },
-          onCompleted: (videoFile, audioFile, size, state) {
-            print(videoFile.path);
-            print(audioFile?.path);
-            print(size.sizeToString);
-            downloadItem.downloadedBytes = size.bytes;
-            downloadItem.downloadState = state;
-            downloadItem.downloadPaths = [videoFile.path, audioFile?.path];
-            _onDownloadCompleted(downloadItem);
-            downloadItem.save();
-          });
+        downloaderId: downloadItem.downloaderId,
+        file: file,
+        stream: whichStream,
+        start: downloadItem.downloadedBytes,
+        audioFile: audioFile,
+        audioStream: audioStream,
+        downloadProgressCallback: (size, progress, state) {
+          downloadItem.downloadedBytes = size.bytes;
+          downloadItem.progress = progress;
+          downloadItem.downloadState = state;
+          downloadItem.save();
+        },
+        onFailedCallback: (message, state) {
+          print("$message 6");
+          downloadItem.downloadState = state;
+          downloadItem.save();
+        },
+        onCanceledCallback: (size, state) {
+          downloadItem.downloadedBytes = size.bytes;
+          downloadItem.downloadState = state;
+          downloadItem.save();
+          print(size.sizeToString);
+          print(state);
+        },
+        onCompleted: (videoFile, audioFile, size, state) {
+          print(videoFile.path);
+          print(audioFile?.path);
+          print(size.sizeToString);
+          downloadItem.downloadedBytes = size.bytes;
+          downloadItem.downloadState = state;
+          downloadItem.downloadPaths = [videoFile.path, audioFile?.path];
+          _onDownloadCompleted(downloadItem);
+          downloadItem.save();
+        },
+      );
       _listOfCurrentDownloaders = List.from(_listOfCurrentDownloaders)
         ..add(downloader);
       downloader.downloadStream();
     }
   }
 
-  Streams? _whichMainStreamToDownload(VideoAudioStream? videoAudioStream,
-      AudioOnlyStream? audioOnlyStream, VideoOnlyStream? videoOnlyStream) {
+  Streams? _whichMainStreamToDownload(
+    VideoAudioStream? videoAudioStream,
+    AudioOnlyStream? audioOnlyStream,
+    VideoOnlyStream? videoOnlyStream,
+  ) {
     if (audioOnlyStream == null && videoOnlyStream == null) {
       return videoAudioStream;
     } else if (videoAudioStream == null && videoOnlyStream != null) {

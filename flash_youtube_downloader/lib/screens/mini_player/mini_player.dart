@@ -11,6 +11,7 @@ import 'package:flash_youtube_downloader/components/modal_sheet.dart';
 import 'package:flash_youtube_downloader/screens/channel/channel_info.dart';
 import 'package:flash_youtube_downloader/screens/channel/providers/channel_providers.dart';
 import 'package:flash_youtube_downloader/screens/home/providers/home_providers.dart';
+import 'package:flash_youtube_downloader/screens/settings/providers/settings_provider.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -32,10 +33,10 @@ class MiniPlayerWidget extends HookWidget {
 
   Size _textSize(String text, TextStyle style) {
     final TextPainter textPainter = TextPainter(
-        text: TextSpan(text: text, style: style),
-        maxLines: 4,
-        textDirection: TextDirection.ltr)
-      ..layout();
+      text: TextSpan(text: text, style: style),
+      maxLines: 4,
+      textDirection: TextDirection.ltr,
+    )..layout();
     return textPainter.size;
   }
 
@@ -48,6 +49,8 @@ class MiniPlayerWidget extends HookWidget {
     final fullVideoInfo = useProvider(HomeProviders.videoStateFullInfo(null));
     final channelFuture =
         useProvider(ChannelProviders.channelInfoProvider(currentVideoState!));
+    final settingsProvider =
+        useProvider(SettingsProvider.settingsChangeNotifierProvider);
 
     final containerHeight = useState(0.0);
     final isExpanded = useState(false);
@@ -105,12 +108,23 @@ class MiniPlayerWidget extends HookWidget {
             child: YoutubePlayer(
               loadingWidth: 8,
               controller: controller!,
+              hideProgressThumb: _miniPlayerController.isClosed,
               colors: YoutubePlayerColors.auto(
                 barColor: Colors.white.withOpacity(.4),
                 bufferedColor: Colors.white.withOpacity(.8),
               ),
             ),
           ),
+        ),
+        bottomCollapseChild: Row(
+          children: const [
+            IconButton(
+              onPressed: null,
+              icon: Icon(
+                Icons.close,
+              ),
+            )
+          ],
         ),
         child: Material(
           child: Container(
@@ -147,9 +161,9 @@ class MiniPlayerWidget extends HookWidget {
                                 InkWell(
                                   onTap: () {
                                     final textSize = _textSize(
-                                        currentVideoState
-                                            .videoInfo!.description!,
-                                        theme.textTheme.subtitle2!);
+                                      currentVideoState.videoInfo!.description!,
+                                      theme.textTheme.subtitle2!,
+                                    );
                                     final countLines = (textSize.width /
                                             (Utils.blockWidth * 50))
                                         .ceil();
@@ -165,7 +179,9 @@ class MiniPlayerWidget extends HookWidget {
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.only(
-                                        left: 15, right: 15),
+                                      left: 15,
+                                      right: 15,
+                                    ),
                                     height: Utils.blockHeight * 4,
                                     child: Row(
                                       mainAxisAlignment:
@@ -324,10 +340,12 @@ class MiniPlayerWidget extends HookWidget {
                                             child: FadeInImage(
                                               fit: BoxFit.fill,
                                               image: CachedNetworkImageProvider(
-                                                  currentVideoState.videoInfo!
-                                                      .uploaderAvatarUrl),
+                                                currentVideoState.videoInfo!
+                                                    .uploaderAvatarUrl,
+                                              ),
                                               placeholder: MemoryImage(
-                                                  Utils.transparentImage),
+                                                Utils.transparentImage,
+                                              ),
                                             ),
                                           ),
                                         ),
@@ -366,7 +384,8 @@ class MiniPlayerWidget extends HookWidget {
                                                           ChannelInfo?>(
                                                     future: ChannelProviders
                                                         .channelInfoProvider(
-                                                            currentVideoState),
+                                                      currentVideoState,
+                                                    ),
                                                   ),
                                                 )
                                               else
@@ -376,7 +395,8 @@ class MiniPlayerWidget extends HookWidget {
                                                       .textTheme
                                                       .subtitle1!
                                                       .copyWith(
-                                                          color: Colors.grey),
+                                                        color: Colors.grey,
+                                                      ),
                                                 ),
                                             ],
                                           ),
@@ -397,7 +417,8 @@ class MiniPlayerWidget extends HookWidget {
                                           style: {
                                             "*": Style(
                                               fontSize: FontSize(
-                                                  Utils.blockWidth * 2.6),
+                                                Utils.blockWidth * 2.6,
+                                              ),
                                               fontWeight: FontWeight.bold,
                                               // color: Colors.white,
                                             ),
@@ -406,7 +427,8 @@ class MiniPlayerWidget extends HookWidget {
                                       : Text(
                                           currentVideoState
                                               .videoInfo!.description!,
-                                          style: theme.textTheme.subtitle2),
+                                          style: theme.textTheme.subtitle2,
+                                        ),
                                 )
                               ],
                             ),
@@ -426,36 +448,42 @@ class MiniPlayerWidget extends HookWidget {
                           ),
                         ),
                         const SizedBox(height: 15),
-                        Container(
-                          child: currentVideoState.videoInfo!.comments == null
-                              ? useProvider(
-                                      MiniPlayerProviders.commentsprovider(
-                                          currentVideoState.videoInfo!))
-                                  .when(
-                                  data: (data) => const SizedBox(),
-                                  loading: () => const Center(
-                                    child: CustomCircularProgressIndicator(),
-                                  ),
-                                  error: (o, s) {
-                                    log(s.toString());
-                                    return CustomErrorWidget<Comments?>(
+                        if (!settingsProvider.showComments)
+                          const SizedBox()
+                        else
+                          Container(
+                            child: currentVideoState.videoInfo!.comments == null
+                                ? useProvider(
+                                    MiniPlayerProviders.commentsprovider(
+                                      currentVideoState.videoInfo!,
+                                    ),
+                                  ).when(
+                                    data: (data) => const SizedBox(),
+                                    loading: () => const Center(
+                                      child: CustomCircularProgressIndicator(),
+                                    ),
+                                    error: (o, s) {
+                                      log(s.toString());
+                                      return CustomErrorWidget<Comments?>(
                                         future: MiniPlayerProviders
                                             .commentsprovider(
-                                                currentVideoState.videoInfo!));
-                                  },
-                                )
-                              : Column(
-                                  children: currentVideoState
-                                      .videoInfo!.comments!.growableListItems
-                                      .map(
-                                        (e) => CommentTile(
-                                          _miniPlayerController,
-                                          e: e,
+                                          currentVideoState.videoInfo!,
                                         ),
-                                      )
-                                      .toList(),
-                                ),
-                        ),
+                                      );
+                                    },
+                                  )
+                                : Column(
+                                    children: currentVideoState
+                                        .videoInfo!.comments!.growableListItems
+                                        .map(
+                                          (e) => CommentTile(
+                                            _miniPlayerController,
+                                            e: e,
+                                          ),
+                                        )
+                                        .toList(),
+                                  ),
+                          ),
                       ],
                     ),
                   ),

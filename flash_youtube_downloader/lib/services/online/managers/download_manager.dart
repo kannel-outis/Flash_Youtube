@@ -83,13 +83,16 @@ class DownloadManager implements IDownloadManager {
 
   double get _progress {
     if (audioStream != null) {
-      return double.tryParse(((downloadedBytes /
-                  stream.combineWithSize(audioStream!.contentSize!).bytes) *
-              100)
-          .toStringAsFixed(1))!;
+      return double.tryParse(
+        ((downloadedBytes /
+                    stream.combineWithSize(audioStream!.contentSize!).bytes) *
+                100)
+            .toStringAsFixed(1),
+      )!;
     }
-    return double.tryParse(((downloadedBytes / stream.contentSize!.bytes) * 100)
-        .toStringAsFixed(1))!;
+    return double.tryParse(
+      ((downloadedBytes / stream.contentSize!.bytes) * 100).toStringAsFixed(1),
+    )!;
   }
 
   ContentSize _contentSize(int bytes) {
@@ -113,8 +116,10 @@ class DownloadManager implements IDownloadManager {
       /// that means that only the audio needs downloading
       /// this is needed for resuming a download either from a failed state or a paused state
       if (downloadedBytes >= streamSize.bytes) {
-        final bytesStream = Extractor.getStream(audioStream!,
-            start: downloadedBytes - stream.contentSize!.bytes);
+        final bytesStream = Extractor.getStream(
+          audioStream!,
+          start: downloadedBytes - stream.contentSize!.bytes,
+        );
 
         await for (final data in bytesStream) {
           downloadedBytes += data.length;
@@ -124,7 +129,10 @@ class DownloadManager implements IDownloadManager {
           }
 
           downloadProgressCallback?.call(
-              _contentSize(downloadedBytes), "$progress%", downloadState);
+            _contentSize(downloadedBytes),
+            "$progress%",
+            downloadState,
+          );
           _audioOutput?.add(data);
         }
       } else {
@@ -135,7 +143,10 @@ class DownloadManager implements IDownloadManager {
             return false;
           }
           downloadProgressCallback?.call(
-              _contentSize(downloadedBytes), "$progress%", downloadState);
+            _contentSize(downloadedBytes),
+            "$progress%",
+            downloadState,
+          );
           _output.add(data);
         }
 
@@ -150,7 +161,10 @@ class DownloadManager implements IDownloadManager {
             }
 
             downloadProgressCallback?.call(
-                _contentSize(downloadedBytes), "$progress%", downloadState);
+              _contentSize(downloadedBytes),
+              "$progress%",
+              downloadState,
+            );
             _audioOutput?.add(data);
           }
         }
@@ -158,7 +172,7 @@ class DownloadManager implements IDownloadManager {
 
       await _closeOutputStreams(true);
       return true;
-    } catch (e, s) {
+    } catch (e) {
       _downloading = false;
       _downloadFailed = true;
       onFailedCallback?.call(e.toString(), downloadState);

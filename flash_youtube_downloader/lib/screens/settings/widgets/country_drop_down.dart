@@ -22,7 +22,7 @@ class CountryDropDown extends StatelessWidget {
           dropdownColor: theme.scaffoldBackgroundColor,
           value: value ?? listOfCodes![0],
           underline: const SizedBox(),
-          elevation: 0,
+          // elevation: 0,
           items: List.generate(
             listOfCodes!.length,
             (index) {

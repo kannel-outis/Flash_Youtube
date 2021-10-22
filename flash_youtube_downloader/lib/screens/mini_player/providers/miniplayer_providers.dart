@@ -8,10 +8,12 @@ class MiniPlayerProviders {
   static final miniPlayerC =
       ChangeNotifierProvider<MiniPlayerController>((ref) {
     return MiniPlayerController(
-        minHeight: Utils.blockHeight * 13.5,
-        maxHeight: Utils.blockHeight * 100,
-        startOpen: false,
-        animationDuration: const Duration(milliseconds: 300));
+      minHeight: Utils.blockHeight * 13.5,
+      maxHeight: Utils.blockHeight * 100,
+      landScapeMinHeight: Utils.blockHeight * 17,
+      startOpen: false,
+      animationDuration: const Duration(milliseconds: 200),
+    );
   });
   static final commentsprovider =
       FutureProvider.family<Comments?, YoutubeVideoInfo>((ref, videoInfo) {

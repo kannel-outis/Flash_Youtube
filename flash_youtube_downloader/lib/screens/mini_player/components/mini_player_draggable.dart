@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class MiniPlayer extends StatefulWidget {
@@ -9,12 +10,14 @@ class MiniPlayer extends StatefulWidget {
   final Widget? playerChild;
   final Widget? collapseChild;
   final Function(double)? percentage;
+  final Widget? bottomCollapseChild;
   const MiniPlayer({
     Key? key,
     this.child,
     this.percentage,
     this.playerChild,
     this.collapseChild,
+    this.bottomCollapseChild,
     required this.miniPlayerController,
   }) : super(key: key);
 
@@ -31,6 +34,7 @@ class _MiniPlayerState extends State<MiniPlayer>
     super.initState();
 
     widget.miniPlayerController._playerState = this;
+    widget.miniPlayerController._setInitialized();
     final range = widget.miniPlayerController.maxHeight -
         widget.miniPlayerController.minHeight;
     final _value = () {
@@ -47,8 +51,9 @@ class _MiniPlayerState extends State<MiniPlayer>
       value: _value,
     )..addListener(() {
         final value = _calCulateSizeWithController(
-            widget.miniPlayerController.minHeight,
-            widget.miniPlayerController.maxHeight);
+          widget.miniPlayerController.minHeight,
+          widget.miniPlayerController.maxHeight,
+        );
         final dragRange = value - widget.miniPlayerController.minHeight;
         final percentage = (dragRange * 100) / range;
         widget.percentage?.call(percentage);
@@ -67,30 +72,57 @@ class _MiniPlayerState extends State<MiniPlayer>
     super.dispose();
   }
 
+  double calcBottomAlignment(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    final bottomNavBarHeightPercent =
+        (kBottomNavigationBarHeight / 100) * height;
+    // final alignmentPercent =
+    return (1 / bottomNavBarHeightPercent) * 100;
+  }
+
+  double calcBottomAlignmentToOneDP(BuildContext context) {
+    return double.parse((1 - calcBottomAlignment(context)).toStringAsFixed(1));
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isPotrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     return Container(
-      alignment: const Alignment(.85, .85),
+      alignment: Alignment(
+        .85,
+        calcBottomAlignmentToOneDP(context),
+      ),
+      // alignment:
+      //     isPotrait ? const Alignment(.85, .85) : const Alignment(.85, .65),
       child: AnimatedBuilder(
         animation: _controller,
         builder: (context, child) {
           return Container(
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              border: Border.all(color: Colors.white, width: 1.5),
+              border: Border.all(
+                color: Colors.white.withOpacity(1 - _controller.value),
+                width: 1.5,
+              ),
             ),
             height: _calCulateSizeWithController(
-                widget.miniPlayerController.minHeight,
-                widget.miniPlayerController.maxHeight),
+              isPotrait
+                  ? widget.miniPlayerController.minHeight
+                  : widget.miniPlayerController.landScapeMinHeight,
+              widget.miniPlayerController.maxHeight,
+            ),
             width: max(
-                _calCulateSizeWithController(
-                  (MediaQuery.of(context).size.width / 100) * 50,
-                  MediaQuery.of(context).size.width,
-                  // 6.5
-                  // valueMultiplier: 4.5,
-                  valueMultiplier: 2.0,
-                ),
-                0),
+              _calCulateSizeWithController(
+                (MediaQuery.of(context).size.width / 100) *
+                    (isPotrait ? 50 : 30),
+                MediaQuery.of(context).size.width,
+                // 6.5
+                // valueMultiplier: 4.5,
+                valueMultiplier: isPotrait ? 2.0 : 1.5,
+              ),
+              0,
+            ),
             // color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,11 +133,12 @@ class _MiniPlayerState extends State<MiniPlayer>
                       child: Stack(
                         children: [
                           Container(
-                              constraints: BoxConstraints(
-                                minHeight:
-                                    widget.miniPlayerController.minHeight - 3.0,
-                              ),
-                              child: widget.playerChild ?? const SizedBox()),
+                            // constraints: BoxConstraints(
+                            //   minHeight:
+                            //       widget.miniPlayerController.minHeight - 15,
+                            // ),
+                            child: widget.playerChild ?? const SizedBox(),
+                          ),
                           GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onVerticalDragEnd: (e) {
@@ -125,10 +158,21 @@ class _MiniPlayerState extends State<MiniPlayer>
                   ],
                 ),
                 Expanded(
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 500),
-                    opacity: _controller.value >= 0.8 ? 1 : 0,
-                    child: widget.child ?? const SizedBox(),
+                  child: Stack(
+                    children: [
+                      Offstage(
+                        offstage: _controller.value <= 0.5,
+                        child: widget.child ?? const SizedBox(),
+                      ),
+                      // if (_controller.value <= 0.2)
+                      //   Material(
+                      //     child: SizedBox(
+                      //       height: double.infinity,
+                      //       width: double.infinity,
+                      //       child: widget.bottomCollapseChild,
+                      //     ),
+                      //   )
+                    ],
                   ),
                 ),
               ],
@@ -139,8 +183,11 @@ class _MiniPlayerState extends State<MiniPlayer>
     );
   }
 
-  double _calCulateSizeWithController(double minSize, double maxSize,
-      {double valueMultiplier = 1}) {
+  double _calCulateSizeWithController(
+    double minSize,
+    double maxSize, {
+    double valueMultiplier = 1,
+  }) {
     final result =
         lerpDouble(minSize, maxSize, _controller.value * valueMultiplier)!;
     return result;
@@ -162,12 +209,14 @@ class _MiniPlayerState extends State<MiniPlayer>
 class MiniPlayerController extends ChangeNotifier {
   final double minHeight;
   final double maxHeight;
+  final double landScapeMinHeight;
   final bool? startOpen;
   final Duration animationDuration;
 
   MiniPlayerController({
     required this.minHeight,
     required this.maxHeight,
+    required this.landScapeMinHeight,
     this.startOpen,
     this.animationDuration = const Duration(seconds: 1),
   }) : _isClosed = startOpen!;
@@ -175,14 +224,25 @@ class MiniPlayerController extends ChangeNotifier {
   _MiniPlayerState? _playerState;
 
   factory MiniPlayerController.nil() {
-    return MiniPlayerController(minHeight: 0, maxHeight: 0, startOpen: true);
+    return MiniPlayerController(
+      minHeight: 0,
+      maxHeight: 0,
+      startOpen: true,
+      landScapeMinHeight: 0,
+    );
   }
 
+  bool _initialized = false;
+  bool get initialized => _initialized;
   @protected
   _MiniPlayerState? get playerState => _playerState;
   // ignore: avoid_setters_without_getters
   set setPlayerState(_MiniPlayerState? _state) {
     _playerState = _state;
+  }
+
+  void _setInitialized() {
+    _initialized = true;
   }
 
   bool? _isClosed;

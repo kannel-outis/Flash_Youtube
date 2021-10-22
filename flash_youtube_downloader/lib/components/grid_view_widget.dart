@@ -44,6 +44,8 @@ class GridViewWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
+    final isPotrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
     if (show) {
       return SliverGrid(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -77,6 +79,7 @@ class GridViewWidget extends ConsumerWidget {
         crossAxisCount: gridCount,
         crossAxisSpacing: 15,
         childAspectRatio: maxWidth / heightWithMaxHeight,
+        mainAxisExtent: !isPotrait ? 350 : null,
       ),
       itemBuilder: (context, index) {
         return SizedBox(

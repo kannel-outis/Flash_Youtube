@@ -7,10 +7,12 @@ class CustomWillScope extends ConsumerWidget {
   final Widget child;
   final bool isHome;
   final Function(bool)? callBack;
+  final PageController? pageController;
   // final MiniPlayerController controller;
   const CustomWillScope({
     Key? key,
     required this.child,
+    this.pageController,
     this.isHome = false,
     // required this.controller,
     // required this.isSearch,
@@ -23,11 +25,20 @@ class CustomWillScope extends ConsumerWidget {
     final homeStateProvider = reader(HomeProviders.homeProvider);
     return WillPopScope(
       onWillPop: () async {
-        if (controller.isClosed) {
+        print(controller.initialized);
+        print("object");
+        if (controller.isClosed || !controller.initialized) {
           if (homeStateProvider.isSearch && isHome) {
             homeStateProvider.clear();
             return false;
           } else {
+            if (pageController != null && pageController!.page == 1) {
+              print("someThing");
+              reader(HomeProviders.pageStateProvider(pageController!).notifier)
+                  .setPage = 0;
+              pageController?.jumpToPage(0);
+              return false;
+            }
             return true;
           }
         } else {

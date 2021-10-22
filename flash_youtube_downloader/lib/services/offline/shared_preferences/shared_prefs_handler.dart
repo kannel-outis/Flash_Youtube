@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_positional_boolean_parameters
+
 import 'dart:convert';
 
 import 'package:flash_youtube_downloader/models/content_country.dart';
@@ -26,6 +28,18 @@ class SharedPrefHandler extends ManagerHandler<ISharedProps> {
   Future<bool> setPlayerQuality(String value) async {
     return manager!.setPlayerQuality(value);
   }
+
+  Future<bool> toggleComments(bool showComments) async {
+    return manager!.toggleComments(showComments);
+  }
+
+  Future<bool> allowPIP(bool allowPIP) async {
+    return manager!.allowPIP(allowPIP);
+  }
+
+  bool? get allowPIPValue => manager!.allowPIPValue;
+
+  bool? get showComments => manager!.showComments;
 
   ContentCountry? get contentCountry => manager!.contentCountry;
 

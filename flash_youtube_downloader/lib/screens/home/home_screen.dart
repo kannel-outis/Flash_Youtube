@@ -11,7 +11,6 @@ import 'package:flash_youtube_downloader/screens/search/search_page.dart';
 import 'package:flash_youtube_downloader/screens/settings/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '/utils/utils.dart';
@@ -35,6 +34,7 @@ class HomeScreen extends HookWidget {
     return Scaffold(
       body: CustomWillScope(
         isHome: true,
+        pageController: pageController,
         child: Scaffold(
           appBar: AppBar(
             backgroundColor: theme.scaffoldBackgroundColor,
