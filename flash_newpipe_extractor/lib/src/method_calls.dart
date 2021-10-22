@@ -36,63 +36,72 @@ class FlashMethodCalls {
         _listOfVideo.add(yVideo);
       });
       return _listOfVideo;
-    } catch (e) {
-      return null;
+    } on PlatformException catch (e) {
+      throw FlashException(e.message ?? e.code);
     }
   }
 
   static Future<YoutubeVideoInfo> getVideoInfoFromUrl(String url) async {
-    final result = await _channel.invokeMethod(
-      "getVideoInfoFromUrl",
-      {
-        "url": url,
-      },
-    );
-    final Map<String, Map<int, Map<String, dynamic>>> resultMap =
-        Utils.convertToType(result);
-    final fullinfo = YoutubeVideoInfo.fromMap(resultMap["fullVideoInfo"]![0]!);
-    resultMap["audioStreamsMap"]!.forEach((key, value) {
-      final stream = AudioOnlyStream.fromMap(value);
-      fullinfo.addAudioOnlyStream(stream);
-    });
+    try {
+      final result = await _channel.invokeMethod(
+        "getVideoInfoFromUrl",
+        {
+          "url": url,
+        },
+      );
+      final Map<String, Map<int, Map<String, dynamic>>> resultMap =
+          Utils.convertToType(result);
+      final fullinfo =
+          YoutubeVideoInfo.fromMap(resultMap["fullVideoInfo"]![0]!);
+      resultMap["audioStreamsMap"]!.forEach((key, value) {
+        final stream = AudioOnlyStream.fromMap(value);
+        fullinfo.addAudioOnlyStream(stream);
+      });
 
-    resultMap["videoOnlyStream"]!.forEach((key, value) {
-      final stream = VideoOnlyStream.fromMap(value);
-      fullinfo.addVideoOnlyStream(stream);
-    });
+      resultMap["videoOnlyStream"]!.forEach((key, value) {
+        final stream = VideoOnlyStream.fromMap(value);
+        fullinfo.addVideoOnlyStream(stream);
+      });
 
-    resultMap["videoAudioStream"]!.forEach((key, value) {
-      final stream = VideoAudioStream.fromMap(value);
-      fullinfo.addVideoAudioStream(stream);
-    });
+      resultMap["videoAudioStream"]!.forEach((key, value) {
+        final stream = VideoAudioStream.fromMap(value);
+        fullinfo.addVideoAudioStream(stream);
+      });
 
-    resultMap["relatedVideos"]!.forEach((key, value) {
-      final video = YoutubeVideo.fromMap(value);
-      fullinfo.addRelatedVideo(video);
-    });
-    return fullinfo;
+      resultMap["relatedVideos"]!.forEach((key, value) {
+        final video = YoutubeVideo.fromMap(value);
+        fullinfo.addRelatedVideo(video);
+      });
+      return fullinfo;
+    } on PlatformException catch (e) {
+      throw FlashException(e.message ?? e.code);
+    }
   }
 
   static Future<ChannelInfo> getChannelInfo(String channelUrl) async {
-    final result = await _channel.invokeMethod(
-      "getChannelInfo",
-      {
-        "channelUrl": channelUrl,
-      },
-    );
-    if (result["channelInfo"] == null) {
-      throw FlashException("Content Not Available");
-    }
-    final Map<String, Map<int, Map<String, dynamic>>> _resultMap =
-        Utils.convertToType(result);
+    try {
+      final result = await _channel.invokeMethod(
+        "getChannelInfo",
+        {
+          "channelUrl": channelUrl,
+        },
+      );
+      if (result["channelInfo"] == null) {
+        throw FlashException("Content Not Available");
+      }
+      final Map<String, Map<int, Map<String, dynamic>>> _resultMap =
+          Utils.convertToType(result);
 
-    final channel = ChannelInfo.fromMap(_resultMap["channelInfo"]![0]!);
-    channel.setPage =
-        Page.fromMap(Map.from(_resultMap["channelInfo"]![0]!["nextPageInfo"]));
-    _resultMap["channelFirstPageVideos"]!.forEach((key, value) {
-      channel.addToGrowableList(YoutubeVideo.fromMap(value));
-    });
-    return channel;
+      final channel = ChannelInfo.fromMap(_resultMap["channelInfo"]![0]!);
+      channel.setPage = Page.fromMap(
+          Map.from(_resultMap["channelInfo"]![0]!["nextPageInfo"]));
+      _resultMap["channelFirstPageVideos"]!.forEach((key, value) {
+        channel.addToGrowableList(YoutubeVideo.fromMap(value));
+      });
+      return channel;
+    } on PlatformException catch (e) {
+      throw FlashException(e.message ?? e.code);
+    }
   }
 
   /// commemts
@@ -145,16 +154,6 @@ class FlashMethodCalls {
             _growable.type == "comments" ? CommentInfo.fromMap(value) : _item);
       },
     );
-    // if (_resultMap.containsKey("playList")) {
-    //   _resultMap["playList"]!.forEach((key, value) {
-    //     _growable.addToGrowableList(Playlist.fromMap(value));
-    //   });
-    // }
-    // if (_resultMap.containsKey("channel")) {
-    //   _resultMap["channel"]!.forEach((key, value) {
-    //     _growable.addToGrowableList(Channel.fromMap(value));
-    //   });
-    // }
   }
 
   // search
@@ -175,12 +174,7 @@ class FlashMethodCalls {
         Page.fromMap(Map<String, dynamic>.from(_resultMap["nextPageInfo"]));
     final _videoMap = Map<int, dynamic>.from(_resultMap["results"])
         .map((key, value) => MapEntry(key, Map<String, dynamic>.from(value)));
-    // final Map<int, dynamic> _channelMap =
-    //     Map<int, dynamic>.from(_resultMap["channels"]);
-    // final Map<int, dynamic> _playlistMap =
-    //     Map<int, dynamic>.from(_resultMap["playLists"]);
     _videoMap.forEach((key, value) {
-      // final _video = YoutubeVideo.fromMap(Map<String, dynamic>.from(value));
       InfoItem _item;
       if (value.containsKey("channelUrl")) {
         _item = Channel.fromMap(value);
@@ -191,14 +185,6 @@ class FlashMethodCalls {
       }
       search.addToGrowableList(_item);
     });
-    // _channelMap.forEach((key, value) {
-    //   final _channel = Channel.fromMap(Map<String, dynamic>.from(value));
-    //   search.addToGrowableList(_channel);
-    // });
-    // _playlistMap.forEach((key, value) {
-    //   final _playList = Playlist.fromMap(Map<String, dynamic>.from(value));
-    //   search.addToGrowableList(_playList);
-    // });
     search.setPage = _page;
     return search;
   }
