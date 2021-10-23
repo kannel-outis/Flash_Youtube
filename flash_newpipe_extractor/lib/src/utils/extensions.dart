@@ -3,17 +3,17 @@ import 'enums.dart';
 extension ToQualityExt on String {
   Quality get toQuality {
     switch (this) {
-      case "HD  -  1080p":
+      case "hd1080":
         return Quality.hd1080;
-      case "HD  -  720p":
+      case "hd720":
         return Quality.hd720;
-      case "Large  -  480p":
+      case "large":
         return Quality.large;
-      case "Medium  -  360p":
+      case "medium":
         return Quality.medium;
-      case "Small  -  240p":
+      case "small":
         return Quality.small;
-      case "Tiny  -  144p":
+      case "tiny":
         return Quality.tiny;
       default:
         return Quality.hd2k;
@@ -25,17 +25,17 @@ extension QualityToString on Quality {
   String get qualityToString {
     switch (this) {
       case Quality.hd1080:
-        return "HD  -  1080p";
+        return "1080p";
       case Quality.hd720:
-        return "HD  -  720p";
+        return "720p";
       case Quality.large:
-        return "Large  -  480p";
+        return "480p";
       case Quality.medium:
-        return "Medium  -  360p";
+        return "360p";
       case Quality.small:
-        return "Small  -  240p";
+        return "240p";
       case Quality.tiny:
-        return "Tiny  -  144p";
+        return "144p";
       default:
         return "2K";
     }
