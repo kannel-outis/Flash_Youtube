@@ -19,6 +19,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import org.schabi.newpipe.extractor.NewPipe
 import org.schabi.newpipe.extractor.Page
+import org.schabi.newpipe.extractor.exceptions.ExtractionException
 import org.schabi.newpipe.extractor.localization.ContentCountry
 import org.schabi.newpipe.extractor.localization.Localization
 import java.util.concurrent.ExecutorService
@@ -51,83 +52,135 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
     val executor: ExecutorService = Executors.newSingleThreadExecutor();
     val  handler = Handler(Looper.getMainLooper());
 
-    executor.execute(Runnable {
-      when {
+      executor.execute(Runnable {
+        when {
           call.method.equals("getTrending") -> {
-            val listOfTrendingVideos = YoutubeExtractors.getTrendingPage()
-            handler.post {
-              result.success(listOfTrendingVideos)
+
+            try{
+              val listOfTrendingVideos = YoutubeExtractors.getTrendingPage()
+              handler.post {
+                result.success(listOfTrendingVideos)
+              }
+            }catch(e: ExtractionException){
+              handler.post {
+                result.error("404", e.message, "")
+              }
+
             }
           }
           call.method.equals("getVideoInfoFromUrl") -> {
-            val url = call.argument<String>("url")
-            val fullVideoInfo = YoutubeVideoInfoExtractor.getVideoInfoFromUrl(url!!)
-            handler.post {
-              result.success(fullVideoInfo)
+            try{
+              val url = call.argument<String>("url")
+              val fullVideoInfo = YoutubeVideoInfoExtractor.getVideoInfoFromUrl(url!!)
+              handler.post {
+                result.success(fullVideoInfo)
+              }
+            }catch(e: ExtractionException){
+              handler.post {
+                result.error("404", e.message, "")
+              }
             }
           }
 
-        call.method.equals("getChannelInfo")->{
-          val channelUrl = call.argument<String>("channelUrl")
-          val channelInfo = YoutubeExtractors.getChannelInfo(channelUrl!!)
-          handler.post {
-            result.success(channelInfo)
+          call.method.equals("getChannelInfo")->{
+            try{
+              val channelUrl = call.argument<String>("channelUrl")
+              val channelInfo = YoutubeExtractors.getChannelInfo(channelUrl!!)
+              handler.post {
+                result.success(channelInfo)
+              }
+            }catch(e: ExtractionException){
+              handler.post {
+                result.error("404", e.message, "")
+              }
+            }
           }
-        }
-        call.method.equals("getComments")->{
-          val url = call.argument<String>("url")
-          val comments = YoutubeVideoInfoExtractor.getCommentsFromUrl(url!!)
-          handler.post {
-            result.success(comments)
+          call.method.equals("getComments")->{
+            try{
+              val url = call.argument<String>("url")
+              val comments = YoutubeVideoInfoExtractor.getCommentsFromUrl(url!!)
+              handler.post {
+                result.success(comments)
+              }
+            }catch(e: ExtractionException){
+              handler.post {
+                result.error("404", e.message, "")
+              }
+            }
           }
-        }
-        call.method.equals("getChannelNextPageItems")->{
-          val value = call.argument<String>("value")
-          val type = call.argument<String>("Type")
-          val pageUrl = call.argument<Map<String, Any>>("pageInfo")!!["url"] as String?
-          val body = call.argument<Map<String, Any>>("pageInfo")!!["body"] as ByteArray?
-          val id = call.argument<Map<String, Any>>("pageInfo")!!["id"] as String?
-          val ids = call.argument<Map<String, Any>>("pageInfo")!!["ids"] as List<String>?
+          call.method.equals("getChannelNextPageItems")->{
+            try{
+              val value = call.argument<String>("value")
+              val type = call.argument<String>("Type")
+              val pageUrl = call.argument<Map<String, Any>>("pageInfo")!!["url"] as String?
+              val body = call.argument<Map<String, Any>>("pageInfo")!!["body"] as ByteArray?
+              val id = call.argument<Map<String, Any>>("pageInfo")!!["id"] as String?
+              val ids = call.argument<Map<String, Any>>("pageInfo")!!["ids"] as List<String>?
 //          val isComment = call.argument<Boolean>("isComments")
 
-          val newItems = YoutubeExtractors.getNextPageItems(
-                  page = Page(pageUrl, id, ids, null, body),
-                  type = type!!,
-                  value = value!!
-          )
-          handler.post {
-            result.success(newItems)
+              val newItems = YoutubeExtractors.getNextPageItems(
+                      page = Page(pageUrl, id, ids, null, body),
+                      type = type!!,
+                      value = value!!
+              )
+              handler.post {
+                result.success(newItems)
+              }
+            }catch(e: ExtractionException){
+              handler.post {
+                result.error("404", e.message, "")
+              }
+            }
           }
-        }
 
-        call.method.equals("getSearchSuggestions")->{
-          val query = call.argument<String>("query")
-          val suggestions = YoutubeExtractors.getQuerySuggestions(query!!)
-          handler.post {
-            result.success(suggestions)
+          call.method.equals("getSearchSuggestions")->{
+            try{
+              val query = call.argument<String>("query")
+              val suggestions = YoutubeExtractors.getQuerySuggestions(query!!)
+              handler.post {
+                result.success(suggestions)
+              }
+            }catch(e: ExtractionException){
+              handler.post {
+                result.error("404", e.message, "")
+              }
+            }
           }
-        }
-        call.method.equals("getSearchResults")->{
-          val query = call.argument<String>("query")
-          val searchResult = YoutubeExtractors.getSearchResults(query!!)
-          handler.post {
-            result.success(searchResult)
+          call.method.equals("getSearchResults")->{
+            try{
+              val query = call.argument<String>("query")
+              val searchResult = YoutubeExtractors.getSearchResults(query!!)
+              handler.post {
+                result.success(searchResult)
+              }
+            }catch(e: ExtractionException){
+              handler.post {
+                result.error("404", e.message, "")
+              }
+            }
           }
-        }
-        call.method.equals("getPlaylistInfo")->{
-          val url = call.argument<String>("url")
-          val info = YoutubeExtractors.getPlaylistInfo(url!!)
-          handler.post {
-            result.success(info)
+          call.method.equals("getPlaylistInfo")->{
+            try{
+              val url = call.argument<String>("url")
+              val info = YoutubeExtractors.getPlaylistInfo(url!!)
+              handler.post {
+                result.success(info)
+              }
+            }catch(e: ExtractionException){
+              handler.post {
+                result.error("404", e.message, "")
+              }
+            }
           }
-        }
           else -> {
             handler.post(Runnable {
               result.notImplemented()
             })
           }
-      }
-    })
+        }
+      })
+
+
 
   }
 

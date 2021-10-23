@@ -10,6 +10,7 @@ import 'package:flash_youtube_downloader/components/info_icon.dart';
 import 'package:flash_youtube_downloader/components/modal_sheet.dart';
 import 'package:flash_youtube_downloader/screens/channel/channel_info.dart';
 import 'package:flash_youtube_downloader/screens/channel/providers/channel_providers.dart';
+import 'package:flash_youtube_downloader/screens/home/components/search_bar.dart';
 import 'package:flash_youtube_downloader/screens/home/providers/home_providers.dart';
 import 'package:flash_youtube_downloader/screens/settings/providers/settings_provider.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
@@ -51,6 +52,7 @@ class MiniPlayerWidget extends HookWidget {
         useProvider(ChannelProviders.channelInfoProvider(currentVideoState!));
     final settingsProvider =
         useProvider(SettingsProvider.settingsChangeNotifierProvider);
+    final searchFocusNode = useProvider(SearchBar.focusNode);
 
     final containerHeight = useState(0.0);
     final isExpanded = useState(false);
@@ -99,6 +101,9 @@ class MiniPlayerWidget extends HookWidget {
         miniPlayerController: _miniPlayerController,
         percentage: (per) {
           // print(per);
+          if (searchFocusNode.hasFocus && per == 100.0) {
+            searchFocusNode.unfocus();
+          }
         },
         playerChild: Material(
           child: Container(
@@ -144,6 +149,7 @@ class MiniPlayerWidget extends HookWidget {
                         child: CustomCircularProgressIndicator(),
                       ),
                       error: (o, s) => CustomErrorWidget<YoutubeVideoInfo>(
+                        obj: o,
                         future: HomeProviders.videoStateFullInfo(null),
                       ),
                     ),
@@ -387,6 +393,7 @@ class MiniPlayerWidget extends HookWidget {
                                                   error: (obj, stk) =>
                                                       CustomErrorWidget<
                                                           ChannelInfo?>(
+                                                    obj: obj,
                                                     future: ChannelProviders
                                                         .channelInfoProvider(
                                                       currentVideoState,
@@ -470,6 +477,7 @@ class MiniPlayerWidget extends HookWidget {
                                     error: (o, s) {
                                       log(s.toString());
                                       return CustomErrorWidget<Comments?>(
+                                        obj: o,
                                         future: MiniPlayerProviders
                                             .commentsprovider(
                                           currentVideoState.videoInfo!,

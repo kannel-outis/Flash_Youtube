@@ -60,6 +60,11 @@ class __TrendingState extends State<_Trending>
 
         return futureTrendingVideos.when(
           data: (data) {
+            if (data == null || data.isEmpty) {
+              return const Center(
+                child: Text("EMir dilony"),
+              );
+            }
             return Padding(
               padding: EdgeInsets.only(
                 top: Utils.blockWidth * 2.0,
@@ -67,11 +72,12 @@ class __TrendingState extends State<_Trending>
                 right: Utils.blockWidth * 2.0,
               ),
               child: GridViewWidget(
-                  gridCount: gridCount,
-                  maxWidth: maxWidth,
-                  data: data!,
-                  heightWithMaxHeight: heightWithMaxHeight,
-                  miniPlayerController: widget._miniPlayerController),
+                gridCount: gridCount,
+                maxWidth: maxWidth,
+                data: data,
+                heightWithMaxHeight: heightWithMaxHeight,
+                miniPlayerController: widget._miniPlayerController,
+              ),
             );
           },
           loading: () {
@@ -80,8 +86,14 @@ class __TrendingState extends State<_Trending>
             );
           },
           error: (obj, stackTrace) {
-            return const Center(
-              child: Text("Something Went Wrong....."),
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CustomErrorWidget<List<YoutubeVideo>?>(
+                  obj: obj,
+                  future: HomeProviders.trendingVideos,
+                ),
+              ],
             );
           },
         );

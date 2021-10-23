@@ -42,6 +42,7 @@ class PlaylistPage extends ConsumerWidget {
             child: CustomCircularProgressIndicator(),
           ),
           error: (obj, stk) => CustomErrorWidget(
+            obj: obj,
             autoDisposeFutureProvider:
                 PlaylistProviders.playlistFuture(playlist.playListUrl),
           ),

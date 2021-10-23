@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 class MiniPlayer extends StatefulWidget {
@@ -73,22 +72,30 @@ class _MiniPlayerState extends State<MiniPlayer>
   }
 
   double calcBottomAlignment(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
+    final height = MediaQuery.of(context).size.height / 2;
+    final bottomInsets = MediaQuery.of(context).viewInsets.bottom;
+    final bottomHeight = () {
+      if (bottomInsets != 0.0) {
+        return bottomInsets;
+      } else {
+        return kBottomNavigationBarHeight;
+      }
+    }();
     final bottomNavBarHeightPercent =
-        (kBottomNavigationBarHeight / 100) * height;
-    // final alignmentPercent =
-    return (1 / bottomNavBarHeightPercent) * 100;
+        ((height - (bottomHeight * 1.3)) / height) * 100;
+    return bottomNavBarHeightPercent / 100;
   }
 
   double calcBottomAlignmentToOneDP(BuildContext context) {
-    return double.parse((1 - calcBottomAlignment(context)).toStringAsFixed(1));
+    return calcBottomAlignment(context);
   }
 
   @override
   Widget build(BuildContext context) {
     final isPotrait =
         MediaQuery.of(context).orientation == Orientation.portrait;
-    return Container(
+    return AnimatedAlign(
+      duration: const Duration(milliseconds: 300),
       alignment: Alignment(
         .85,
         calcBottomAlignmentToOneDP(context),
