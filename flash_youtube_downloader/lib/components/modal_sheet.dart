@@ -4,10 +4,10 @@ import 'package:flash_youtube_downloader/components/error_widget.dart';
 import 'package:flash_youtube_downloader/screens/downloads/provider/downloads_provider.dart';
 import 'package:flash_youtube_downloader/screens/home/providers/home_providers.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/hive_download_item.dart';
+import 'package:flash_youtube_downloader/utils/extensions.dart';
 import 'package:flash_youtube_downloader/utils/helper.dart';
 import 'package:flash_youtube_downloader/utils/scroll_behaviour.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
-import 'package:flash_youtube_downloader/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:uuid/uuid.dart';
@@ -22,11 +22,17 @@ class ModalSheet extends ConsumerWidget {
       .family<bool, YoutubeVideoInfo>((ref, video) async {
     return Future.value([
       await Future.forEach<Streams>(
-          video.audioOnlyStreams, (element) => element.streamSize),
+        video.audioOnlyStreams,
+        (element) => element.streamSize,
+      ),
       await Future.forEach<Streams>(
-          video.videoAudioStreams, (element) => element.streamSize),
+        video.videoAudioStreams,
+        (element) => element.streamSize,
+      ),
       await Future.forEach<Streams>(
-          video.videoOnlyStreams, (element) => element.streamSize),
+        video.videoOnlyStreams,
+        (element) => element.streamSize,
+      ),
     ]).then((value) => true);
   });
 
@@ -51,6 +57,7 @@ class ModalSheet extends ConsumerWidget {
         },
         error: (obj, stk) {
           return CustomErrorWidget(
+            obj: obj,
             future: HomeProviders.videoStateFullInfo(video),
           );
         },
@@ -113,6 +120,7 @@ class ModalSheet extends ConsumerWidget {
           child: CustomCircularProgressIndicator(),
         ),
         error: (obj, stack) => CustomErrorWidget(
+          obj: obj,
           autoDisposeFutureProvider:
               getContentLengthFutureProvider(video.videoInfo!),
         ),
@@ -177,7 +185,9 @@ class QualityStreams extends ConsumerWidget {
                   child: Text(
                     item.qualityToString,
                     style: theme.textTheme.bodyText2!.copyWith(
-                        fontWeight: FontWeight.normal, color: Colors.white),
+                      fontWeight: FontWeight.normal,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],
@@ -242,7 +252,9 @@ class QualityStreams extends ConsumerWidget {
               decoration: BoxDecoration(
                 border: item.bitrate == getPerfectAudio.bitrate
                     ? Border.all(
-                        color: Utils.containerLabelColorLight, width: 2)
+                        color: Utils.containerLabelColorLight,
+                        width: 2,
+                      )
                     : Border.all(width: 0.0, color: Colors.transparent),
                 borderRadius: BorderRadius.circular(10),
               ),

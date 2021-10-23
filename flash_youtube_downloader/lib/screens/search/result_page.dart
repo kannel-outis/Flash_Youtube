@@ -20,8 +20,14 @@ class ResultPage extends ConsumerWidget {
       loading: () => const Center(
         child: CustomCircularProgressIndicator(),
       ),
-      error: (o, s) => CustomErrorWidget<Search>(
-        autoDisposeFutureProvider: SearchProviders.searchResultsProvider,
+      error: (o, s) => Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          CustomErrorWidget<Search>(
+            obj: o,
+            autoDisposeFutureProvider: SearchProviders.searchResultsProvider,
+          ),
+        ],
       ),
     );
   }

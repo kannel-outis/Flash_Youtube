@@ -35,9 +35,11 @@ class ChannelInfoPage extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final channelReader = useProvider(uploaderUrl == null
-        ? ChannelProviders.channelInfoProvider(youtubeVideo!)
-        : ChannelProviders.channelInfoExtractProvider(uploaderUrl!));
+    final channelReader = useProvider(
+      uploaderUrl == null
+          ? ChannelProviders.channelInfoProvider(youtubeVideo!)
+          : ChannelProviders.channelInfoExtractProvider(uploaderUrl!),
+    );
     final tabController = useTabController(initialLength: 3);
 
     final theme = Theme.of(context);
@@ -50,9 +52,12 @@ class ChannelInfoPage extends HookWidget {
             return FutureBuilder<PaletteGenerator>(
               // TODO: put future.delayed();
               future: PaletteGenerator.fromImageProvider(
-                  CachedNetworkImageProvider(data!.bannerUrl == null
+                CachedNetworkImageProvider(
+                  data!.bannerUrl == null
                       ? "https://s.ytimg.com/yts/img/channels/c4/default_banner-vflYp0HrA.jpg"
-                      : data.bannerUrl!.replaceAll("=w1060", "=w650"))),
+                      : data.bannerUrl!.replaceAll("=w1060", "=w650"),
+                ),
+              ),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return const Center(
@@ -108,9 +113,10 @@ class ChannelInfoPage extends HookWidget {
                       controller: tabController,
                       children: [
                         _Home(
-                            data: data,
-                            colorGen: snapshot.data!,
-                            controller: controller),
+                          data: data,
+                          colorGen: snapshot.data!,
+                          controller: controller,
+                        ),
                         _Videos(
                           channel: data,
                         ),
@@ -126,6 +132,7 @@ class ChannelInfoPage extends HookWidget {
             child: CustomCircularProgressIndicator(),
           ),
           error: (o, s) => CustomErrorWidget<ChannelInfo?>(
+            obj: o,
             future: uploaderUrl == null
                 ? ChannelProviders.channelInfoProvider(youtubeVideo!)
                 : ChannelProviders.channelInfoExtractProvider(uploaderUrl!),

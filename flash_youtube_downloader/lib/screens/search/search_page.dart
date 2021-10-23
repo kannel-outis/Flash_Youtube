@@ -59,8 +59,8 @@ class SearchPage extends ConsumerWidget {
                                           textAlign: TextAlign.left,
                                           style: theme.textTheme.bodyText1!
                                               .copyWith(
-                                                  fontWeight:
-                                                      FontWeight.normal),
+                                            fontWeight: FontWeight.normal,
+                                          ),
                                         ),
                                       ),
                                     ],
