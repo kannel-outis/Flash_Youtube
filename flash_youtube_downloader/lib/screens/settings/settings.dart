@@ -16,13 +16,21 @@ class SettingsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final theme = Theme.of(context);
+    final isDarkTheme = theme.brightness == Brightness.dark;
     final settingsProvider =
         watch(SettingsProvider.settingsChangeNotifierProvider);
     return CustomWillScope(
       child: Scaffold(
         appBar: AppBar(
           // automaticallyImplyLeading: false,
-          title: const Text("Settings"),
+          backgroundColor: theme.scaffoldBackgroundColor,
+          iconTheme: IconThemeData(
+            color: isDarkTheme ? Colors.white : Colors.black,
+          ),
+          title: Text(
+            "Settings",
+            style: TextStyle(color: isDarkTheme ? Colors.white : Colors.black),
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 20.0),

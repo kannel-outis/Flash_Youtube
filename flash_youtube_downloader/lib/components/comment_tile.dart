@@ -18,10 +18,11 @@ class CommentTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 15),
       decoration: const BoxDecoration(
-          border: Border(
-        top: BorderSide(color: Colors.grey, width: .1),
-        bottom: BorderSide(color: Colors.grey, width: .1),
-      )),
+        border: Border(
+          top: BorderSide(color: Colors.grey, width: .1),
+          bottom: BorderSide(color: Colors.grey, width: .1),
+        ),
+      ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,8 +46,10 @@ class CommentTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(50),
                 child: FadeInImage(
                   fit: BoxFit.fill,
-                  image: CachedNetworkImageProvider(e.uploaderAvatarUrl ??
-                      "https://s.ytimg.com/yts/img/channels/c4/default_banner-vflYp0HrA.jpg"),
+                  image: CachedNetworkImageProvider(
+                    e.uploaderAvatarUrl ??
+                        "https://s.ytimg.com/yts/img/channels/c4/default_banner-vflYp0HrA.jpg",
+                  ),
                   placeholder: MemoryImage(Utils.transparentImage),
                 ),
               ),
@@ -69,8 +72,10 @@ class CommentTile extends StatelessWidget {
                               .copyWith(color: Colors.grey),
                         ),
                         const SizedBox(height: 5),
-                        Text(e.commentText ?? "cannot load this at the minute",
-                            style: theme.textTheme.bodyText1),
+                        Text(
+                          e.commentText ?? "cannot load this at the minute",
+                          style: theme.textTheme.bodyText1,
+                        ),
                       ],
                     ),
                   ),

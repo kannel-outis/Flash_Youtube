@@ -34,24 +34,29 @@ class _LibraryPageViewState extends State<LibraryPageView>
             menuType: MenuType.download,
             title: "Downloads",
             subTitle: ValueListenableBuilder<Box<HiveDownloadItem>>(
-                valueListenable:
-                    Hive.box<HiveDownloadItem>(HiveInit.hiveDownloadItems)
-                        .listenable(),
-                builder: (context, box, child) {
-                  final downloads = box.values
-                      .where((element) =>
+              valueListenable:
+                  Hive.box<HiveDownloadItem>(HiveInit.hiveDownloadItems)
+                      .listenable(),
+              builder: (context, box, child) {
+                final downloads = box.values
+                    .where(
+                      (element) =>
                           element.downloadState == DownloadState.downloading ||
-                          element.downloadState == DownloadState.paused)
-                      .toList();
-                  if (downloads.isEmpty) {
-                    return const SizedBox();
-                  }
-                  return Text(
-                    "${downloads.length} downloading",
-                    style: theme.textTheme.bodyText2!.copyWith(
-                        fontWeight: FontWeight.normal, color: Colors.grey),
-                  );
-                }),
+                          element.downloadState == DownloadState.paused,
+                    )
+                    .toList();
+                if (downloads.isEmpty) {
+                  return const SizedBox();
+                }
+                return Text(
+                  "${downloads.length} downloading",
+                  style: theme.textTheme.bodyText2!.copyWith(
+                    fontWeight: FontWeight.normal,
+                    color: Colors.grey,
+                  ),
+                );
+              },
+            ),
           ),
           const LibraryItemTile(
             leadingIcon: Icons.watch_later_outlined,
@@ -94,73 +99,72 @@ class _LibraryPageViewState extends State<LibraryPageView>
                   .where((element) => element.videos.isNotEmpty)
                   .toList();
               return Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: eligibleToDisplaylist.map(
-                    (e) {
-                      return InkWell(
-                        onTap: () {
-                          Utils.navigationKey.currentState!.push(
-                            MaterialPageRoute(
-                              builder: (contex) =>
-                                  HivePlaylistPage(playlist: e),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.only(bottom: 20),
-                          height: 50,
-                          width: double.infinity,
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                height: double.infinity,
-                                width: 80,
-                                child: Center(
-                                  child: Container(
-                                    width: 50,
-                                    height: double.infinity,
-                                    decoration: BoxDecoration(
-                                      color: Utils.placeHolderColor,
-                                      image: DecorationImage(
-                                        fit: BoxFit.cover,
-                                        image: CachedNetworkImageProvider(
-                                          e.videos.first.avatarThumbnailUrl,
-                                        ),
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: eligibleToDisplaylist.map(
+                  (e) {
+                    return InkWell(
+                      onTap: () {
+                        Utils.navigationKey.currentState!.push(
+                          MaterialPageRoute(
+                            builder: (contex) => HivePlaylistPage(playlist: e),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 20),
+                        height: 50,
+                        width: double.infinity,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              height: double.infinity,
+                              width: 80,
+                              child: Center(
+                                child: Container(
+                                  width: 50,
+                                  height: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: Utils.placeHolderColor,
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: CachedNetworkImageProvider(
+                                        e.videos.first.avatarThumbnailUrl,
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      e.playlistName,
-                                      style:
-                                          theme.textTheme.bodyText1!.copyWith(
-                                        fontWeight: FontWeight.normal,
-                                        color: theme.textTheme.bodyText1!.color,
-                                      ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    e.playlistName,
+                                    style: theme.textTheme.bodyText1!.copyWith(
+                                      fontWeight: FontWeight.normal,
+                                      color: theme.textTheme.bodyText1!.color,
                                     ),
-                                    Text(
-                                      e.videos.length.toString(),
-                                      style: theme.textTheme.bodyText2!
-                                          .copyWith(
-                                              fontWeight: FontWeight.normal,
-                                              color: Colors.grey),
+                                  ),
+                                  Text(
+                                    e.videos.length.toString(),
+                                    style: theme.textTheme.bodyText2!.copyWith(
+                                      fontWeight: FontWeight.normal,
+                                      color: Colors.grey,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
-                      );
-                    },
-                  ).toList());
+                      ),
+                    );
+                  },
+                ).toList(),
+              );
             },
           ),
         ],

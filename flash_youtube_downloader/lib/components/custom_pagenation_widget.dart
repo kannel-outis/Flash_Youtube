@@ -21,7 +21,8 @@ class CustomPagnationListview extends HookWidget {
     final channelVideoState =
         useProvider(ChannelProviders.channelVideoProvider(growablePage));
     final channelVideoNotifier = useProvider(
-        ChannelProviders.channelVideoProvider(growablePage).notifier);
+      ChannelProviders.channelVideoProvider(growablePage).notifier,
+    );
     final miniController = useProvider(MiniPlayerProviders.miniPlayerC);
     return Scrollbar(
       controller: controller,

@@ -71,14 +71,20 @@ class HomeScreen extends HookWidget {
                         Row(
                           children: [
                             IconButton(
-                              icon: const Icon(Icons.search),
+                              icon: Icon(
+                                Icons.search,
+                                color: theme.iconTheme.color,
+                              ),
                               onPressed: () {
                                 homeStates.isSearch = true;
                               },
                             ),
                             if (pageStateProvider == 1)
                               IconButton(
-                                icon: const Icon(Icons.settings),
+                                icon: Icon(
+                                  Icons.settings,
+                                  color: theme.iconTheme.color,
+                                ),
                                 onPressed: () {
                                   Utils.navigationKey.currentState!.push(
                                     MaterialPageRoute(

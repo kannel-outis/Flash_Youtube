@@ -77,8 +77,10 @@ class ChannelInfoPage extends HookWidget {
                           toolbarHeight: 40,
                           title: Text(
                             data.name,
-                            style: theme.textTheme.headline5!
-                                .copyWith(fontWeight: FontWeight.normal),
+                            style: theme.textTheme.headline5!.copyWith(
+                              fontWeight: FontWeight.normal,
+                              color: Colors.white,
+                            ),
                           ),
                           // snap: true,
                           pinned: true,

@@ -11,6 +11,7 @@ class PlayListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: () {
         Utils.navigationKey.currentState!.push(
@@ -47,15 +48,25 @@ class PlayListTile extends StatelessWidget {
                         width: Utils.blockWidth * 25,
                         color: Colors.black.withOpacity(.8),
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Text(
                               playlist.streamCount.toString(),
-                              style: Theme.of(context).textTheme.subtitle1,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .subtitle1!
+                                  .copyWith(
+                                    color: Colors.white,
+                                  ),
                             ),
-                            const Icon(Icons.playlist_play),
+                            const Icon(
+                              Icons.playlist_play,
+                              color: Colors.white,
+                            ),
                           ],
                         ),
                       ),

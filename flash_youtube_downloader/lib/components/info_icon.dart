@@ -5,9 +5,12 @@ class InfoIcon extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback? onPressed;
-  const InfoIcon(
-      {Key? key, required this.icon, required this.label, this.onPressed})
-      : super(key: key);
+  const InfoIcon({
+    Key? key,
+    required this.icon,
+    required this.label,
+    this.onPressed,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

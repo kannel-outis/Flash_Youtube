@@ -25,15 +25,12 @@ class CustomWillScope extends ConsumerWidget {
     final homeStateProvider = reader(HomeProviders.homeProvider);
     return WillPopScope(
       onWillPop: () async {
-        print(controller.initialized);
-        print("object");
         if (controller.isClosed || !controller.initialized) {
           if (homeStateProvider.isSearch && isHome) {
             homeStateProvider.clear();
             return false;
           } else {
             if (pageController != null && pageController!.page == 1) {
-              print("someThing");
               reader(HomeProviders.pageStateProvider(pageController!).notifier)
                   .setPage = 0;
               pageController?.jumpToPage(0);

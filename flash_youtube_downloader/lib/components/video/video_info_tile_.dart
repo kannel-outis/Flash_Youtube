@@ -8,6 +8,7 @@ import 'package:flash_youtube_downloader/utils/utils.dart';
 import "package:flutter/material.dart";
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import './../../../utils/extensions.dart';
+import 'duration_stack.dart';
 
 class VideoInfoTile extends ConsumerWidget {
   final YoutubeVideo video;
@@ -17,16 +18,16 @@ class VideoInfoTile extends ConsumerWidget {
   final Widget? leadingChild;
   final bool isDownloadTile;
   final HiveDownloadItem? item;
-  const VideoInfoTile(
-      {Key? key,
-      required this.video,
-      this.isDownloadTile = false,
-      this.isSearch = false,
-      this.item,
-      this.index = 0,
-      this.leadingChild,
-      this.isPlayListInfo = false})
-      : super(key: key);
+  const VideoInfoTile({
+    Key? key,
+    required this.video,
+    this.isDownloadTile = false,
+    this.isSearch = false,
+    this.item,
+    this.index = 0,
+    this.leadingChild,
+    this.isPlayListInfo = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context, ScopedReader watch) {
@@ -90,21 +91,7 @@ class VideoInfoTile extends ConsumerWidget {
                       width: double.infinity,
                     ),
                   ),
-                  Positioned(
-                    bottom: 10,
-                    right: 20,
-                    child: Container(
-                      color: Colors.black.withOpacity(.7),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      child: Center(
-                        child: Text(
-                          Utils.trimTime(video.duration.toString()),
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
-                      ),
-                    ),
-                  )
+                  DurationStack(video: video),
                 ],
               ),
             ),
@@ -303,21 +290,7 @@ class _IsSearchTile extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned(
-                    bottom: 10,
-                    right: 20,
-                    child: Container(
-                      color: Colors.black.withOpacity(.7),
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 5),
-                      child: Center(
-                        child: Text(
-                          Utils.trimTime(video.duration.toString()),
-                          style: Theme.of(context).textTheme.subtitle1,
-                        ),
-                      ),
-                    ),
-                  )
+                  DurationStack(video: video),
                 ],
               ),
             ),
@@ -339,7 +312,7 @@ class _IsSearchTile extends StatelessWidget {
                                 Theme.of(context).textTheme.bodyText1!.copyWith(
                                       fontWeight: FontWeight.normal,
                                     ),
-                            maxLines: 1,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -371,9 +344,11 @@ class _IsSearchTile extends StatelessWidget {
 class _DownloadVideoTile extends ConsumerWidget {
   final YoutubeVideo video;
   final HiveDownloadItem downloadItem;
-  const _DownloadVideoTile(
-      {Key? key, required this.video, required this.downloadItem})
-      : super(key: key);
+  const _DownloadVideoTile({
+    Key? key,
+    required this.video,
+    required this.downloadItem,
+  }) : super(key: key);
 
   Color get stateTextColor {
     switch (downloadItem.downloadState) {
@@ -532,9 +507,12 @@ class _DownloadVideoTile extends ConsumerWidget {
             onSelected: (value) {
               switch (value) {
                 case "Resume":
-                  downloadsProvider.downloadStream(video, downloadItem,
-                      audioStream: downloadItem.audioOnlyStream,
-                      continueDownload: true);
+                  downloadsProvider.downloadStream(
+                    video,
+                    downloadItem,
+                    audioStream: downloadItem.audioOnlyStream,
+                    continueDownload: true,
+                  );
                   break;
                 case "pause":
                   downloadsProvider.pauseDownload(downloadItem);
@@ -569,7 +547,8 @@ class _DownloadVideoTile extends ConsumerWidget {
                             ? const Text("pause")
                             : const Text("nil"),
                   ),
-                if (!isNotPausedNorDownloading)
+                if (!isNotPausedNorDownloading ||
+                    downloadItem.downloadState == DownloadState.notStarted)
                   const PopupMenuItem<String>(
                     value: "cancel",
                     child: Text("Cancel Download"),

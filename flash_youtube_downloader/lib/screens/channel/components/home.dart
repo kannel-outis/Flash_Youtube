@@ -5,12 +5,12 @@ class _Home extends StatelessWidget {
   final ChannelInfo data;
   final PaletteGenerator colorGen;
   final MiniPlayerController controller;
-  _Home(
-      {Key? key,
-      required this.data,
-      required this.colorGen,
-      required this.controller})
-      : super(key: key);
+  _Home({
+    Key? key,
+    required this.data,
+    required this.colorGen,
+    required this.controller,
+  }) : super(key: key);
   int gridCount = 0;
 
   @override
@@ -54,6 +54,7 @@ class _Home extends StatelessWidget {
       return Utils.blockHeight * 18;
     }();
     final theme = Theme.of(context);
+    final isDarkTheme = theme.brightness == Brightness.dark;
     return MediaQuery.removePadding(
       removeTop: true,
       context: context,
@@ -72,18 +73,21 @@ class _Home extends StatelessWidget {
                         decoration: BoxDecoration(
                           image: DecorationImage(
                             fit: BoxFit.cover,
-                            image: CachedNetworkImageProvider(data.bannerUrl ==
-                                    null
-                                ? "https://s.ytimg.com/yts/img/channels/c4/default_banner-vflYp0HrA.jpg"
-                                : data.bannerUrl!),
+                            image: CachedNetworkImageProvider(
+                              data.bannerUrl == null
+                                  ? "https://s.ytimg.com/yts/img/channels/c4/default_banner-vflYp0HrA.jpg"
+                                  : data.bannerUrl!,
+                            ),
                           ),
                         ),
                       ),
                       Container(
                         height: Utils.blockHeight * 7,
                         width: double.infinity,
-                        decoration: const BoxDecoration(
-                          color: Colors.black,
+                        decoration: BoxDecoration(
+                          color: isDarkTheme
+                              ? Colors.black
+                              : Colors.black.withOpacity(.2),
                         ),
                         child: Row(
                           // mainAxisAlignment:

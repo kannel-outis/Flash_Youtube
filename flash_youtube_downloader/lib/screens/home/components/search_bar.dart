@@ -29,7 +29,10 @@ class SearchBar extends ConsumerWidget {
               provider?.clear();
             },
             iconSize: 20,
-            icon: const Icon(Icons.arrow_back),
+            icon: Icon(
+              Icons.arrow_back,
+              color: theme.iconTheme.color,
+            ),
           ),
           Expanded(
             child: Container(
@@ -72,7 +75,10 @@ class SearchBar extends ConsumerWidget {
             children: [
               IconButton(
                 iconSize: 20,
-                icon: const Icon(Icons.close),
+                icon: Icon(
+                  Icons.close,
+                  color: theme.iconTheme.color,
+                ),
                 onPressed: () {
                   controller.clear();
                   controller.text = "";
