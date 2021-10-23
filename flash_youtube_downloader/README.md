@@ -61,8 +61,7 @@ git clone https://github.com/kannel-outis/Flash_Youtube.git
 <img src="https://raw.githubusercontent.com/kannel-outis/Flash_Youtube/dev-2/flash_youtube_downloader/screenshots/image14.png" width="360" height="840">
 <img src="https://raw.githubusercontent.com/kannel-outis/Flash_Youtube/dev-2/flash_youtube_downloader/screenshots/image15.png" width="360" height="840">
 <img src="https://raw.githubusercontent.com/kannel-outis/Flash_Youtube/dev-2/flash_youtube_downloader/screenshots/image16.png" width="360" height="840">
-
-
+<img src="https://raw.githubusercontent.com/kannel-outis/Flash_Youtube/dev-2/flash_youtube_downloader/screenshots/player1.gif" width="360" height="840">
 
 ***This may not be the final look of the app as it's still under development***
 
