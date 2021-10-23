@@ -17,7 +17,7 @@ class VideoAudioStream extends Streams {
   final double width;
   final bool isVideoOnly;
 
-  const VideoAudioStream(
+  VideoAudioStream(
     this.url,
     this.codec,
     this.torrentUrl,
@@ -38,6 +38,7 @@ class VideoAudioStream extends Streams {
           codec: codec,
           iTag: iTag,
           torrentUrl: torrentUrl,
+          streamFormat: format.asStreamFormat,
         );
 
   Size get size => Size(width, height);

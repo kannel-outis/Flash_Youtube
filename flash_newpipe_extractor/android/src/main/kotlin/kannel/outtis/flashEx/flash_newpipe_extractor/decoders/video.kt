@@ -1,9 +1,12 @@
 package kannel.outtis.flashEx.flash_newpipe_extractor.decoders
 
+import org.schabi.newpipe.extractor.channel.ChannelInfoItem
+import org.schabi.newpipe.extractor.comments.CommentsInfoItem
+import org.schabi.newpipe.extractor.playlist.PlaylistInfoItem
 import org.schabi.newpipe.extractor.stream.StreamExtractor
 import org.schabi.newpipe.extractor.stream.StreamInfoItem
 
-class VideoInfoDecode(){
+class InfoDecoder(){
     companion object{
         fun decodeAudioStreams(extractor: StreamExtractor):Map<Int, Map<String, Any?>>{
             val audioStreams:MutableMap<Int, Map<String, Any?>> = mutableMapOf()
@@ -72,6 +75,7 @@ class VideoInfoDecode(){
 
         fun decoderToMap(extractor:StreamExtractor): Map<String, Any?>{
             val fullVideoInformation:MutableMap<String, Any?> = mutableMapOf()
+//            TODO: get hlsUrl, license and so on
             fullVideoInformation["id"] = extractor.id
             fullVideoInformation["url"] = extractor.url
             fullVideoInformation["videoName"] = extractor.name
@@ -109,6 +113,42 @@ class VideoInfoDecode(){
             }
 
             itemMap["isUploaderVerified"] = item.isUploaderVerified
+            return itemMap
+        }
+
+        fun decodeCommentsToMap(item: CommentsInfoItem): Map<String, Any?>{
+            val itemMap: MutableMap<String, Any?> = mutableMapOf()
+            itemMap["commentId"] = item.commentId
+            itemMap["commentText"] = item.commentText
+            itemMap["isHeartedByUploader"] = item.isHeartedByUploader
+            itemMap["isPinned"] = item.isPinned
+            itemMap["likeCount"] = item.likeCount
+            itemMap["textualUploadDate"] = item.textualUploadDate
+            itemMap["uploaderAvatarUrl"] = item.uploaderAvatarUrl
+            itemMap["uploaderName"] = item.uploaderName
+            itemMap["uploaderUrl"] = item.uploaderUrl
+            return itemMap
+        }
+
+        fun decodeChannelsToMap(item: ChannelInfoItem): Map<String, Any?>{
+            val itemMap: MutableMap<String, Any?> = mutableMapOf()
+            itemMap["description"] = item.description
+            itemMap["isVerified"] = item.isVerified
+            itemMap["streamCount"] = item.streamCount
+            itemMap["subscriberCount"] = item.subscriberCount
+            itemMap["channelName"] = item.name
+            itemMap["thumbnailUrl"] = item.thumbnailUrl
+            itemMap["channelUrl"] = item.url
+            return itemMap
+        }
+
+        fun decodePlayListToMap(item: PlaylistInfoItem): Map<String, Any?>{
+            val itemMap: MutableMap<String, Any?> = mutableMapOf()
+            itemMap["uploaderName"] = item.uploaderName
+            itemMap["streamCount"] = item.streamCount
+            itemMap["playListName"] = item.name
+            itemMap["thumbnailUrl"] = item.thumbnailUrl
+            itemMap["playListUrl"] = item.url
             return itemMap
         }
     }

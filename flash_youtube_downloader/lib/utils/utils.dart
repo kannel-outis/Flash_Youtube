@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flutter/material.dart';
 
 // ignore_for_file: avoid_classes_with_only_static_members
@@ -7,9 +8,14 @@ import 'package:flutter/material.dart';
 class Utils {
   static late double blockHeight;
   static late double blockWidth;
+  static late Orientation orientation;
+  static late bool isDarkTheme;
+
+  static final navigationKey = GlobalKey<NavigatorState>();
 
   static void getBlockWidthAndHeight(BuildContext context) {
-    if (MediaQuery.of(context).orientation == Orientation.portrait) {
+    orientation = MediaQuery.of(context).orientation;
+    if (orientation == Orientation.portrait) {
       blockHeight = MediaQuery.of(context).size.height / 100;
       blockWidth = MediaQuery.of(context).size.width / 100;
     } else {
@@ -18,10 +24,24 @@ class Utils {
     }
   }
 
+  static Color placeHolderColor = const Color(0xFF212121);
+  static Color containerLabelColor = const Color(0xFF3d3d3d);
+  static Color containerLabelColorLight = const Color(0xFFaaaaaa);
+
   static ThemeData themeData(BuildContext context, Brightness brightness) {
     getBlockWidthAndHeight(context);
-    final isDarkTheme = brightness == Brightness.dark;
+    isDarkTheme = brightness == Brightness.dark;
+    final theme = Theme.of(context);
     return ThemeData(
+      popupMenuTheme: PopupMenuThemeData(
+        color: isDarkTheme
+            ? const Color(0xFF181818)
+            : theme.scaffoldBackgroundColor,
+      ),
+      dialogBackgroundColor:
+          isDarkTheme ? const Color(0xFF181818) : theme.scaffoldBackgroundColor,
+      scaffoldBackgroundColor:
+          isDarkTheme ? const Color(0xFF181818) : theme.scaffoldBackgroundColor,
       brightness: brightness,
       fontFamily: "TT Firs Neue Regular",
       textTheme: TextTheme(
@@ -43,6 +63,20 @@ class Utils {
           color: isDarkTheme ? Colors.white : Colors.black,
         ),
       ),
+      primaryIconTheme: IconThemeData(size: blockWidth * 3),
+      iconTheme: IconThemeData(
+        color: isDarkTheme ? Colors.white : Colors.black,
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: isDarkTheme
+            ? const Color(0xFF181818)
+            : theme.scaffoldBackgroundColor,
+      ),
+      dialogTheme: DialogTheme(
+        backgroundColor: isDarkTheme
+            ? const Color(0xFF181818)
+            : theme.scaffoldBackgroundColor,
+      ),
     );
   }
 
@@ -58,6 +92,9 @@ class Utils {
       return y.join(":");
     }
   }
+
+  static const dummyPictureUrl =
+      "http://dreamvilla.life/wp-content/uploads/2017/07/dummy-profile-pic-300x300.png";
 
   static final Uint8List transparentImage = Uint8List.fromList(<int>[
     0x89,
@@ -125,4 +162,8 @@ class Utils {
     0x44,
     0xAE,
   ]);
+
+  static ContentSize bytesToContentSize(int bytes) {
+    return ContentSize(bytes: bytes);
+  }
 }
