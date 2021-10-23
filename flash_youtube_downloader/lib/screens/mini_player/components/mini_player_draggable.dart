@@ -122,7 +122,7 @@ class _MiniPlayerState extends State<MiniPlayer>
             width: max(
               _calCulateSizeWithController(
                 (MediaQuery.of(context).size.width / 100) *
-                    (isPotrait ? 50 : 30),
+                    (isPotrait ? 40 : 30),
                 MediaQuery.of(context).size.width,
                 // 6.5
                 // valueMultiplier: 4.5,
@@ -171,14 +171,14 @@ class _MiniPlayerState extends State<MiniPlayer>
                         offstage: _controller.value <= 0.5,
                         child: widget.child ?? const SizedBox(),
                       ),
-                      // if (_controller.value <= 0.2)
-                      //   Material(
-                      //     child: SizedBox(
-                      //       height: double.infinity,
-                      //       width: double.infinity,
-                      //       child: widget.bottomCollapseChild,
-                      //     ),
-                      //   )
+                      if (_controller.value <= 0.2)
+                        Material(
+                          child: SizedBox(
+                            height: double.infinity,
+                            width: double.infinity,
+                            child: widget.bottomCollapseChild,
+                          ),
+                        )
                     ],
                   ),
                 ),

@@ -46,6 +46,8 @@ class MiniPlayerWidget extends HookWidget {
     final theme = Theme.of(context);
     final currentVideoState =
         useProvider(HomeProviders.currentVideoStateProvider);
+    final currentVideoStateNotifier =
+        useProvider(HomeProviders.currentVideoStateProvider.notifier);
     final controller = useProvider(HomeProviders.youtubePlayerController);
     final fullVideoInfo = useProvider(HomeProviders.videoStateFullInfo(null));
     final channelFuture =
@@ -126,15 +128,47 @@ class MiniPlayerWidget extends HookWidget {
             ),
           ),
         ),
-        bottomCollapseChild: Row(
-          children: const [
-            IconButton(
-              onPressed: null,
-              icon: Icon(
-                Icons.close,
+        bottomCollapseChild: Container(
+          color: theme.scaffoldBackgroundColor,
+          padding: const EdgeInsets.only(left: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        currentVideoState.videoName!,
+                        style: theme.textTheme.bodyText2,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    // Flexible(
+                    //   child: Text(
+                    //     currentVideoState.uploaderName!,
+                    //     style: theme.textTheme.caption,
+                    //     maxLines: 1,
+                    //     overflow: TextOverflow.ellipsis,
+                    //   ),
+                    // ),
+                  ],
+                ),
               ),
-            )
-          ],
+              IconButton(
+                onPressed: () {
+                  currentVideoStateNotifier.disposeVideoState();
+                },
+                icon: const Icon(
+                  Icons.close,
+                  size: 20,
+                ),
+              )
+            ],
+          ),
         ),
         child: Material(
           child: Container(

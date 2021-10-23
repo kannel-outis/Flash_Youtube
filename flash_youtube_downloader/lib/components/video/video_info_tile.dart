@@ -85,8 +85,9 @@ class VideoInfoTile extends ConsumerWidget {
                       Utils.navigationKey.currentState!.push(
                         MaterialPageRoute(
                           builder: (context) => ChannelInfoPage(
-                              controller: _miniPlayerController,
-                              youtubeVideo: video),
+                            controller: _miniPlayerController,
+                            youtubeVideo: video,
+                          ),
                         ),
                       );
                     },
@@ -113,10 +114,11 @@ class VideoInfoTile extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(50),
                                     image: DecorationImage(
                                       image: CachedNetworkImageProvider(
-                                          data != null
-                                              ? data.avatarUrl
-                                                  .replaceAll("=s48", "=s40")
-                                              : Utils.dummyPictureUrl),
+                                        data != null
+                                            ? data.avatarUrl
+                                                .replaceAll("=s48", "=s40")
+                                            : Utils.dummyPictureUrl,
+                                      ),
                                     ),
                                   ),
                                 );
@@ -138,7 +140,8 @@ class VideoInfoTile extends ConsumerWidget {
                                 borderRadius: BorderRadius.circular(50),
                                 image: DecorationImage(
                                   image: CachedNetworkImageProvider(
-                                      video.uploaderChannelInfo!.avatarUrl),
+                                    video.uploaderChannelInfo!.avatarUrl,
+                                  ),
                                 ),
                               ),
                             ),
@@ -147,7 +150,9 @@ class VideoInfoTile extends ConsumerWidget {
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(
-                        left: Utils.blockWidth * 2.2, right: Utils.blockWidth),
+                      left: Utils.blockWidth * 2.2,
+                      right: Utils.blockWidth,
+                    ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
