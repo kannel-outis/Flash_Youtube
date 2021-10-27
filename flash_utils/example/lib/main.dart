@@ -1,8 +1,12 @@
+import 'dart:developer';
+
+import 'package:flash_utils/flash_pip/pip.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:flash_utils/flash_utils.dart';
+import 'package:youtube_player/youtube_player.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,47 +20,105 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
-    initPlatformState();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    // We also handle the message potentially returning null.
-    try {
-      platformVersion =
-          await FlashUtils.platformVersion ?? 'Unknown platform version';
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Plugin example app'),
-        ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
-        ),
-      ),
+    return const MaterialApp(
+      // home: Scaffold(
+      //   appBar: AppBar(
+      //     title: const Text('Plugin example app'),
+      //   ),
+      //   body: Column(
+      //     children: [
+      //       const Center(
+      //         child: Text('Running on: '),
+      //       ),
+      //       // TextButton(
+      //       //   onPressed: () {
+      //       //     FlashUtils.enterPiPMode(200, 200);
+      //       //   },
+      //       //   child: const Center(
+      //       //     child: Text("emir"),
+      //       //   ),
+      //       // ),
+      //     ],
+      //   ),
+      // ),
+      home: Testingpage2(),
+    );
+  }
+}
+
+class Testingpage2 extends StatefulWidget {
+  const Testingpage2({Key? key}) : super(key: key);
+
+  @override
+  _Testingpage2State createState() => _Testingpage2State();
+}
+
+class _Testingpage2State extends State<Testingpage2> {
+  late final YoutubePlayerController _controller;
+  bool isPipMode = false;
+  String quality = "240p";
+  // ignore: unused_field
+  static const String youtubeLink =
+      "https://www.youtube.com/watch?v=BS3HgiHPYcs";
+  @override
+  void initState() {
+    super.initState();
+    _controller = YoutubePlayerController.link(
+        youtubeLink: "https://www.youtube.com/watch?v=X3Ai6osw3Mk",
+        quality: YoutubePlayerVideoQuality.quality_144p);
+    // https://www.youtube.com/watch?v=X3Ai6osw3Mk
+    // https://www.youtube.com/watch?v=r64_50ELf58
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FlashPIP(
+      // child:
+      builder: (context, isPip, child) {
+        log(isPip.toString());
+        return SafeArea(
+          child: Scaffold(
+            // appBar: AppBar(),
+            body: Column(
+              children: [
+                // Padding(
+                //   padding: EdgeInsets.only(
+                //       top: MediaQuery.of(context).orientation == Orientation.portrait
+                //           ? MediaQuery.of(context).viewPadding.top
+                //           : 0.0),
+                // ),
+                YoutubePlayer(
+                  controller: _controller,
+                  // size: const Size(20, 20),
+                  hideProgressThumb: true,
+                  onVideoQualityChange: (quality) {},
+                ),
+
+                TextButton(
+                  onPressed: () {
+                    FlashUtilsMethodCall.enterPiPMode(200, 300).then(
+                      (value) {
+                        isPipMode = value;
+                        setState(() {});
+                      },
+                    );
+                  },
+                  child: const Center(
+                    child: Text("emir"),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

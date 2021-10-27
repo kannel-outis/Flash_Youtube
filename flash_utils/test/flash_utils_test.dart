@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flash_utils/flash_utils.dart';
+// import 'package:flash_utils/flash_utils.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('flash_utils');
@@ -17,7 +17,7 @@ void main() {
     channel.setMockMethodCallHandler(null);
   });
 
-  test('getPlatformVersion', () async {
-    expect(await FlashUtils.platformVersion, '42');
-  });
+  // test('getPlatformVersion', () async {
+  //   expect(await FlashUtils.platformVersion, '42');
+  // });
 }
