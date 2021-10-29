@@ -1,7 +1,8 @@
-import 'package:flash_utils/flash_utils.dart';
-import 'package:flash_utils/models/flash_aspect_ratio.dart';
-import 'package:flash_utils/utils/typedef.dart';
+import 'package:flash_utils/src/models/flash_aspect_ratio.dart';
+import 'package:flash_utils/src/utils/typedef.dart';
 import 'package:flutter/material.dart';
+
+import '../method_callls.dart';
 
 class FlashPIP extends StatefulWidget {
   final Widget? child;

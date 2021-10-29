@@ -1,10 +1,5 @@
-import 'dart:developer';
-
-import 'package:flash_utils/flash_pip/pip.dart';
 import 'package:flutter/material.dart';
-import 'dart:async';
 
-import 'package:flutter/services.dart';
 import 'package:flash_utils/flash_utils.dart';
 import 'package:youtube_player/youtube_player.dart';
 
@@ -106,10 +101,11 @@ class _Testingpage2State extends State<Testingpage2> {
                 if (!isPip)
                   TextButton(
                     onPressed: () {
-                      FlashUtilsMethodCall.selectFolder()
+                      FlashUtils()
+                          .selectFolder()
                           .then((value) => print(value?.path));
                       return;
-                      FlashUtilsMethodCall.enterPiPMode(9, 16).then(
+                      FlashUtils().enterPiPMode(9, 16).then(
                         (value) {
                           isPipMode = value;
                           setState(() {});

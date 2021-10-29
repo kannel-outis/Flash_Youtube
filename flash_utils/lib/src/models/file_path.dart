@@ -1,4 +1,4 @@
-import 'package:flash_utils/utils/utils.dart';
+import 'package:flash_utils/src/utils/utils.dart';
 
 class FilePath {
   final String path;
