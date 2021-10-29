@@ -82,11 +82,12 @@ class _Testingpage2State extends State<Testingpage2> {
     return FlashPIP(
       // child:
       builder: (context, isPip, child) {
-        log(isPip.toString());
         return SafeArea(
           child: Scaffold(
             // appBar: AppBar(),
             body: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Padding(
                 //   padding: EdgeInsets.only(
@@ -96,24 +97,29 @@ class _Testingpage2State extends State<Testingpage2> {
                 // ),
                 YoutubePlayer(
                   controller: _controller,
+                  completelyHideProgressBar: isPip,
                   // size: const Size(20, 20),
                   hideProgressThumb: true,
                   onVideoQualityChange: (quality) {},
                 ),
 
-                TextButton(
-                  onPressed: () {
-                    FlashUtilsMethodCall.enterPiPMode(200, 300).then(
-                      (value) {
-                        isPipMode = value;
-                        setState(() {});
-                      },
-                    );
-                  },
-                  child: const Center(
-                    child: Text("emir"),
+                if (!isPip)
+                  TextButton(
+                    onPressed: () {
+                      FlashUtilsMethodCall.selectFolder()
+                          .then((value) => print(value?.path));
+                      return;
+                      FlashUtilsMethodCall.enterPiPMode(9, 16).then(
+                        (value) {
+                          isPipMode = value;
+                          setState(() {});
+                        },
+                      );
+                    },
+                    child: const Center(
+                      child: Text("emir"),
+                    ),
                   ),
-                ),
               ],
             ),
           ),
