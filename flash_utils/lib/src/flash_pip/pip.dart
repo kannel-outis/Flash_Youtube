@@ -42,7 +42,7 @@ class _FlashPIPState extends State<FlashPIP> with WidgetsBindingObserver {
               widget.aspectRatio.h, widget.aspectRatio.w);
         }
         isInPIPMode = true;
-        setState(() {});
+        // setState(() {});
         break;
       case AppLifecycleState.resumed:
         isInPIPMode = false;

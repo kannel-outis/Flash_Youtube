@@ -13,6 +13,15 @@ class FilePath {
     required this.isRelative,
   });
 
+  Map<String, dynamic> toMap() {
+    return {
+      "path": path,
+      "encodedPath": encodedpath,
+      "isAbsolute": isAbsolute,
+      "isRelative": isRelative,
+    };
+  }
+
   factory FilePath.fromMap(Map<String, dynamic> map) {
     return FilePath(
       path: Utils.changeToRealPath(map["path"] as String),

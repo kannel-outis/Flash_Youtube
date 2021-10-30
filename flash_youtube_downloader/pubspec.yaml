@@ -14,6 +14,8 @@ dependencies:
   equatable: ^2.0.3
   flash_newpipe_extractor:
     path: ../flash_newpipe_extractor
+  flash_utils:
+    path: ../flash_utils
   flutter:
     sdk: flutter
   flutter_hooks: ^0.17.0
