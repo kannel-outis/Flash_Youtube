@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_positional_boolean_parameters
+import 'package:flash_utils/flash_utils.dart';
 import 'package:flash_youtube_downloader/models/content_country.dart';
 import 'package:flash_youtube_downloader/services/offline/shared_preferences/shared_prefs_handler.dart';
 import 'package:flutter/widgets.dart';
@@ -12,6 +13,7 @@ class SettingsChangeNotifier extends ChangeNotifier {
   bool? _allowSetPlayerQualityOnQualityChange;
   ContentCountry? _contentCountry;
   YoutubePlayerVideoQuality? _playerQuality;
+  FilePath? _filePath;
 
   void setAllowSetPlayerQualityOnQualityChange(
     bool allowSetPlayerQualityOnQualityChange,
@@ -47,6 +49,14 @@ class SettingsChangeNotifier extends ChangeNotifier {
     _sharedHandler.setPlayerQuality(playerQuality);
   }
 
+  Future<void> setDeafultDownloadPath() async {
+    final path = await FlashUtils().selectFolder();
+    _filePath = path;
+    notifyListeners();
+    if (_filePath == null) return;
+    _sharedHandler.setDefaultDownloadPath(_filePath!);
+  }
+
   ContentCountry get contentCountry {
     return _contentCountry ??
         _sharedHandler.contentCountry ??
@@ -71,5 +81,16 @@ class SettingsChangeNotifier extends ChangeNotifier {
     return _allowSetPlayerQualityOnQualityChange ??
         _sharedHandler.allowPlayerQualityOnQualityChange ??
         false;
+  }
+
+  FilePath get filePath {
+    return _filePath ??
+        _sharedHandler.filePath ??
+        FilePath(
+          path: "/storage/emulated/0/FlashDownloader",
+          encodedpath: "/storage/emulated/0/FlashDownloader",
+          isAbsolute: true,
+          isRelative: false,
+        );
   }
 }

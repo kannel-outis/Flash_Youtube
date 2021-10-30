@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_utils/flash_utils.dart';
 import 'package:flash_youtube_downloader/components/circular_progress_indicator.dart';
 import 'package:flash_youtube_downloader/components/comment_tile.dart';
 import 'package:flash_youtube_downloader/components/error_widget.dart';
@@ -161,6 +162,7 @@ class MiniPlayerWidget extends HookWidget {
               IconButton(
                 onPressed: () {
                   currentVideoStateNotifier.disposeVideoState();
+                  // FlashUtils().enterPiPMode(9, 16);
                 },
                 icon: const Icon(
                   Icons.close,
@@ -331,6 +333,16 @@ class MiniPlayerWidget extends HookWidget {
                                           label: "save",
                                         ),
                                       ),
+                                      Expanded(
+                                        child: InfoIcon(
+                                          onPressed: () {
+                                            FlashUtils().enterPiPMode(9, 16);
+                                          },
+                                          icon: Icons
+                                              .picture_in_picture_alt_rounded,
+                                          label: "Background",
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),

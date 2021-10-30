@@ -1,7 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'dart:convert';
-
+import 'package:flash_utils/flash_utils.dart';
 import 'package:flash_youtube_downloader/models/content_country.dart';
 import 'package:flash_youtube_downloader/services/manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -20,6 +20,7 @@ class SharedPrefsManager implements ISharedProps {
   final ALLOW_PIP = "allow_PIP";
   final SET_PLAYER_QUALITY_ON_QUALITY_CHANGE =
       "set_player_quality_on_quality_change";
+  final SET_DOWNLOAD_PATH = "set_download_path";
 
   static late SharedPreferences _prefs;
 
@@ -85,5 +86,23 @@ class SharedPrefsManager implements ISharedProps {
   @override
   Future<bool> setPlayerQualityOnQualityChange(bool playerQuality) {
     return _prefs.setBool(SET_PLAYER_QUALITY_ON_QUALITY_CHANGE, playerQuality);
+  }
+
+  @override
+  Future<bool> setDefaultDownloadPath(FilePath path) {
+    final pathToString = json.encode(path.toMap());
+    return _prefs.setString(
+      SET_DOWNLOAD_PATH,
+      pathToString,
+    );
+  }
+
+  @override
+  FilePath? get filePath {
+    final stringJson = _prefs.getString(SET_DOWNLOAD_PATH);
+    if (stringJson == null) return null;
+    final decodeJson = (json.decode(stringJson) as Map)
+        .map((key, value) => MapEntry(key as String, value));
+    return FilePath.fromMap(decodeJson);
   }
 }

@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 
+import 'package:flash_utils/flash_utils.dart';
 import 'package:flash_youtube_downloader/models/content_country.dart';
 import 'package:flash_youtube_downloader/services/manager.dart';
 import 'package:flash_youtube_downloader/services/offline/managers/shared_prefs_manager.dart';
@@ -40,6 +41,12 @@ class SharedPrefHandler extends ManagerHandler<ISharedProps> {
   Future<bool> setPlayerQualityOnQualityChange(bool playerQuality) async {
     return manager!.setPlayerQualityOnQualityChange(playerQuality);
   }
+
+  Future<bool> setDefaultDownloadPath(FilePath path) {
+    return manager!.setDefaultDownloadPath(path);
+  }
+
+  FilePath? get filePath => manager!.filePath;
 
   bool? get allowPlayerQualityOnQualityChange =>
       manager!.allowPlayerQualityOnQualityChange;

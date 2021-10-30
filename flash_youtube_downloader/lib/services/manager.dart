@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_positional_boolean_parameters
 
+import 'package:flash_utils/flash_utils.dart';
 import 'package:flash_youtube_downloader/models/content_country.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/history.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/hive_download_item.dart';
@@ -53,9 +54,11 @@ abstract class ISharedProps extends Manager {
   Future<bool> toggleComments(bool showComments);
   Future<bool> allowPIP(bool allowPIP);
   Future<bool> setPlayerQualityOnQualityChange(bool playerQuality);
+  Future<bool> setDefaultDownloadPath(FilePath path);
   bool? get allowPlayerQualityOnQualityChange;
   bool? get showComments;
   bool? get allowPIPValue;
+  FilePath? get filePath;
   ContentCountry? get contentCountry;
   String? get downloaderQuality;
   String? get playerQuality;
