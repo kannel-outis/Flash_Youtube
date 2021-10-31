@@ -32,7 +32,7 @@ dependencies:
   youtube_player:
     git:
       url: https://github.com/kannel-outis/youtube_player_plugin.git
-      ref: dev
+      ref: redo_fullscreen
 
 dev_dependencies:
   flutter_test:

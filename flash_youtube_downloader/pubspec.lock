@@ -711,8 +711,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: dev
-      resolved-ref: abbad927dac26134965a08a1686a1883f53a82bd
+      ref: redo_fullscreen
+      resolved-ref: "1d89105ff3d3c2b9ca00cca8761b2552107053b3"
       url: "https://github.com/kannel-outis/youtube_player_plugin.git"
     source: git
     version: "0.0.1"
