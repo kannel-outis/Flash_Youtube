@@ -14,6 +14,7 @@ class SettingsChangeNotifier extends ChangeNotifier {
   ContentCountry? _contentCountry;
   YoutubePlayerVideoQuality? _playerQuality;
   FilePath? _filePath;
+  bool? _canGoPiP;
 
   void setAllowSetPlayerQualityOnQualityChange(
     bool allowSetPlayerQualityOnQualityChange,
@@ -57,6 +58,12 @@ class SettingsChangeNotifier extends ChangeNotifier {
     _sharedHandler.setDefaultDownloadPath(_filePath!);
   }
 
+  void setCanGoPiP(bool canGoPIP) {
+    _canGoPiP = canGoPIP;
+    notifyListeners();
+    _sharedHandler.canGoPiP(canGoPiP);
+  }
+
   ContentCountry get contentCountry {
     return _contentCountry ??
         _sharedHandler.contentCountry ??
@@ -92,5 +99,9 @@ class SettingsChangeNotifier extends ChangeNotifier {
           isAbsolute: true,
           isRelative: false,
         );
+  }
+
+  bool get canGoPiP {
+    return _canGoPiP ?? _sharedHandler.canGoPIP ?? false;
   }
 }

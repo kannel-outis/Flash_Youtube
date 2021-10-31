@@ -46,6 +46,12 @@ class SharedPrefHandler extends ManagerHandler<ISharedProps> {
     return manager!.setDefaultDownloadPath(path);
   }
 
+  Future<bool> canGoPiP(bool canGoPiP) async {
+    return manager!.canGoPiP(canGoPiP);
+  }
+
+  bool? get canGoPIP => manager!.canGoPIP;
+
   FilePath? get filePath => manager!.filePath;
 
   bool? get allowPlayerQualityOnQualityChange =>

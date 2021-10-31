@@ -21,6 +21,7 @@ class SharedPrefsManager implements ISharedProps {
   final SET_PLAYER_QUALITY_ON_QUALITY_CHANGE =
       "set_player_quality_on_quality_change";
   final SET_DOWNLOAD_PATH = "set_download_path";
+  final CAN_GO_PIP = "can_go_pip";
 
   static late SharedPreferences _prefs;
 
@@ -104,5 +105,13 @@ class SharedPrefsManager implements ISharedProps {
     final decodeJson = (json.decode(stringJson) as Map)
         .map((key, value) => MapEntry(key as String, value));
     return FilePath.fromMap(decodeJson);
+  }
+
+  @override
+  bool? get canGoPIP => _prefs.getBool(CAN_GO_PIP);
+
+  @override
+  Future<bool> canGoPiP(bool canGoPiP) async {
+    return _prefs.setBool(CAN_GO_PIP, canGoPiP);
   }
 }

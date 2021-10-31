@@ -106,6 +106,12 @@ class MiniPlayerWidget extends HookWidget {
           // print(per);
           if (searchFocusNode.hasFocus && per == 100.0) {
             searchFocusNode.unfocus();
+            settingsProvider.setCanGoPiP(true);
+          }
+          if (per == 100) {
+            settingsProvider.setCanGoPiP(true);
+          } else if (per < 10 && settingsProvider.canGoPiP) {
+            settingsProvider.setCanGoPiP(false);
           }
         },
         playerChild: Material(
@@ -114,6 +120,9 @@ class MiniPlayerWidget extends HookWidget {
 
             ///TODO: add to watch later on ready
             child: YoutubePlayer(
+              toolBarMinimizeAction: () {
+                _miniPlayerController.closeMiniPlayer();
+              },
               loadingWidth: 8,
               controller: controller!,
               hideProgressThumb: _miniPlayerController.isClosed,
