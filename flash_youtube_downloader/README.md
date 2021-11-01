@@ -20,6 +20,7 @@ Flash Downloader's features include:
 - [x] Create and add videos to the playlist.
 - [x] Responsive UI design.
 - [x] light, dark, and system adaptive theme.
+- [x] Supports Picture-in-picture and background play.
 - [ ] Play Live videos.
 - [ ] Media Conversion and Merging. 
 
