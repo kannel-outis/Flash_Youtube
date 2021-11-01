@@ -82,6 +82,7 @@ git clone https://github.com/kannel-outis/Flash_Youtube.git
 -  [uuid](https://pub.dev/packages/uuid)
 -  [permission_handler](https://pub.dev/packages/permission_handler)
 -  [flash_newpipe_extractor](https://github.com/kannel-outis/Flash_Youtube/tree/master/flash_newpipe_extractor)
+-  [flash_utils](https://github.com/kannel-outis/Flash_Youtube/tree/master/flash_utils)
 -  [youtube_player](https://github.com/kannel-outis/youtube_player_plugin/tree/dev)
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
