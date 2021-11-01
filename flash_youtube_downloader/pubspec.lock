@@ -712,7 +712,7 @@ packages:
     description:
       path: "."
       ref: redo_fullscreen
-      resolved-ref: "1d89105ff3d3c2b9ca00cca8761b2552107053b3"
+      resolved-ref: bcb27f41b8aea5131e634a7e24d2e90d815d9fe4
       url: "https://github.com/kannel-outis/youtube_player_plugin.git"
     source: git
     version: "0.0.1"

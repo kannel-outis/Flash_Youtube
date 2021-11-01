@@ -126,7 +126,7 @@ class _MiniPlayerState extends State<MiniPlayer>
                 MediaQuery.of(context).size.width,
                 // 6.5
                 // valueMultiplier: 4.5,
-                // valueMultiplier: isPotrait ? 2.0 : 1.5,
+                valueMultiplier: isPotrait ? 2.0 : 1.5,
               ),
               0,
             ),

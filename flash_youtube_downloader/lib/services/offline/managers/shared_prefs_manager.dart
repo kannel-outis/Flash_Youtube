@@ -28,6 +28,7 @@ class SharedPrefsManager implements ISharedProps {
   Future<SharedPreferences?> getInstance() async {
     // ignore: join_return_with_assignment
     _prefs = await SharedPreferences.getInstance();
+    canGoPiP(false);
     return _prefs;
   }
 
