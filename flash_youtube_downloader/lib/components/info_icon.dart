@@ -23,12 +23,12 @@ class InfoIcon extends StatelessWidget {
             Icon(
               icon,
               textDirection: TextDirection.rtl,
-              size: 23,
+              size: 20,
             ),
             const SizedBox(height: 7),
             Text(
               capitalize(label),
-              style: Theme.of(context).textTheme.button!.copyWith(
+              style: Theme.of(context).textTheme.caption!.copyWith(
                     fontWeight: FontWeight.normal,
                   ),
             ),

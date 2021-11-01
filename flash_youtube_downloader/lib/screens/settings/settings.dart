@@ -224,6 +224,38 @@ class SettingsPage extends ConsumerWidget {
                   ],
                 ),
               ),
+              const Divider(),
+              InkWell(
+                onTap: () {
+                  settingsProvider.setDeafultDownloadPath();
+                },
+                child: SizedBox(
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Select Download Path",
+                            style: theme.textTheme.bodyText1!.copyWith(
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            settingsProvider.filePath.path,
+                            style: theme.textTheme.caption,
+                          ),
+                        ],
+                      ),
+                      const Icon(Icons.folder_sharp, size: 30),
+                    ],
+                  ),
+                ),
+              ),
+              const Divider(),
             ],
           ),
         ),

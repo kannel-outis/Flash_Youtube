@@ -108,10 +108,10 @@ class _MiniPlayerState extends State<MiniPlayer>
           return Container(
             decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
-              border: Border.all(
-                color: Colors.white.withOpacity(1 - _controller.value),
-                width: 1.5,
-              ),
+              // border: Border.all(
+              //   color: Colors.white.withOpacity(1 - _controller.value),
+              //   width: 1.5,
+              // ),
             ),
             height: _calCulateSizeWithController(
               isPotrait

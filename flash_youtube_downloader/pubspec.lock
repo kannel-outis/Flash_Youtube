@@ -134,6 +134,13 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  flash_utils:
+    dependency: "direct main"
+    description:
+      path: "../flash_utils"
+      relative: true
+    source: path
+    version: "0.0.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -704,8 +711,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: dev
-      resolved-ref: abbad927dac26134965a08a1686a1883f53a82bd
+      ref: redo_fullscreen
+      resolved-ref: bcb27f41b8aea5131e634a7e24d2e90d815d9fe4
       url: "https://github.com/kannel-outis/youtube_player_plugin.git"
     source: git
     version: "0.0.1"

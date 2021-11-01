@@ -1,3 +1,5 @@
+import 'actual_size.dart';
+
 class ContentSize {
   final int bytes;
 
@@ -8,6 +10,8 @@ class ContentSize {
   double get kiloBytes => bytes / 1024;
   double get megaBytes => kiloBytes / 1024;
   double get gigaBytes => megaBytes / 1024;
+
+  ActualSize get actualSize => ActualSize(bytes: bytes);
 
   String get sizeToString {
     if (gigaBytes >= 1) {

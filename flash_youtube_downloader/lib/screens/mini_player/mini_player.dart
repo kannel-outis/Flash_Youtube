@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_utils/flash_utils.dart';
 import 'package:flash_youtube_downloader/components/circular_progress_indicator.dart';
 import 'package:flash_youtube_downloader/components/comment_tile.dart';
 import 'package:flash_youtube_downloader/components/error_widget.dart';
@@ -105,6 +106,12 @@ class MiniPlayerWidget extends HookWidget {
           // print(per);
           if (searchFocusNode.hasFocus && per == 100.0) {
             searchFocusNode.unfocus();
+            settingsProvider.setCanGoPiP(true);
+          }
+          if (per == 100) {
+            settingsProvider.setCanGoPiP(true);
+          } else if (per < 10 && settingsProvider.canGoPiP) {
+            settingsProvider.setCanGoPiP(false);
           }
         },
         playerChild: Material(
@@ -113,6 +120,9 @@ class MiniPlayerWidget extends HookWidget {
 
             ///TODO: add to watch later on ready
             child: YoutubePlayer(
+              toolBarMinimizeAction: () {
+                _miniPlayerController.closeMiniPlayer();
+              },
               loadingWidth: 8,
               controller: controller!,
               hideProgressThumb: _miniPlayerController.isClosed,
@@ -161,6 +171,7 @@ class MiniPlayerWidget extends HookWidget {
               IconButton(
                 onPressed: () {
                   currentVideoStateNotifier.disposeVideoState();
+                  // FlashUtils().enterPiPMode(9, 16);
                 },
                 icon: const Icon(
                   Icons.close,
@@ -331,6 +342,16 @@ class MiniPlayerWidget extends HookWidget {
                                           label: "save",
                                         ),
                                       ),
+                                      Expanded(
+                                        child: InfoIcon(
+                                          onPressed: () {
+                                            FlashUtils().enterPiPMode(9, 16);
+                                          },
+                                          icon: Icons
+                                              .picture_in_picture_alt_rounded,
+                                          label: "Background",
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ),
