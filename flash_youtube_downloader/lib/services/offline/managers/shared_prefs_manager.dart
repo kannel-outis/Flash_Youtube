@@ -22,6 +22,7 @@ class SharedPrefsManager implements ISharedProps {
       "set_player_quality_on_quality_change";
   final SET_DOWNLOAD_PATH = "set_download_path";
   final CAN_GO_PIP = "can_go_pip";
+  final APP_THEME_MODE = "app_theme_mode";
 
   static late SharedPreferences _prefs;
 
@@ -115,4 +116,13 @@ class SharedPrefsManager implements ISharedProps {
   Future<bool> canGoPiP(bool canGoPiP) async {
     return _prefs.setBool(CAN_GO_PIP, canGoPiP);
   }
+
+  @override
+  Future<bool> setAppTheme(String themeToString) async {
+    return _prefs.setString(APP_THEME_MODE, themeToString);
+  }
+
+  @override
+  // TODO: implement themeModeString
+  String? get themeModeString => _prefs.getString(APP_THEME_MODE);
 }

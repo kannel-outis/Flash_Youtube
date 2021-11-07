@@ -1,4 +1,5 @@
 import 'package:flash_youtube_downloader/utils/enums.dart';
+import 'package:flutter/material.dart';
 
 extension ConvertView on String {
   String convertToViews(
@@ -65,6 +66,32 @@ extension ConvertStateToString on DownloadState {
         return "Preparing...";
       case DownloadState.paused:
         return "Paused";
+    }
+  }
+}
+
+extension ThemeToString on ThemeMode {
+  String get stringify {
+    switch (this) {
+      case ThemeMode.dark:
+        return "DarkMode";
+      case ThemeMode.light:
+        return "LightMode";
+      default:
+        return "SystemMode";
+    }
+  }
+}
+
+extension StringToTheme on String {
+  ThemeMode get themify {
+    switch (this) {
+      case "DarkMode":
+        return ThemeMode.dark;
+      case "LightMode":
+        return ThemeMode.light;
+      default:
+        return ThemeMode.system;
     }
   }
 }

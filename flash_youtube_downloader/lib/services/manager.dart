@@ -56,6 +56,7 @@ abstract class ISharedProps extends Manager {
   Future<bool> canGoPiP(bool canGoPiP);
   Future<bool> setPlayerQualityOnQualityChange(bool playerQuality);
   Future<bool> setDefaultDownloadPath(FilePath path);
+  Future<bool> setAppTheme(String themeToString);
   bool? get allowPlayerQualityOnQualityChange;
   bool? get showComments;
   bool? get allowPIPValue;
@@ -64,6 +65,7 @@ abstract class ISharedProps extends Manager {
   ContentCountry? get contentCountry;
   String? get downloaderQuality;
   String? get playerQuality;
+  String? get themeModeString;
 }
 
 abstract class ManagerHandler<T extends Manager?> {

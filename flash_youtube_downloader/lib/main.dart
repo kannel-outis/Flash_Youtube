@@ -1,3 +1,4 @@
+import 'package:flash_youtube_downloader/screens/settings/providers/settings_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/home/home_screen.dart';
@@ -11,9 +12,9 @@ import 'utils/utils.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPrefsManager.instance.getInstance();
   await HiveInit.init();
   await HiveInit.setAllCurrentDownloadingToPause();
-  SharedPrefsManager.instance.getInstance();
   runApp(const MyApp());
 }
 
@@ -23,23 +24,35 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ProviderScope(
       child: MaterialApp(
-        builder: (context, child) => MaterialApp(
-          darkTheme: Utils.themeData(context, Brightness.dark),
-          theme: Utils.themeData(context, Brightness.light),
-          home: child,
+        builder: (context, child) => Consumer(
+          builder: (context, watch, cChild) {
+            final themeMode = watch(SettingsProvider.themeSettings);
+            return MaterialApp(
+              darkTheme: Utils.themeData(context, Brightness.dark),
+              theme: Utils.themeData(context, Brightness.light),
+              themeMode: themeMode,
+              home: child,
+            );
+          },
         ),
         home: Stack(
           children: [
             MaterialApp(
               builder: (context, child) {
-                return MaterialApp(
-                  navigatorKey: Utils.navigationKey,
-                  darkTheme: Utils.themeData(context, Brightness.dark),
-                  theme: Utils.themeData(context, Brightness.light),
-                  home: ScrollConfiguration(
-                    behavior: NoEffectScrollConfig(),
-                    child: const HomeScreen(),
-                  ),
+                return Consumer(
+                  builder: (context, watch, cChild) {
+                    final themeMode = watch(SettingsProvider.themeSettings);
+                    return MaterialApp(
+                      navigatorKey: Utils.navigationKey,
+                      darkTheme: Utils.themeData(context, Brightness.dark),
+                      theme: Utils.themeData(context, Brightness.light),
+                      themeMode: themeMode,
+                      home: ScrollConfiguration(
+                        behavior: NoEffectScrollConfig(),
+                        child: const HomeScreen(),
+                      ),
+                    );
+                  },
                 );
               },
             ),

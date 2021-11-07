@@ -1,12 +1,14 @@
 import 'package:flash_youtube_downloader/components/custom_will_scope.dart';
 import 'package:flash_youtube_downloader/models/content_country.dart';
 import 'package:flash_youtube_downloader/screens/settings/providers/settings_provider.dart';
+import 'package:flash_youtube_downloader/screens/settings/states/theme_data_state_.dart';
 import 'package:flash_youtube_downloader/utils/countries.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:youtube_player/youtube_player.dart';
 
 import 'widgets/country_drop_down.dart';
+import 'widgets/theme_mode_radio.dart';
 
 // ignore: must_be_immutable
 class SettingsPage extends ConsumerWidget {
@@ -84,7 +86,7 @@ class SettingsPage extends ConsumerWidget {
               SwitchListTile(
                 contentPadding: EdgeInsets.zero,
                 title: SizedBox(
-                  height: 70,
+                  // height: 70,
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
@@ -256,6 +258,29 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ),
               const Divider(),
+              Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "App Theme",
+                      style: theme.textTheme.bodyText1,
+                    ),
+                    const SizedBox(height: 20),
+                    const ThemeModeRadio(
+                      mode: ThemeMode.dark,
+                    ),
+                    const ThemeModeRadio(
+                      mode: ThemeMode.light,
+                    ),
+                    const ThemeModeRadio(
+                      mode: ThemeMode.system,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

@@ -50,6 +50,12 @@ class SharedPrefHandler extends ManagerHandler<ISharedProps> {
     return manager!.canGoPiP(canGoPiP);
   }
 
+  Future<bool> setAppTheme(String themeToString) async {
+    return manager!.setAppTheme(themeToString);
+  }
+
+  String? get themeModeString => manager!.themeModeString;
+
   bool? get canGoPIP => manager!.canGoPIP;
 
   FilePath? get filePath => manager!.filePath;
