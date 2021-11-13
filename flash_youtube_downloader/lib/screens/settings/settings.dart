@@ -1,7 +1,6 @@
 import 'package:flash_youtube_downloader/components/custom_will_scope.dart';
 import 'package:flash_youtube_downloader/models/content_country.dart';
 import 'package:flash_youtube_downloader/screens/settings/providers/settings_provider.dart';
-import 'package:flash_youtube_downloader/screens/settings/states/theme_data_state_.dart';
 import 'package:flash_youtube_downloader/utils/countries.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

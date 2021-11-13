@@ -61,7 +61,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
               handler.post {
                 result.success(listOfTrendingVideos)
               }
-            }catch(e: ExtractionException){
+            }catch(e: Exception){
               handler.post {
                 result.error("404", e.message, "")
               }
@@ -75,7 +75,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
               handler.post {
                 result.success(fullVideoInfo)
               }
-            }catch(e: ExtractionException){
+            }catch(e: Exception){
               handler.post {
                 result.error("404", e.message, "")
               }
@@ -89,7 +89,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
               handler.post {
                 result.success(channelInfo)
               }
-            }catch(e: ExtractionException){
+            }catch(e: Exception){
               handler.post {
                 result.error("404", e.message, "")
               }
@@ -102,7 +102,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
               handler.post {
                 result.success(comments)
               }
-            }catch(e: ExtractionException){
+            }catch(e: Exception){
               handler.post {
                 result.error("404", e.message, "")
               }
@@ -126,7 +126,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
               handler.post {
                 result.success(newItems)
               }
-            }catch(e: ExtractionException){
+            }catch(e: Exception){
               handler.post {
                 result.error("404", e.message, "")
               }
@@ -140,7 +140,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
               handler.post {
                 result.success(suggestions)
               }
-            }catch(e: ExtractionException){
+            }catch(e: Exception){
               handler.post {
                 result.error("404", e.message, "")
               }
@@ -153,7 +153,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
               handler.post {
                 result.success(searchResult)
               }
-            }catch(e: ExtractionException){
+            }catch(e: Exception){
               handler.post {
                 result.error("404", e.message, "")
               }
@@ -166,7 +166,7 @@ class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
               handler.post {
                 result.success(info)
               }
-            }catch(e: ExtractionException){
+            }catch(e: Exception){
               handler.post {
                 result.error("404", e.message, "")
               }
