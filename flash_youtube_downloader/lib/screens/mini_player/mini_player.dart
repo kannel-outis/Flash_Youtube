@@ -120,6 +120,7 @@ class MiniPlayerWidget extends HookWidget {
 
             ///TODO: add to watch later on ready
             child: YoutubePlayer(
+              next: () {},
               // toolBarMinimizeAction: () {
               //   _miniPlayerController.closeMiniPlayer();
               // },
