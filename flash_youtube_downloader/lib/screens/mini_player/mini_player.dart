@@ -227,10 +227,12 @@ class MiniPlayerWidget extends HookWidget {
                       loading: () => const Center(
                         child: CustomCircularProgressIndicator(),
                       ),
-                      error: (o, s) => CustomErrorWidget<YoutubeVideoInfo>(
-                        obj: o,
-                        future: HomeProviders.videoStateFullInfo(null),
-                      ),
+                      error: (o, s) {
+                        return CustomErrorWidget<YoutubeVideoInfo>(
+                          obj: o,
+                          future: HomeProviders.videoStateFullInfo(null),
+                        );
+                      },
                     ),
                   )
                 : SingleChildScrollView(

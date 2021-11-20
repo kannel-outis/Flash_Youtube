@@ -1,9 +1,4 @@
-enum MenuType {
-  watchlater,
-  download,
-  playlist,
-  addPlaylist,
-}
+enum MenuType { watchlater, download, playlist, addPlaylist, playNext }
 
 enum DownloadState {
   canceled,
@@ -11,5 +6,5 @@ enum DownloadState {
   downloading,
   paused,
   failed,
-  notStarted,
+  notStarted
 }

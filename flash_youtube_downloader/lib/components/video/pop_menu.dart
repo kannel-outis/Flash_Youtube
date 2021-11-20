@@ -1,4 +1,5 @@
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_youtube_downloader/providers/playlist_manager_state.dart';
 import 'package:flash_youtube_downloader/screens/playlist/components/playlist_modal.dart';
 import 'package:flash_youtube_downloader/screens/watchLater/provider/watch_later_provider.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
@@ -17,6 +18,8 @@ class CustomPopMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader watch) {
     final hiveOps = watch(WatchLaterProvider.hiveOpsProvider);
+    final playlistManagerStateNotifier =
+        watch(PlaylistManagerState.playlistManagerState.notifier);
     return SizedBox(
       height: 20,
       width: 20,
@@ -44,6 +47,9 @@ class CustomPopMenu extends ConsumerWidget {
                 builder: (context) => PlayListModal(video: video),
               );
               break;
+            case MenuType.playNext:
+              playlistManagerStateNotifier.typeState.playNext(video);
+              break;
             default:
           }
         },
@@ -63,6 +69,10 @@ class CustomPopMenu extends ConsumerWidget {
               value: MenuType.playlist,
               child: Text("Add to Playlist"),
             ),
+            const PopupMenuItem<MenuType>(
+              value: MenuType.playNext,
+              child: Text("Play Next"),
+            )
           ];
         },
       ),

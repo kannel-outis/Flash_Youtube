@@ -30,7 +30,7 @@ class PlaylistManager {
   int _currentVideoIndex = 0;
 
   void playNext(YoutubeVideo nextVideo) {
-    _playList.insert(_currentVideoIndex++, nextVideo);
+    _playList.insert(_currentVideoIndex + 1, nextVideo);
   }
 
   YoutubeVideo? get nextVideo {
