@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
@@ -9,6 +10,8 @@ import 'package:flash_youtube_downloader/components/error_widget.dart';
 import 'package:flash_youtube_downloader/components/grid_view_widget.dart';
 import 'package:flash_youtube_downloader/components/info_icon.dart';
 import 'package:flash_youtube_downloader/components/modal_sheet.dart';
+import 'package:flash_youtube_downloader/providers/change_current_playing.dart';
+import 'package:flash_youtube_downloader/providers/playlist_manager_state.dart';
 import 'package:flash_youtube_downloader/screens/channel/channel_info.dart';
 import 'package:flash_youtube_downloader/screens/channel/providers/channel_providers.dart';
 import 'package:flash_youtube_downloader/screens/home/components/search_bar.dart';
@@ -17,7 +20,6 @@ import 'package:flash_youtube_downloader/screens/settings/providers/settings_pro
 import 'package:flash_youtube_downloader/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:youtube_player/youtube_player.dart';
 import '/utils/extensions.dart';
@@ -55,7 +57,11 @@ class MiniPlayerWidget extends HookWidget {
         useProvider(ChannelProviders.channelInfoProvider(currentVideoState!));
     final settingsProvider =
         useProvider(SettingsProvider.settingsChangeNotifierProvider);
+    final playlistManagerStateNotifier =
+        useProvider(PlaylistManagerState.playlistManagerState.notifier);
     final searchFocusNode = useProvider(SearchBar.focusNode);
+    final currentPlaying =
+        useProvider(ChangeCurrentPlaying.changeCurrentPlayingProvider);
 
     final containerHeight = useState(0.0);
     final isExpanded = useState(false);
@@ -120,7 +126,35 @@ class MiniPlayerWidget extends HookWidget {
 
             ///TODO: add to watch later on ready
             child: YoutubePlayer(
-              next: () {},
+              next: currentVideoState.videoInfo == null
+                  ? null
+                  : playlistManagerStateNotifier.typeState.growablePlayList ==
+                              false &&
+                          !playlistManagerStateNotifier.typeState.hasNext
+                      ? null
+                      : () {
+                          if (playlistManagerStateNotifier.typeState.hasNext) {
+                            final video = playlistManagerStateNotifier
+                                .typeState.nextVideo!;
+                            currentPlaying.changeCurrentVideoplaying(video);
+                            playlistManagerStateNotifier.next(video, false);
+                            return;
+                          }
+                          final index = math.Random().nextInt(currentVideoState
+                              .videoInfo!.relatedVideos.length);
+                          final video =
+                              currentVideoState.videoInfo!.relatedVideos[index];
+                          currentPlaying.changeCurrentVideoplaying(video);
+                          playlistManagerStateNotifier.next(video);
+                        },
+              prev: !playlistManagerStateNotifier.typeState.hasPrev
+                  ? null
+                  : () {
+                      final video =
+                          playlistManagerStateNotifier.typeState.prevVideo!;
+                      playlistManagerStateNotifier.prev();
+                      currentPlaying.changeCurrentVideoplaying(video);
+                    },
               // toolBarMinimizeAction: () {
               //   _miniPlayerController.closeMiniPlayer();
               // },
@@ -172,7 +206,6 @@ class MiniPlayerWidget extends HookWidget {
               IconButton(
                 onPressed: () {
                   currentVideoStateNotifier.disposeVideoState();
-                  // FlashUtils().enterPiPMode(9, 16);
                 },
                 icon: const Icon(
                   Icons.close,
@@ -476,27 +509,26 @@ class MiniPlayerWidget extends HookWidget {
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   // child: Text(currentVideoState.videoInfo!.description!),
-                                  child: currentVideoState
-                                          .videoInfo!.description!
-                                          .contains("<")
-                                      ? Html(
-                                          data: currentVideoState
-                                              .videoInfo!.description,
-                                          style: {
-                                            "*": Style(
-                                              fontSize: FontSize(
-                                                Utils.blockWidth * 2.6,
-                                              ),
-                                              fontWeight: FontWeight.bold,
-                                              // color: Colors.white,
-                                            ),
-                                          },
-                                        )
-                                      : Text(
-                                          currentVideoState
-                                              .videoInfo!.description!,
-                                          style: theme.textTheme.subtitle2,
-                                        ),
+                                  // child: currentVideoState
+                                  //         .videoInfo!.description!
+                                  //         .contains("<")
+                                  //     ? Html(
+                                  //         data: currentVideoState
+                                  //             .videoInfo!.description,
+                                  //         style: {
+                                  //           "*": Style(
+                                  //             fontSize: FontSize(
+                                  //               Utils.blockWidth * 2.6,
+                                  //             ),
+                                  //             fontWeight: FontWeight.bold,
+                                  //             // color: Colors.white,
+                                  //           ),
+                                  //         },
+                                  //       )
+                                  child: Text(
+                                    currentVideoState.videoInfo!.description!,
+                                    style: theme.textTheme.subtitle2,
+                                  ),
                                 )
                               ],
                             ),

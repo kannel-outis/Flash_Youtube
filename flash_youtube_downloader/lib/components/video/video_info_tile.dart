@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/components/video/pop_menu.dart';
 import 'package:flash_youtube_downloader/providers/change_current_playing.dart';
+import 'package:flash_youtube_downloader/providers/playlist_manager_state.dart';
 import 'package:flash_youtube_downloader/screens/channel/channel_info.dart';
 import 'package:flash_youtube_downloader/screens/channel/providers/channel_providers.dart';
 import 'package:flash_youtube_downloader/screens/mini_player/components/mini_player_draggable.dart';
@@ -28,6 +29,8 @@ class VideoInfoTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, ScopedReader reader) {
     final channelFuture = reader(ChannelProviders.channelInfoProvider(video));
+    final playlistManagerStateNotifier =
+        reader(PlaylistManagerState.playlistManagerState.notifier);
     final currentPlaying =
         reader(ChangeCurrentPlaying.changeCurrentPlayingProvider);
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
@@ -37,7 +40,10 @@ class VideoInfoTile extends ConsumerWidget {
         children: [
           GestureDetector(
             onTap: () {
+              playlistManagerStateNotifier.changePlaylistManagerInstance(true);
               currentPlaying.changeCurrentVideoplaying(video);
+              playlistManagerStateNotifier.typeState
+                  .setCurrentPlayingVideo(video);
             },
             child: AspectRatio(
               aspectRatio: 16 / 9,
