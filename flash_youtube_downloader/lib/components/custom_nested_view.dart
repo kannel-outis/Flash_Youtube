@@ -4,8 +4,16 @@ import 'package:flutter/material.dart';
 class CustomNestedView extends StatelessWidget {
   final Widget child;
   final int? videoCount;
+  final VoidCallback? playIconOnpressed;
+  final VoidCallback? saveButtonOnpressed;
+  final VoidCallback? downloadButtonOnpressed;
+  final VoidCallback? shareButtonOnpressed;
   const CustomNestedView({
     Key? key,
+    this.downloadButtonOnpressed,
+    this.playIconOnpressed,
+    this.saveButtonOnpressed,
+    this.shareButtonOnpressed,
     required this.child,
     this.videoCount,
   }) : super(key: key);
@@ -33,30 +41,42 @@ class CustomNestedView extends StatelessWidget {
                       width: 70,
                     ),
                     SizedBox(
-                      width: 150,
+                      // width: 150,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Icon(
-                            Icons.play_circle_rounded,
-                            color: isDarkMode ? Colors.white : Colors.black,
-                            size: 20,
+                          IconButton(
+                            onPressed: playIconOnpressed,
+                            icon: Icon(
+                              Icons.play_circle_rounded,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                              size: 20,
+                            ),
                           ),
-                          Icon(
-                            Icons.library_add_check,
-                            color: isDarkMode ? Colors.white : Colors.black,
-                            size: 20,
+                          IconButton(
+                            onPressed: saveButtonOnpressed,
+                            icon: Icon(
+                              Icons.library_add_check,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                              size: 20,
+                            ),
                           ),
-                          Icon(
-                            Icons.vertical_align_bottom_outlined,
-                            color: isDarkMode ? Colors.white : Colors.black,
-                            size: 20,
+                          IconButton(
+                            onPressed: downloadButtonOnpressed,
+                            icon: Icon(
+                              Icons.vertical_align_bottom_outlined,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                              size: 20,
+                            ),
                           ),
-                          Icon(
-                            Icons.reply_sharp,
-                            textDirection: TextDirection.rtl,
-                            color: isDarkMode ? Colors.white : Colors.black,
-                            size: 20,
+                          IconButton(
+                            onPressed: shareButtonOnpressed,
+                            icon: Icon(
+                              Icons.reply_sharp,
+                              textDirection: TextDirection.rtl,
+                              color: isDarkMode ? Colors.white : Colors.black,
+                              size: 20,
+                            ),
                           ),
                         ],
                       ),

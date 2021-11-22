@@ -9,6 +9,7 @@ import "package:flutter/material.dart";
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import './../../../utils/extensions.dart';
 import 'duration_stack.dart';
+import 'pop_menu.dart';
 
 class VideoInfoTile extends ConsumerWidget {
   final YoutubeVideo video;
@@ -304,17 +305,27 @@ class _IsSearchTile extends StatelessWidget {
                     // height: Utils.blockWidth * 10,
                     child: Column(
                       children: [
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            video.videoName!,
-                            style:
-                                Theme.of(context).textTheme.bodyText1!.copyWith(
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Container(
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  video.videoName!,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyText1!
+                                      .copyWith(
+                                        fontWeight: FontWeight.normal,
+                                      ),
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ),
+                            CustomPopMenu(video: video),
+                          ],
                         ),
                       ],
                     ),

@@ -4,6 +4,8 @@ import 'package:flash_youtube_downloader/components/custom_nested_view.dart';
 import 'package:flash_youtube_downloader/components/custom_pagenation_widget.dart';
 import 'package:flash_youtube_downloader/components/custom_will_scope.dart';
 import 'package:flash_youtube_downloader/components/error_widget.dart';
+import 'package:flash_youtube_downloader/providers/change_current_playing.dart';
+import 'package:flash_youtube_downloader/providers/playlist_manager_state.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -19,6 +21,10 @@ class PlaylistPage extends ConsumerWidget {
 
     final playlistInfoFuture =
         watch(PlaylistProviders.playlistFuture(playlist.playListUrl));
+    final playlistManagerStateNotifier =
+        watch(PlaylistManagerState.playlistManagerState.notifier);
+    final currentPlaying =
+        watch(ChangeCurrentPlaying.changeCurrentPlayingProvider);
     return CustomWillScope(
       child: Scaffold(
         appBar: AppBar(
@@ -33,6 +39,14 @@ class PlaylistPage extends ConsumerWidget {
           data: (data) {
             return CustomNestedView(
               videoCount: playlist.streamCount,
+              playIconOnpressed: () {
+                playlistManagerStateNotifier.changePlaylistManagerInstance(
+                    false, data.growableListItems);
+                currentPlaying
+                    .changeCurrentVideoplaying(data.growableListItems.first);
+                playlistManagerStateNotifier.typeState
+                    .setCurrentPlayingVideo(data.growableListItems.first);
+              },
               child: CustomPagnationListview(
                 growablePage: data,
               ),

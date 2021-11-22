@@ -10,8 +10,10 @@ import '../modal_sheet.dart';
 
 class CustomPopMenu extends ConsumerWidget {
   final YoutubeVideo video;
+  final double? iconSize;
   const CustomPopMenu({
     Key? key,
+    this.iconSize,
     required this.video,
   }) : super(key: key);
 
@@ -25,7 +27,7 @@ class CustomPopMenu extends ConsumerWidget {
       width: 20,
       child: PopupMenuButton<MenuType>(
         padding: EdgeInsets.zero,
-        iconSize: 20,
+        iconSize: iconSize ?? 20,
         onSelected: (v) {
           switch (v) {
             case MenuType.download:

@@ -170,6 +170,24 @@ class MiniPlayerWidget extends HookWidget {
                 barColor: Colors.white.withOpacity(.4),
                 bufferedColor: Colors.white.withOpacity(.8),
               ),
+              onVideoEnded: () {
+                if (playlistManagerStateNotifier.typeState.hasNext) {
+                  final video =
+                      playlistManagerStateNotifier.typeState.nextVideo!;
+                  currentPlaying.changeCurrentVideoplaying(video);
+                  playlistManagerStateNotifier.next(video, false);
+                  return;
+                }
+                if (!playlistManagerStateNotifier.typeState.growablePlayList &&
+                    !playlistManagerStateNotifier.typeState.hasNext) {
+                  return;
+                }
+                final index = math.Random()
+                    .nextInt(currentVideoState.videoInfo!.relatedVideos.length);
+                final video = currentVideoState.videoInfo!.relatedVideos[index];
+                currentPlaying.changeCurrentVideoplaying(video);
+                playlistManagerStateNotifier.next(video);
+              },
             ),
           ),
         ),
