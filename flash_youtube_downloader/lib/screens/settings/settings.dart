@@ -173,6 +173,42 @@ class SettingsPage extends ConsumerWidget {
                 ),
               ),
               const Divider(),
+              InkWell(
+                onTap: () {
+                  settingsProvider.setAutoPlay(
+                    !settingsProvider.autoAutoPlay,
+                  );
+                },
+                child: SizedBox(
+                  height: 70,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "AutoPlay",
+                            style: theme.textTheme.bodyText1!.copyWith(
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                          Text(
+                            "Allow Player to Automatically play the next video.",
+                            style: theme.textTheme.caption,
+                          ),
+                        ],
+                      ),
+                      Switch(
+                        value: settingsProvider.autoAutoPlay,
+                        onChanged: (autoPlay) {},
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const Divider(),
               SizedBox(
                 height: 70,
                 child: Row(

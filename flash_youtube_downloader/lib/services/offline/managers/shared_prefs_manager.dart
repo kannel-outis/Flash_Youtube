@@ -23,6 +23,7 @@ class SharedPrefsManager implements ISharedProps {
   final SET_DOWNLOAD_PATH = "set_download_path";
   final CAN_GO_PIP = "can_go_pip";
   final APP_THEME_MODE = "app_theme_mode";
+  final AUTO_PLAY = "auto_play";
 
   static late SharedPreferences _prefs;
 
@@ -125,4 +126,13 @@ class SharedPrefsManager implements ISharedProps {
   @override
   // TODO: implement themeModeString
   String? get themeModeString => _prefs.getString(APP_THEME_MODE);
+
+  @override
+  // TODO: implement autoPlay
+  bool? get autoPlay => _prefs.getBool(AUTO_PLAY);
+
+  @override
+  Future<bool> setAutoPlay(bool autoPlay) {
+    return _prefs.setBool(AUTO_PLAY, autoPlay);
+  }
 }

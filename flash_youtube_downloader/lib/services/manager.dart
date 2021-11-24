@@ -57,10 +57,12 @@ abstract class ISharedProps extends Manager {
   Future<bool> setPlayerQualityOnQualityChange(bool playerQuality);
   Future<bool> setDefaultDownloadPath(FilePath path);
   Future<bool> setAppTheme(String themeToString);
+  Future<bool> setAutoPlay(bool autoPlay);
   bool? get allowPlayerQualityOnQualityChange;
   bool? get showComments;
   bool? get allowPIPValue;
   bool? get canGoPIP;
+  bool? get autoPlay;
   FilePath? get filePath;
   ContentCountry? get contentCountry;
   String? get downloaderQuality;

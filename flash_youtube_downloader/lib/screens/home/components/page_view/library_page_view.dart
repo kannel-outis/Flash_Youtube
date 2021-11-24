@@ -28,6 +28,7 @@ class _LibraryPageViewState extends State<LibraryPageView>
           const LibraryItemTile(
             leadingIcon: Icons.history,
             title: "History",
+            menuType: MenuType.history,
           ),
           LibraryItemTile(
             leadingIcon: Icons.vertical_align_bottom_outlined,

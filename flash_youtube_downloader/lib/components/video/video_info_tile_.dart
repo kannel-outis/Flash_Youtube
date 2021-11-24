@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
 import 'package:flash_youtube_downloader/providers/change_current_playing.dart';
+import 'package:flash_youtube_downloader/providers/playlist_manager_state.dart';
 import 'package:flash_youtube_downloader/screens/downloads/provider/downloads_provider.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/hive_download_item.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
@@ -34,11 +35,15 @@ class VideoInfoTile extends ConsumerWidget {
   Widget build(BuildContext context, ScopedReader watch) {
     final currentPlaying =
         watch(ChangeCurrentPlaying.changeCurrentPlayingProvider);
+    final playlistManagerStateNotifier =
+        watch(PlaylistManagerState.playlistManagerState.notifier);
     final isDarkTheme = Theme.of(context).brightness == Brightness.dark;
     if (isSearch) {
       return GestureDetector(
         onTap: () {
+          playlistManagerStateNotifier.changePlaylistManagerInstance(true);
           currentPlaying.changeCurrentVideoplaying(video);
+          playlistManagerStateNotifier.typeState.setCurrentPlayingVideo(video);
         },
         child: _IsSearchTile(
           video: video,
@@ -400,6 +405,8 @@ class _DownloadVideoTile extends ConsumerWidget {
     final downloading = downloadItem.downloadState == DownloadState.downloading;
     final downloadsProvider =
         watch(DownloadsProvider.downloadChangeNotifierProvider);
+    final currentPlaying =
+        watch(ChangeCurrentPlaying.changeCurrentPlayingProvider);
     return Container(
       color: Colors.transparent,
       margin: const EdgeInsets.only(bottom: 20),
@@ -445,71 +452,81 @@ class _DownloadVideoTile extends ConsumerWidget {
             ),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 7.0),
-              child: Column(
-                children: [
-                  SizedBox(
-                    // height: Utils.blockWidth * 10,
-                    child: Column(
-                      children: [
-                        Container(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            video.videoName!,
+            child: InkWell(
+              onTap: () {
+                if (downloadItem.downloadState == DownloadState.completed) {
+                  currentPlaying.changeCurrentVideoplaying(
+                      video, downloadItem.downloadPaths.first);
+                }
+              },
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 7.0),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      // height: Utils.blockWidth * 10,
+                      child: Column(
+                        children: [
+                          Container(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              video.videoName!,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyText1!
+                                  .copyWith(
+                                    fontWeight: FontWeight.normal,
+                                  ),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: Utils.blockWidth),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        "${video.viewCount.toString().convertToViews()} views  •   ${video.textualUploadDate}",
+                        style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                              color: Colors.grey,
+                            ),
+                        textAlign: TextAlign.left,
+                        // maxLines: 2,
+                      ),
+                    ),
+                    SizedBox(height: Utils.blockWidth),
+                    Container(
+                      alignment: Alignment.topLeft,
+                      padding: const EdgeInsets.only(right: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "${downloadItem.progress}  •   ${size.sizeToString} / ${totalSize.sizeToString}",
                             style:
-                                Theme.of(context).textTheme.bodyText1!.copyWith(
-                                      fontWeight: FontWeight.normal,
+                                Theme.of(context).textTheme.bodyText2!.copyWith(
+                                      color: stateTextColor,
                                     ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.left,
+                            // maxLines: 2,
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: Utils.blockWidth),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      "${video.viewCount.toString().convertToViews()} views  •   ${video.textualUploadDate}",
-                      style: Theme.of(context).textTheme.bodyText2!.copyWith(
-                            color: Colors.grey,
+                          Text(
+                            downloadItem.downloadState.convertStateToString,
+                            style:
+                                Theme.of(context).textTheme.bodyText2!.copyWith(
+                                      color: stateTextColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                            textAlign: TextAlign.left,
+                            // maxLines: 2,
                           ),
-                      textAlign: TextAlign.left,
-                      // maxLines: 2,
+                        ],
+                      ),
                     ),
-                  ),
-                  SizedBox(height: Utils.blockWidth),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    padding: const EdgeInsets.only(right: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "${downloadItem.progress}  •   ${size.sizeToString} / ${totalSize.sizeToString}",
-                          style:
-                              Theme.of(context).textTheme.bodyText2!.copyWith(
-                                    color: stateTextColor,
-                                  ),
-                          textAlign: TextAlign.left,
-                          // maxLines: 2,
-                        ),
-                        Text(
-                          downloadItem.downloadState.convertStateToString,
-                          style:
-                              Theme.of(context).textTheme.bodyText2!.copyWith(
-                                    color: stateTextColor,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                          textAlign: TextAlign.left,
-                          // maxLines: 2,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

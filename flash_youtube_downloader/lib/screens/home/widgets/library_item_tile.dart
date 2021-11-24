@@ -1,5 +1,6 @@
 import 'package:flash_youtube_downloader/screens/downloads/downloads.dart';
 import 'package:flash_youtube_downloader/screens/playlist/components/add_playlist_dialog.dart';
+import 'package:flash_youtube_downloader/screens/watchHistory/watch_history.dart';
 import 'package:flash_youtube_downloader/screens/watchLater/watch_later.dart';
 import 'package:flash_youtube_downloader/utils/enums.dart';
 import 'package:flash_youtube_downloader/utils/utils.dart';
@@ -52,6 +53,13 @@ class LibraryItemTile extends StatelessWidget {
             Utils.navigationKey.currentState!.push(
               MaterialPageRoute(
                 builder: (context) => const DownloadsPage(),
+              ),
+            );
+            break;
+          case MenuType.history:
+            Utils.navigationKey.currentState!.push(
+              MaterialPageRoute(
+                builder: (context) => const WatchHistory(),
               ),
             );
             break;

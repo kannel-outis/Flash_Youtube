@@ -54,6 +54,12 @@ class SharedPrefHandler extends ManagerHandler<ISharedProps> {
     return manager!.setAppTheme(themeToString);
   }
 
+  Future<bool> setAutoPlay(bool autoPlay) {
+    return manager!.setAutoPlay(autoPlay);
+  }
+
+  bool? get autoPlay => manager!.autoPlay;
+
   String? get themeModeString => manager!.themeModeString;
 
   bool? get canGoPIP => manager!.canGoPIP;

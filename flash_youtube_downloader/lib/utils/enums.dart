@@ -1,4 +1,4 @@
-enum MenuType { watchlater, download, playlist, addPlaylist, playNext }
+enum MenuType { watchlater, download, playlist, addPlaylist, playNext, history }
 
 enum DownloadState {
   canceled,

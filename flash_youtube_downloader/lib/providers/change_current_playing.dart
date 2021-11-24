@@ -35,10 +35,11 @@ class ChangeCurrentPlaying {
     this.currentVideoStateNotifier,
     this.youtubePlayerControllerNotifier,
   );
-  void changeCurrentVideoplaying(YoutubeVideo video) {
+  void changeCurrentVideoplaying(YoutubeVideo video, [String? videoUrl]) {
     if (currentVideoState == null || video.url != currentVideoState!.url) {
       currentVideoStateNotifier.setVideoState(video);
-      youtubePlayerControllerNotifier.youtubeControllerState = video.url;
+      youtubePlayerControllerNotifier.youtubeControllerState =
+          videoUrl ?? video.url;
     }
     if (_miniPlayerController.isClosed) {
       Future.delayed(const Duration(milliseconds: 20), () {

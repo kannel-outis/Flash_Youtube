@@ -1,6 +1,7 @@
 import 'package:flash_youtube_downloader/services/offline/managers/hive_manager.dart';
 import 'package:flash_youtube_downloader/services/manager.dart';
 
+import 'models/history.dart';
 import 'models/hive_download_item.dart';
 import 'models/playlist.dart';
 import 'models/watch_later.dart';
@@ -17,6 +18,10 @@ class HiveHandler extends ManagerHandler<IHiveManager> {
 
   Future<void> saveWatchLaterToDb(HiveWatchLater watchlater) async {
     await manager!.saveWatchLaterToDb(watchlater);
+  }
+
+  Future<void> saveWatchHistory(HiveWatchHistory watchHistory) async {
+    await manager!.saveWatchHistory(watchHistory);
   }
 
   Future<void> createPlaylist(HivePlaylist hivePlaylist,

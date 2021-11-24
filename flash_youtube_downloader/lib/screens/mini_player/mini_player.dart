@@ -171,6 +171,7 @@ class MiniPlayerWidget extends HookWidget {
                 bufferedColor: Colors.white.withOpacity(.8),
               ),
               onVideoEnded: () {
+                if (!settingsProvider.autoAutoPlay) return;
                 if (playlistManagerStateNotifier.typeState.hasNext) {
                   final video =
                       playlistManagerStateNotifier.typeState.nextVideo!;
@@ -258,8 +259,8 @@ class MiniPlayerWidget extends HookWidget {
                       children: [
                         AnimatedContainer(
                           duration: const Duration(milliseconds: 300),
-                          height: (Utils.blockHeight * 14.5) +
-                              containerHeight.value,
+                          height:
+                              (Utils.blockHeight * 16) + containerHeight.value,
                           decoration: const BoxDecoration(
                               // color: Colors.black,
                               ),
@@ -292,7 +293,7 @@ class MiniPlayerWidget extends HookWidget {
                                       left: 15,
                                       right: 15,
                                     ),
-                                    height: Utils.blockHeight * 4,
+                                    height: Utils.blockHeight * 5.5,
                                     child: Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -320,14 +321,45 @@ class MiniPlayerWidget extends HookWidget {
                                                 ),
                                               ),
                                               const SizedBox(height: 10),
-                                              Text(
-                                                "${currentVideoState.videoInfo!.viewCount.toString().convertToViews(false)} views",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .bodyText1!
-                                                    .copyWith(
-                                                      color: Colors.grey,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    "${currentVideoState.videoInfo!.viewCount.toString().convertToViews(false)} views",
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1!
+                                                        .copyWith(
+                                                          color: Colors.grey,
+                                                        ),
+                                                  ),
+                                                  SizedBox(
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                          "Auto Play",
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyText1,
+                                                        ),
+                                                        Switch(
+                                                          value:
+                                                              settingsProvider
+                                                                  .autoAutoPlay,
+                                                          onChanged:
+                                                              (autoPlay) {
+                                                            settingsProvider
+                                                                .setAutoPlay(
+                                                                    autoPlay);
+                                                          },
+                                                        ),
+                                                      ],
                                                     ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),

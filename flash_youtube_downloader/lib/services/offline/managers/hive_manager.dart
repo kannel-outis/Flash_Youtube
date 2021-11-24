@@ -20,6 +20,8 @@ class HiveManager implements IHiveManager {
   final playListBox = Hive.box<HivePlaylist>(HiveInit.hivePlaylistBoxName);
   final downloadItemBox =
       Hive.box<HiveDownloadItem>(HiveInit.hiveDownloadItems);
+  final hiveWatchHistory =
+      Hive.box<HiveWatchHistory>(HiveInit.hiveWatchHistoryBoxName);
 
   @override
   List<HivePlaylist> getAllSavedPlaylist() {
@@ -69,8 +71,7 @@ class HiveManager implements IHiveManager {
 
   @override
   Future<void> saveWatchHistory(HiveWatchHistory watchHistory) async {
-    // TODO: implement saveWatchHistory
-    throw UnimplementedError();
+    await hiveWatchHistory.add(watchHistory);
   }
 
   @override
