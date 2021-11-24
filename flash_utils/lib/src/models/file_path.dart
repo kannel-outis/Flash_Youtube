@@ -13,6 +13,8 @@ class FilePath {
     required this.isRelative,
   });
 
+  static const defaultPath = "/storage/emulated/0/FlashDownloader";
+
   Map<String, dynamic> toMap() {
     return {
       "path": path,
