@@ -3,7 +3,6 @@ import 'package:flash_youtube_downloader/components/custom_will_scope.dart';
 import 'package:flash_youtube_downloader/components/video/video_info_tile_.dart';
 import 'package:flash_youtube_downloader/providers/change_current_playing.dart';
 import 'package:flash_youtube_downloader/providers/playlist_manager_state.dart';
-import 'package:flash_youtube_downloader/screens/playlist/providers/playlist_providers.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/init.dart';
 import 'package:flash_youtube_downloader/services/offline/hive/models/watch_later.dart';
 import 'package:flutter/material.dart';

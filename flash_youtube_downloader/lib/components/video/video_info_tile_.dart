@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flash_newpipe_extractor/flash_newpipe_extractor.dart';
+import 'package:flash_youtube_downloader/components/download_info_dialog.dart';
 import 'package:flash_youtube_downloader/providers/change_current_playing.dart';
 import 'package:flash_youtube_downloader/providers/playlist_manager_state.dart';
 import 'package:flash_youtube_downloader/screens/downloads/provider/downloads_provider.dart';
@@ -534,6 +535,13 @@ class _DownloadVideoTile extends ConsumerWidget {
             offset: const Offset(50, 40),
             onSelected: (value) {
               switch (value) {
+                case "info":
+                  showDialog(
+                    context: context,
+                    builder: (context) =>
+                        DownlaodInfoDialog(item: downloadItem),
+                  );
+                  break;
                 case "Resume":
                   downloadsProvider.downloadStream(
                     video,
@@ -594,6 +602,10 @@ class _DownloadVideoTile extends ConsumerWidget {
                     value: "Delete",
                     child: Text("Delete from history"),
                   ),
+                const PopupMenuItem<String>(
+                  value: "info",
+                  child: Text("Download Info"),
+                ),
               ];
             },
             child: const SizedBox(
