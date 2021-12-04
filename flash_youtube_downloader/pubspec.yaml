@@ -26,8 +26,8 @@ dependencies:
   lint: ^1.5.3
   palette_generator: ^0.3.1
   path_provider: ^2.0.4
-  permission_handler: ^8.2.5
-  shared_preferences: ^2.0.8
+  permission_handler: ^8.1.5
+  shared_preferences: ^2.0.7
   uuid: ^3.0.5
   youtube_player:
     git:
