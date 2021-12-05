@@ -12,7 +12,7 @@ import 'utils/utils.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPrefsManager.instance.getInstance();
+  await SharedPrefsManager.instance.getInstance();
   await HiveInit.init();
   await HiveInit.setAllCurrentDownloadingToPause();
   runApp(const MyApp());

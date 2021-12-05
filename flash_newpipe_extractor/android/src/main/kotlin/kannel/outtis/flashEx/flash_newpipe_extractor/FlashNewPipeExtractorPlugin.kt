@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import androidx.preference.PreferenceManager
 import androidx.annotation.NonNull
+import io.flutter.embedding.android.FlutterActivity
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall
@@ -25,17 +26,22 @@ import org.schabi.newpipe.extractor.localization.Localization
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class FlashNewPipeExtractorPlugin: FlutterPlugin, MethodCallHandler {
+class FlashNewPipeExtractorPlugin:  FlutterPlugin, MethodCallHandler {
   private lateinit var channel : MethodChannel
+
+
 
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     val context = flutterPluginBinding.applicationContext
-    val contentPref = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+    val contentPref: SharedPreferences = context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE)
+    var contentCountryString = "NG"
     val sharedString = contentPref.getString("flutter.content_country", null)
-    val jsonMapObj = JSONObject(sharedString)
-    val contentCountryString = jsonMapObj.toMap()["code"]?:"NG"
-    
+    if(sharedString != null){
+      val jsonMapObj = JSONObject(sharedString)
+      contentCountryString = jsonMapObj.toMap()["code"]!!
+    }
+
 //    TODO: always get contentCountry from shared preferences
     NewPipe.init(FlashDownloader.instance(), Localization.DEFAULT, ContentCountry(contentCountryString))
     val preferences: SharedPreferences = PreferenceManager
