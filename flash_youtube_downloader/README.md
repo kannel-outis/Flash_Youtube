@@ -5,7 +5,7 @@ A mobile application for downloading youtube videos.
 ## Project Overview
 
 Flash Downloader is a mobile application that allows you to download videos and audio from [Youtube](https://youtube.com/). it supports videos and audios of any quality ranging from 2k videos to low-quality videos.
-Flash Youtube was written with [Flutter](https://flutter.dev/) ***and the project is still in progress***.
+Flash Youtube was written with [Flutter](https://flutter.dev/) .
 
 ## Features
 Flash Downloader's features include:
@@ -21,8 +21,7 @@ Flash Downloader's features include:
 - [x] Responsive UI design.
 - [x] light, dark, and system adaptive theme.
 - [x] Supports Picture-in-picture and background play.
-- [ ] Play Live videos.
-- [ ] Media Conversion and Merging. 
+
 
 
 ## Running The Project
